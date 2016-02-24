@@ -16,6 +16,7 @@ http://www.ogre3d.org/wiki/
 */
 
 #include "TutorialApplication.h"
+#include "Plain.h"
 
 using namespace Ogre;
 
@@ -41,32 +42,35 @@ void TutorialApplication::createScene(void)
 
     mSceneMgr->setAmbientLight(ColourValue(0.25,0.25,0.25));
 
-    Plane plane(Vector3::UNIT_Y, 0);
-    MeshManager::getSingleton().createPlane("ground", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane, 1500, 1500, 20, 20, true, 1, 5, 5, Vector3::UNIT_Z);
-    
-    Entity* entGround = mSceneMgr->createEntity("ground");
-    entGround->setMaterialName("Examples/BumpyMetal");
-    SceneNode* groundNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("groundNode");
+    Plain plain1(mSceneMgr, Vector3::UNIT_Y, Vector3::UNIT_Z, 1500, 1500, -750, "ground1", "node_ground1", "Examples/BumpyMetal");
+    plain1.set_origin(btVector3(btScalar(0), btScalar(-750), btScalar(0)));
+    plain1.set_bounding_box(btVector3(btScalar(1500), btScalar(0), btScalar(1500)));
+    plain1.create_bounding_box(simulator);
 
-    groundNode->attachObject(entGround);
+    Plain plain2(mSceneMgr, Vector3::NEGATIVE_UNIT_Y, Vector3::UNIT_Z, 1500, 1500, -750, "ground2", "node_ground2", "Examples/BumpyMetal");
+    plain2.set_origin(btVector3(btScalar(0), btScalar(750), btScalar(0)));
+    plain2.set_bounding_box(btVector3(btScalar(1500), btScalar(0), btScalar(1500)));
+    plain2.create_bounding_box(simulator);
 
-    btTransform groundTransform;
-    groundTransform.setIdentity();
-    groundTransform.setOrigin(btVector3(0,-50, 0));
+    Plain plain3(mSceneMgr, Vector3::UNIT_X, Vector3::UNIT_Y, 1500, 1500, -750, "ground3", "node_ground3", "Examples/BumpyMetal");
+    plain3.set_origin(btVector3(btScalar(0), btScalar(-750), btScalar(0)));
+    plain3.set_bounding_box(btVector3(btScalar(1500), btScalar(0), btScalar(1500)));
+    plain3.create_bounding_box(simulator);
 
-    btScalar groundMass(0.0);
-    btVector3 localGroundInertia(0,0,0);
+    Plain plain4(mSceneMgr, Vector3::NEGATIVE_UNIT_X, Vector3::UNIT_Y, 1500, 1500, -750, "ground4", "node_ground4", "Examples/BumpyMetal");
+    plain4.set_origin(btVector3(btScalar(0), btScalar(-750), btScalar(0)));
+    plain4.set_bounding_box(btVector3(btScalar(1500), btScalar(0), btScalar(1500)));
+    plain4.create_bounding_box(simulator);
 
-    btCollisionShape* groundShape = new btBoxShape(btVector3(btScalar(50.0), btScalar(50.0), btScalar(50.0)));
-    btDefaultMotionState* groundMotionState = new btDefaultMotionState(groundTransform);
+    Plain plain5(mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 1500, 1500, -750, "ground5", "node_ground5", "Examples/BumpyMetal");
+    plain5.set_origin(btVector3(btScalar(0), btScalar(-750), btScalar(0)));
+    plain5.set_bounding_box(btVector3(btScalar(1500), btScalar(0), btScalar(1500)));
+    plain5.create_bounding_box(simulator);
 
-    groundShape->calculateLocalInertia(groundMass, localGroundInertia);
-    btRigidBody::btRigidBodyConstructionInfo groundRBInfo(groundMass, groundMotionState, groundShape, localGroundInertia);
-    btRigidBody* groundBody = new btRigidBody(groundRBInfo);
-    simulator->getDynamicsWorld()->addRigidBody(groundBody);
-    groundBody->setUserPointer(groundNode);
-    //create gameobject, add it to list
-
+    Plain plain6(mSceneMgr, Vector3::NEGATIVE_UNIT_Z, Vector3::UNIT_X, 1500, 1500, -750, "ground6", "node_ground6", "Examples/BumpyMetal");
+    plain6.set_origin(btVector3(btScalar(0), btScalar(-750), btScalar(0)));
+    plain6.set_bounding_box(btVector3(btScalar(1500), btScalar(0), btScalar(1500)));
+    plain6.create_bounding_box(simulator);
 
     Entity* entity = mSceneMgr->createEntity("box", "sphere.mesh");
     SceneNode* newNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("Cube");
