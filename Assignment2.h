@@ -12,7 +12,11 @@
 #include <OgreRenderOperation.h>
 #include <OgreAxisAlignedBox.h>
 
+#include <SDL/SDL_mixer.h>
+
 #include <Simulator.h>
+#include "Plain.h"
+#include "Sound.h"
 
 #include <iostream>
 #include <time.h>
@@ -117,6 +121,10 @@ public:
 
     // Added for Mac compatibility
     Ogre::String                 m_ResourcePath;
+    Sound track1;
+    Sound track2;
+
+
 
 #ifdef OGRE_STATIC_LIB
     Ogre::StaticPluginLoader m_StaticPluginLoader;

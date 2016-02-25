@@ -102,7 +102,7 @@ am_assignment2_OBJECTS = assignment2-Assignment2.$(OBJEXT) \
 	assignment2-OgreMotionState.$(OBJEXT) \
 	assignment2-Simulator.$(OBJEXT) \
 	assignment2-TutorialApplication.$(OBJEXT) \
-	assignment2-Plain.$(OBJEXT)
+	assignment2-Plain.$(OBJEXT) assignment2-Sound.$(OBJEXT)
 assignment2_OBJECTS = $(am_assignment2_OBJECTS)
 am__DEPENDENCIES_1 =
 assignment2_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
@@ -325,12 +325,12 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-noinst_HEADERS = Assignment2.h GameObject.h OgreMotionState.h Simulator.h TutorialApplication.h Plain.h
-assignment2_CPPFLAGS = -I$(top_srcdir)
-assignment2_SOURCES = Assignment2.cpp GameObject.cpp OgreMotionState.cpp Simulator.cpp TutorialApplication.cpp Plain.cpp
+noinst_HEADERS = Assignment2.h GameObject.h OgreMotionState.h Simulator.h TutorialApplication.h Plain.h Sound.h
+assignment2_CPPFLAGS = -I$(top_srcdir) -std=c++11 -I/usr/include/SDL
+assignment2_SOURCES = Assignment2.cpp GameObject.cpp OgreMotionState.cpp Simulator.cpp TutorialApplication.cpp Plain.cpp Sound.cpp
 assignment2_CXXFLAGS = $(OGRE_CFLAGS) $(OIS_CFLAGS) $(bullet_CFLAGS)
 assignment2_LDADD = $(OGRE_LIBS) $(OIS_LIBS) $(bullet_LIBS)
-assignment2_LDFLAGS = -lOgreOverlay -lboost_system
+assignment2_LDFLAGS = -lOgreOverlay -lboost_system -lSDL -lSDL_mixer
 EXTRA_DIST = buildit makeit
 AUTOMAKE_OPTIONS = foreign
 all: config.h
@@ -452,6 +452,7 @@ include ./$(DEPDIR)/assignment2-GameObject.Po
 include ./$(DEPDIR)/assignment2-OgreMotionState.Po
 include ./$(DEPDIR)/assignment2-Plain.Po
 include ./$(DEPDIR)/assignment2-Simulator.Po
+include ./$(DEPDIR)/assignment2-Sound.Po
 include ./$(DEPDIR)/assignment2-TutorialApplication.Po
 
 .cpp.o:
@@ -558,6 +559,20 @@ assignment2-Plain.obj: Plain.cpp
 #	$(AM_V_CXX)source='Plain.cpp' object='assignment2-Plain.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -c -o assignment2-Plain.obj `if test -f 'Plain.cpp'; then $(CYGPATH_W) 'Plain.cpp'; else $(CYGPATH_W) '$(srcdir)/Plain.cpp'; fi`
+
+assignment2-Sound.o: Sound.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -MT assignment2-Sound.o -MD -MP -MF $(DEPDIR)/assignment2-Sound.Tpo -c -o assignment2-Sound.o `test -f 'Sound.cpp' || echo '$(srcdir)/'`Sound.cpp
+	$(AM_V_at)$(am__mv) $(DEPDIR)/assignment2-Sound.Tpo $(DEPDIR)/assignment2-Sound.Po
+#	$(AM_V_CXX)source='Sound.cpp' object='assignment2-Sound.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -c -o assignment2-Sound.o `test -f 'Sound.cpp' || echo '$(srcdir)/'`Sound.cpp
+
+assignment2-Sound.obj: Sound.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -MT assignment2-Sound.obj -MD -MP -MF $(DEPDIR)/assignment2-Sound.Tpo -c -o assignment2-Sound.obj `if test -f 'Sound.cpp'; then $(CYGPATH_W) 'Sound.cpp'; else $(CYGPATH_W) '$(srcdir)/Sound.cpp'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/assignment2-Sound.Tpo $(DEPDIR)/assignment2-Sound.Po
+#	$(AM_V_CXX)source='Sound.cpp' object='assignment2-Sound.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -c -o assignment2-Sound.obj `if test -f 'Sound.cpp'; then $(CYGPATH_W) 'Sound.cpp'; else $(CYGPATH_W) '$(srcdir)/Sound.cpp'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo

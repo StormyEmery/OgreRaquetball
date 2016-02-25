@@ -16,7 +16,6 @@ http://www.ogre3d.org/wiki/
 */
 
 #include "TutorialApplication.h"
-#include "Plain.h"
 
 using namespace Ogre;
 
@@ -38,6 +37,7 @@ TutorialApplication::~TutorialApplication(void)
 //---------------------------------------------------------------------------
 void TutorialApplication::createScene(void)
 {
+
     simulator = new Simulator();
 
     mSceneMgr->setAmbientLight(ColourValue(0.25,0.25,0.25));
@@ -97,7 +97,6 @@ void TutorialApplication::createScene(void)
 
     simulator->getDynamicsWorld()->addRigidBody(body);
     // simulator->trackRigidBodyWithName(body, "Sphere");
-
    
     //ball
     srand(time(NULL));
@@ -123,6 +122,9 @@ void TutorialApplication::createScene(void)
     Light* light1 = mSceneMgr->createLight("ThirdLight");
     light1->setDiffuseColour(1,1,1);
     light1->setPosition(0,50,50);
+
+    //Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096);
+
 }
 
 void TutorialApplication::createCamera() {
@@ -144,7 +146,11 @@ void TutorialApplication::createViewports() {
 bool TutorialApplication::frameStarted(const FrameEvent& fe) {
     bool ret = Assignment2::frameRenderingQueued(fe);
 
-     if(simulator != NULL) {
+    //track1.play();
+    //track2.play();
+
+    track1.play(-1);
+    if(simulator != NULL) {
         simulator->getDynamicsWorld()->stepSimulation(1.0f/60.0f);
         btTransform trans;
         body->getMotionState()->getWorldTransform(trans);
