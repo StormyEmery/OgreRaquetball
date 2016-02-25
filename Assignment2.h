@@ -107,8 +107,10 @@ public:
     OgreBites::SdkTrayManager*  mTrayMgr;
     OgreBites::SdkCameraMan*    mCameraMan;         // Basic camera controller
     OgreBites::ParamsPanel*     mDetailsPanel;      // Sample details panel
+    OgreBites::Button*          mMenu;
     bool                        mCursorWasVisible;  // Was cursor visible before dialog appeared?
     bool                        mShutDown;
+    bool                        mPause;
 
     //OIS Input devices
     OIS::InputManager*          mInputManager;

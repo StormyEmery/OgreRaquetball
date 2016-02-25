@@ -143,7 +143,7 @@ void TutorialApplication::createViewports() {
 
 bool TutorialApplication::frameStarted(const FrameEvent& fe) {
     bool ret = Assignment2::frameRenderingQueued(fe);
-
+    if(!mPause){
      if(simulator != NULL) {
         simulator->getDynamicsWorld()->stepSimulation(1.0f/60.0f);
         btTransform trans;
@@ -157,6 +157,7 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
             sceneNode->setOrientation(Quaternion(orientation.getW(), orientation.getX(), orientation.getY(), orientation.getZ()));
         }
      }
+ }
 
     return ret;
 }

@@ -16,7 +16,9 @@ Assignment2::Assignment2(void) :
     mMouse(0),
     mKeyboard(0),
     mOverlaySystem(0),
-    mBaller(0)
+    mBaller(0),
+    mPause(false),
+    mMenu(0)
 {
 #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
     m_ResourcePath = Ogre::macBundlePath() + "/Contents/Resources/";
@@ -111,7 +113,7 @@ void Assignment2::createFrameListener(void)
     mInputContext.mMouse = mMouse;
     mTrayMgr = new OgreBites::SdkTrayManager("InterfaceName", mWindow, mInputContext, this);
     mTrayMgr->showFrameStats(OgreBites::TL_BOTTOMLEFT);
-    mTrayMgr->showLogo(OgreBites::TL_BOTTOMRIGHT);
+    //mTrayMgr->showLogo(OgreBites::TL_BOTTOMRIGHT);
     mTrayMgr->hideCursor();
 
     // Create a params panel for displaying sample details
@@ -127,13 +129,23 @@ void Assignment2::createFrameListener(void)
     items.push_back("");
     items.push_back("Filtering");
     items.push_back("Poly Mode");
+    items.push_back("Ball.pX");
+    items.push_back("Ball.pY");
+    items.push_back("Ball.pZ");
 
+    OgreBites::Button* menu1 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton", "Click Me!", 250);
+    OgreBites::Button* menu2 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton2", "Click Me!2", 50);
     mDetailsPanel = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "DetailsPanel", 200, items);
     mDetailsPanel->setParamValue(9, "Bilinear");
     mDetailsPanel->setParamValue(10, "Solid");
-    mDetailsPanel->hide();
-
+    mDetailsPanel->show();
     mRoot->addFrameListener(this);
+
+    menu1->show();
+    menu2->show();
+    mTrayMgr->setTrayPadding(12);
+    mTrayMgr->hideBackdrop();
+
 }
 //---------------------------------------------------------------------------
 void Assignment2::destroyScene(void)
@@ -278,6 +290,9 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
             mDetailsPanel->setParamValue(5, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().x));
             mDetailsPanel->setParamValue(6, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().y));
             mDetailsPanel->setParamValue(7, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().z));
+            mDetailsPanel->setParamValue(11, Ogre::StringConverter::toString(mSceneMgr->getSceneNode("Cube")->getPosition().x));
+            mDetailsPanel->setParamValue(12, Ogre::StringConverter::toString(mSceneMgr->getSceneNode("Cube")->getPosition().y));
+            mDetailsPanel->setParamValue(13, Ogre::StringConverter::toString(mSceneMgr->getSceneNode("Cube")->getPosition().z));
         }
     }
 
@@ -287,10 +302,18 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
 {
     //if (mTrayMgr->isDialogVisible()) return true;   // don't process any more keys if dialog is up
+    if (arg.key == OIS::KC_ESCAPE){
+        if(!mPause) {mPause=true;
+        }
+        else{mPause=false;}
+
+    }
 
     if (arg.key == OIS::KC_F)   // toggle visibility of advanced frame stats
     {
         mTrayMgr->toggleAdvancedFrameStats();
+
+        //-------------------
     }
     else if (arg.key == OIS::KC_G)   // toggle visibility of even rarer debugging details
     {
@@ -369,7 +392,7 @@ bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
     {
         mWindow->writeContentsToTimestampedFile("screenshot", ".jpg");
     }
-    else if (arg.key == OIS::KC_ESCAPE)
+    else if (arg.key == OIS::KC_F12)
     {
         mShutDown = true;
     }
