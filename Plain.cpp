@@ -31,6 +31,7 @@ void Plain::create_bounding_box(Simulator* simulator){
     groundShape->calculateLocalInertia(groundMass, localGroundInertia);
     btRigidBody::btRigidBodyConstructionInfo groundRBInfo(groundMass, groundMotionState, groundShape, localGroundInertia);
     btRigidBody* groundBody = new btRigidBody(groundRBInfo);
+    groundBody->setRestitution(1.0f);
     simulator->getDynamicsWorld()->addRigidBody(groundBody);
     groundBody->setUserPointer(groundNode);
 };

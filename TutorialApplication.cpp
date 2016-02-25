@@ -16,7 +16,6 @@ http://www.ogre3d.org/wiki/
 */
 
 #include "TutorialApplication.h"
-#include "Plain.h"
 
 using namespace Ogre;
 
@@ -28,7 +27,7 @@ const float speed = 250.0;
 TutorialApplication::TutorialApplication(void)
 {
     Simulator* simulator = NULL;
-    btRigidBody* body = NULL;
+    Ball* ball = NULL;
 }
 //---------------------------------------------------------------------------
 TutorialApplication::~TutorialApplication(void)
@@ -53,56 +52,38 @@ void TutorialApplication::createScene(void)
     plain2.create_bounding_box(simulator);
 
     Plain plain3(mSceneMgr, Vector3::UNIT_X, Vector3::UNIT_Y, 1500, 1500, -750, "ground3", "node_ground3", "Examples/BumpyMetal");
-    plain3.set_origin(btVector3(btScalar(0), btScalar(-750), btScalar(0)));
-    plain3.set_bounding_box(btVector3(btScalar(1500), btScalar(0), btScalar(1500)));
+    plain3.set_origin(btVector3(btScalar(-750), btScalar(0), btScalar(0)));
+    plain3.set_bounding_box(btVector3(btScalar(0), btScalar(1500), btScalar(1500)));
     plain3.create_bounding_box(simulator);
 
     Plain plain4(mSceneMgr, Vector3::NEGATIVE_UNIT_X, Vector3::UNIT_Y, 1500, 1500, -750, "ground4", "node_ground4", "Examples/BumpyMetal");
-    plain4.set_origin(btVector3(btScalar(0), btScalar(-750), btScalar(0)));
-    plain4.set_bounding_box(btVector3(btScalar(1500), btScalar(0), btScalar(1500)));
+    plain4.set_origin(btVector3(btScalar(750), btScalar(0), btScalar(0)));
+    plain4.set_bounding_box(btVector3(btScalar(0), btScalar(1500), btScalar(1500)));
     plain4.create_bounding_box(simulator);
 
     Plain plain5(mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 1500, 1500, -750, "ground5", "node_ground5", "Examples/BumpyMetal");
-    plain5.set_origin(btVector3(btScalar(0), btScalar(-750), btScalar(0)));
-    plain5.set_bounding_box(btVector3(btScalar(1500), btScalar(0), btScalar(1500)));
+    plain5.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(-750)));
+    plain5.set_bounding_box(btVector3(btScalar(1500), btScalar(1500), btScalar(0)));
     plain5.create_bounding_box(simulator);
 
     Plain plain6(mSceneMgr, Vector3::NEGATIVE_UNIT_Z, Vector3::UNIT_X, 1500, 1500, -750, "ground6", "node_ground6", "Examples/BumpyMetal");
-    plain6.set_origin(btVector3(btScalar(0), btScalar(-750), btScalar(0)));
-    plain6.set_bounding_box(btVector3(btScalar(1500), btScalar(0), btScalar(1500)));
+    plain6.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(750)));
+    plain6.set_bounding_box(btVector3(btScalar(1500), btScalar(1500), btScalar(0)));
     plain6.create_bounding_box(simulator);
 
-    Entity* entity = mSceneMgr->createEntity("box", "sphere.mesh");
-    SceneNode* newNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("Cube");
-    newNode->attachObject(entity);
-    btScalar r = 100.0f;
-    btCollisionShape *newRigidShape = new btSphereShape(r);
-    simulator->getCollisionShapes().push_back(newRigidShape);
+    ball = new Ball(mSceneMgr, "ball", "node_ball");
+    btVector3 origin = btVector3(btScalar(0), btScalar(500), btScalar(0));
+    btQuaternion rotation = btQuaternion(1.0f, 1.0f, 1.0f, 0);
+    ball->set_origin(origin, rotation);
+    ball->set_bounding_box(50.0f);
+    btVector3 inertia = btVector3(0.0f, 0.0f, 0.0f);
+    btScalar restitution = .95f;
+    ball->create_bounding_box(simulator, .2f, inertia, restitution);
 
-    btTransform startTransform;
-    startTransform.setIdentity();
-    startTransform.setRotation(btQuaternion(1.0f, 1.0f, 1.0f, 0));
-
-    btScalar mass = 0.1f;
-    btVector3 localInertia(0,0,0);
-
-    startTransform.setOrigin(btVector3(0,500,0));
-    newRigidShape->calculateLocalInertia(mass, localInertia);
-
-    btDefaultMotionState* ballMotionState = new btDefaultMotionState(startTransform);
-    btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, ballMotionState, newRigidShape, localInertia);
-    body = new btRigidBody(rbInfo);
-    body->setRestitution(1);
-    body->setUserPointer(newNode);
-
-    simulator->getDynamicsWorld()->addRigidBody(body);
-    // simulator->trackRigidBodyWithName(body, "Sphere");
-
+    ball->get_rigidbody()->applyCentralForce(btVector3(btScalar(2500.0f), btScalar(0.0f), btScalar(2500.0f)));
    
     //ball
     srand(time(NULL));
-
-
 
     Light* light = mSceneMgr->createLight("MainLight");
     light->setDiffuseColour(153, 0, 0);
@@ -147,9 +128,10 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
      if(simulator != NULL) {
         simulator->getDynamicsWorld()->stepSimulation(1.0f/60.0f);
         btTransform trans;
-        body->getMotionState()->getWorldTransform(trans);
-
-        void* userPointer = body->getUserPointer();
+        ball->get_rigidbody()->getMotionState()->getWorldTransform(trans);
+ 
+        // ball->get_rigidbody()->applyCentralForce(btVector3(btScalar(-25.0f), btScalar(25.0f), btScalar(0.0f)));
+        void* userPointer = ball->get_rigidbody()->getUserPointer();
         if(userPointer) {
             btQuaternion orientation = trans.getRotation();
             SceneNode* sceneNode = static_cast<SceneNode*>(userPointer);

@@ -932,7 +932,10 @@ assignment2-TutorialApplication.o: TutorialApplication.cpp \
  /lusr/opt/ogre-1.9/include/OGRE/OgreManualObject.h \
  /lusr/opt/ogre-1.9/include/OGRE/OgreRenderOperation.h \
  /lusr/opt/ogre-1.9/include/OGRE/OgreAxisAlignedBox.h Simulator.h \
- GameObject.h /usr/include/ois/OISEvents.h /usr/include/ois/OISPrereqs.h \
+ GameObject.h Plain.h /lusr/opt/ogre-1.9/include/OGRE/OgreMeshManager.h \
+ /lusr/opt/ogre-1.9/include/OGRE/OgrePatchMesh.h \
+ /lusr/opt/ogre-1.9/include/OGRE/OgrePatchSurface.h Ball.h \
+ /usr/include/ois/OISEvents.h /usr/include/ois/OISPrereqs.h \
  /usr/include/ois/OISConfig.h /usr/include/ois/OISInputManager.h \
  /usr/include/ois/OISKeyboard.h /usr/include/ois/OISObject.h \
  /usr/include/ois/OISInterface.h /usr/include/ois/OISEvents.h \
@@ -954,8 +957,6 @@ assignment2-TutorialApplication.o: TutorialApplication.cpp \
  /lusr/opt/ogre-1.9/include/OGRE/OgreInstancedEntity.h \
  /lusr/opt/ogre-1.9/include/OGRE/OgreManualObject.h \
  /lusr/opt/ogre-1.9/include/OGRE/OgreMeshManager.h \
- /lusr/opt/ogre-1.9/include/OGRE/OgrePatchMesh.h \
- /lusr/opt/ogre-1.9/include/OGRE/OgrePatchSurface.h \
  /lusr/opt/ogre-1.9/include/OGRE/OgreMeshSerializer.h \
  /lusr/opt/ogre-1.9/include/OGRE/OgreMeshSerializerImpl.h \
  /lusr/opt/ogre-1.9/include/OGRE/OgreEdgeListBuilder.h \
@@ -1031,8 +1032,7 @@ assignment2-TutorialApplication.o: TutorialApplication.cpp \
  /usr/include/ois/OISInputManager.h /usr/include/ois/OISFactoryCreator.h \
  /usr/include/ois/OISException.h /usr/include/ois/OISEffect.h \
  /usr/include/ois/OISForceFeedback.h \
- /lusr/opt/ogre-1.9/include/OGRE/SdkCameraMan.h Plain.h \
- /lusr/opt/ogre-1.9/include/OGRE/OgreMeshManager.h
+ /lusr/opt/ogre-1.9/include/OGRE/SdkCameraMan.h
 
 /usr/include/stdc-predef.h:
 
@@ -3084,6 +3084,16 @@ Simulator.h:
 
 GameObject.h:
 
+Plain.h:
+
+/lusr/opt/ogre-1.9/include/OGRE/OgreMeshManager.h:
+
+/lusr/opt/ogre-1.9/include/OGRE/OgrePatchMesh.h:
+
+/lusr/opt/ogre-1.9/include/OGRE/OgrePatchSurface.h:
+
+Ball.h:
+
 /usr/include/ois/OISEvents.h:
 
 /usr/include/ois/OISPrereqs.h:
@@ -3137,10 +3147,6 @@ GameObject.h:
 /lusr/opt/ogre-1.9/include/OGRE/OgreManualObject.h:
 
 /lusr/opt/ogre-1.9/include/OGRE/OgreMeshManager.h:
-
-/lusr/opt/ogre-1.9/include/OGRE/OgrePatchMesh.h:
-
-/lusr/opt/ogre-1.9/include/OGRE/OgrePatchSurface.h:
 
 /lusr/opt/ogre-1.9/include/OGRE/OgreMeshSerializer.h:
 
@@ -3303,7 +3309,3 @@ GameObject.h:
 /usr/include/ois/OISForceFeedback.h:
 
 /lusr/opt/ogre-1.9/include/OGRE/SdkCameraMan.h:
-
-Plain.h:
-
-/lusr/opt/ogre-1.9/include/OGRE/OgreMeshManager.h:

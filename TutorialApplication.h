@@ -29,7 +29,7 @@ public:
 
 protected:
   Simulator* simulator;
-  btRigidBody* body;
+  Ball* ball;
   btDefaultCollisionConfiguration* collisionConfiguration;
   btCollisionDispatcher* dispatcher;
   btBroadphaseInterface* overlappingPairCache;

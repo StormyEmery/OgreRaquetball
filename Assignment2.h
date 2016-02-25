@@ -13,6 +13,8 @@
 #include <OgreAxisAlignedBox.h>
 
 #include <Simulator.h>
+#include "Plain.h"
+#include "Ball.h"
 
 #include <iostream>
 #include <time.h>
