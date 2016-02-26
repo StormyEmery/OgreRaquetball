@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 aclocal.m4
 autom4te.cache
 *.m4
@@ -20,3 +21,7 @@ missing
 ogre.cfg
 Ogre.log
 stamp-hl
+=======
+*.m4
+*.cache
+>>>>>>> 936d2e619c20cffd3239bccf98987be28bd62d05

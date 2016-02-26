@@ -146,25 +146,29 @@ void TutorialApplication::createViewports() {
 bool TutorialApplication::frameStarted(const FrameEvent& fe) {
     bool ret = Assignment2::frameRenderingQueued(fe);
 
-    //track1.play();
-    //track2.play();
 
     track1.play(-1);
     if(simulator != NULL) {
-        simulator->getDynamicsWorld()->stepSimulation(1.0f/60.0f);
-        btTransform trans;
-        body->getMotionState()->getWorldTransform(trans);
 
-        void* userPointer = body->getUserPointer();
-        if(userPointer) {
-            btQuaternion orientation = trans.getRotation();
-            SceneNode* sceneNode = static_cast<SceneNode*>(userPointer);
-            sceneNode->setPosition(Vector3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));            // std::cout << "Position: " << sceneNode->getPosition() << "\n";
-            sceneNode->setOrientation(Quaternion(orientation.getW(), orientation.getX(), orientation.getY(), orientation.getZ()));
+    if(!mPause){
+        if(simulator != NULL) {
+    
+           simulator->getDynamicsWorld()->stepSimulation(1.0f/60.0f);
+           btTransform trans;
+           body->getMotionState()->getWorldTransform(trans);
+    
+           void* userPointer = body->getUserPointer();
+           if(userPointer) {
+               btQuaternion orientation = trans.getRotation();
+               SceneNode* sceneNode = static_cast<SceneNode*>(userPointer);
+               sceneNode->setPosition(Vector3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));            // std::cout << "Position: " << sceneNode->getPosition() << "\n";
+               sceneNode->setOrientation(Quaternion(orientation.getW(), orientation.getX(), orientation.getY(), orientation.getZ()));
+           }
         }
-     }
+    }
 
     return ret;
+}
 }
 
 bool TutorialApplication::processUnbufferedInput(const FrameEvent& fe) {
