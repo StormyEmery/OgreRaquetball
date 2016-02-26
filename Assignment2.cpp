@@ -17,8 +17,13 @@ Assignment2::Assignment2(void) :
     mKeyboard(0),
     mOverlaySystem(0),
     mBaller(0),
+
+    track1("music/track1.wav", 0),
+    track2("music/collision.wav", 1),
+
     mPause(false),
     mMenu(0)
+
 {
 #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
     m_ResourcePath = Ogre::macBundlePath() + "/Contents/Resources/";
@@ -302,6 +307,7 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
 {
     //if (mTrayMgr->isDialogVisible()) return true;   // don't process any more keys if dialog is up
+
     if (arg.key == OIS::KC_ESCAPE){
         if(!mPause) {mPause=true;
         }
@@ -309,6 +315,11 @@ bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
 
     }
 
+
+
+    if(arg.key == OIS::KC_Q){
+        track2.play(0);
+    }
     if (arg.key == OIS::KC_F)   // toggle visibility of advanced frame stats
     {
         mTrayMgr->toggleAdvancedFrameStats();

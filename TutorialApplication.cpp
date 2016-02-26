@@ -37,6 +37,7 @@ TutorialApplication::~TutorialApplication(void)
 //---------------------------------------------------------------------------
 void TutorialApplication::createScene(void)
 {
+
     simulator = new Simulator();
 
     mSceneMgr->setAmbientLight(ColourValue(0.25,0.25,0.25));
@@ -81,8 +82,7 @@ void TutorialApplication::createScene(void)
     ball->create_bounding_box(simulator, .2f, inertia, restitution);
 
     ball->get_rigidbody()->applyCentralForce(btVector3(btScalar(2500.0f), btScalar(0.0f), btScalar(2500.0f)));
-   
-    //ball
+
     srand(time(NULL));
 
     Light* light = mSceneMgr->createLight("MainLight");
@@ -104,6 +104,9 @@ void TutorialApplication::createScene(void)
     Light* light1 = mSceneMgr->createLight("ThirdLight");
     light1->setDiffuseColour(1,1,1);
     light1->setPosition(0,50,50);
+
+    //Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096);
+
 }
 
 void TutorialApplication::createCamera() {
@@ -124,25 +127,30 @@ void TutorialApplication::createViewports() {
 
 bool TutorialApplication::frameStarted(const FrameEvent& fe) {
     bool ret = Assignment2::frameRenderingQueued(fe);
-    if(!mPause){
-     if(simulator != NULL) {
-        simulator->getDynamicsWorld()->stepSimulation(1.0f/60.0f);
-        btTransform trans;
-        ball->get_rigidbody()->getMotionState()->getWorldTransform(trans);
- 
-        // ball->get_rigidbody()->applyCentralForce(btVector3(btScalar(-25.0f), btScalar(25.0f), btScalar(0.0f)));
-        void* userPointer = ball->get_rigidbody()->getUserPointer();
-        if(userPointer) {
-            btQuaternion orientation = trans.getRotation();
-            SceneNode* sceneNode = static_cast<SceneNode*>(userPointer);
-            sceneNode->setPosition(Vector3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));            // std::cout << "Position: " << sceneNode->getPosition() << "\n";
-            sceneNode->setOrientation(Quaternion(orientation.getW(), orientation.getX(), orientation.getY(), orientation.getZ()));
-        }
-     }
- }
 
-    return ret;
-}
+
+    track1.play(-1);
+    if(simulator != NULL) {
+        if(!mPause){
+         if(simulator != NULL) {
+            simulator->getDynamicsWorld()->stepSimulation(1.0f/60.0f);
+            btTransform trans;
+            ball->get_rigidbody()->getMotionState()->getWorldTransform(trans);
+     
+            // ball->get_rigidbody()->applyCentralForce(btVector3(btScalar(-25.0f), btScalar(25.0f), btScalar(0.0f)));
+            void* userPointer = ball->get_rigidbody()->getUserPointer();
+            if(userPointer) {
+                btQuaternion orientation = trans.getRotation();
+                SceneNode* sceneNode = static_cast<SceneNode*>(userPointer);
+                sceneNode->setPosition(Vector3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));            // std::cout << "Position: " << sceneNode->getPosition() << "\n";
+                sceneNode->setOrientation(Quaternion(orientation.getW(), orientation.getX(), orientation.getY(), orientation.getZ()));
+                }
+            }
+        }
+        
+        return ret;
+    }     
+}   
 
 bool TutorialApplication::processUnbufferedInput(const FrameEvent& fe) {
     static Real move = 5;

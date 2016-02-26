@@ -36,6 +36,11 @@ protected:
   btSequentialImpulseConstraintSolver* solver;
   btDiscreteDynamicsWorld* dynamicsWorld;
 
+  bool music_running;
+
+  Mix_Chunk* file;
+  Mix_Music* music;
+  
 
 
   virtual void createScene(void);
