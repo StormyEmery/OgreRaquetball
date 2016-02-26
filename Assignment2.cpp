@@ -290,9 +290,9 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
             mDetailsPanel->setParamValue(5, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().x));
             mDetailsPanel->setParamValue(6, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().y));
             mDetailsPanel->setParamValue(7, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().z));
-            mDetailsPanel->setParamValue(11, Ogre::StringConverter::toString(mSceneMgr->getSceneNode("Cube")->getPosition().x));
-            mDetailsPanel->setParamValue(12, Ogre::StringConverter::toString(mSceneMgr->getSceneNode("Cube")->getPosition().y));
-            mDetailsPanel->setParamValue(13, Ogre::StringConverter::toString(mSceneMgr->getSceneNode("Cube")->getPosition().z));
+            mDetailsPanel->setParamValue(11, Ogre::StringConverter::toString(mSceneMgr->getSceneNode("node_ball")->getPosition().x));
+            mDetailsPanel->setParamValue(12, Ogre::StringConverter::toString(mSceneMgr->getSceneNode("node_ball")->getPosition().y));
+            mDetailsPanel->setParamValue(13, Ogre::StringConverter::toString(mSceneMgr->getSceneNode("node_ball")->getPosition().z));
         }
     }
 
