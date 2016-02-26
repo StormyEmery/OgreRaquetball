@@ -72,16 +72,20 @@ void TutorialApplication::createScene(void)
     plain6.set_bounding_box(btVector3(btScalar(1500), btScalar(1500), btScalar(0)));
     plain6.create_bounding_box(simulator);
 
-    ball = new Ball(mSceneMgr, "ball", "node_ball");
-    btVector3 origin = btVector3(btScalar(0), btScalar(500), btScalar(0));
-    btQuaternion rotation = btQuaternion(1.0f, 1.0f, 1.0f, 0);
-    ball->set_origin(origin, rotation);
-    ball->set_bounding_box(50.0f);
-    btVector3 inertia = btVector3(0.0f, 0.0f, 0.0f);
-    btScalar restitution = .95f;
-    ball->create_bounding_box(simulator, .2f, inertia, restitution);
+        printf("Sempai was here \n");
 
-    ball->get_rigidbody()->applyCentralForce(btVector3(btScalar(2500.0f), btScalar(0.0f), btScalar(2500.0f)));
+    ball = new Ball(mSceneMgr, "ball", "node_ball");
+    ball->reset(mSceneMgr, ball, simulator);
+
+    // btVector3 origin = btVector3(btScalar(0), btScalar(500), btScalar(0));
+    // btQuaternion rotation = btQuaternion(1.0f, 1.0f, 1.0f, 0);
+    // ball->set_origin(origin, rotation);
+    // ball->set_bounding_box(50.0f);
+    // btVector3 inertia = btVector3(0.0f, 0.0f, 0.0f);
+    // btScalar restitution = .95f;
+    // ball->create_bounding_box(simulator, .2f, inertia, restitution);
+
+    // ball->get_rigidbody()->applyCentralForce(btVector3(btScalar(2500.0f), btScalar(0.0f), btScalar(2500.0f)));
 
     srand(time(NULL));
 
@@ -131,6 +135,9 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
 
     track1.play(-1);
     if(simulator != NULL) {
+        if(oneFrame) {
+            mPause = false; 
+        }
         if(!mPause){
          if(simulator != NULL) {
             simulator->getDynamicsWorld()->stepSimulation(1.0f/60.0f);
@@ -147,7 +154,10 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                 }
             }
         }
-        
+        if(oneFrame) {
+            mPause = true;
+            oneFrame = false;
+        }
         return ret;
     }     
 }   
@@ -155,6 +165,14 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
 bool TutorialApplication::processUnbufferedInput(const FrameEvent& fe) {
     static Real move = 5;
     return true;
+}
+
+Ball* TutorialApplication::getBall(){
+    return ball;
+}
+
+Simulator* TutorialApplication::getSimulator() {
+    return simulator;
 }
 
 //---------------------------------------------------------------------------

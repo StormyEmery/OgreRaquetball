@@ -24,6 +24,7 @@ public:
 	void set_origin(btVector3 origin, btQuaternion rotation);
 	void set_bounding_box(btScalar radius);
 	void create_bounding_box(Simulator* simulator, btScalar mass, btVector3 inertia, btScalar restitution);
+	void reset(SceneManager* mSceneMgr, Ball* ball, Simulator* simulator);
 
 	btRigidBody* get_rigidbody();
 

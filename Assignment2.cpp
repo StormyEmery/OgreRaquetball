@@ -22,7 +22,9 @@ Assignment2::Assignment2(void) :
     track2("music/collision.wav", 1),
 
     mPause(false),
-    mMenu(0)
+    mMenu(0),
+    mScore(0),
+    oneFrame(false)
 
 {
 #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
@@ -123,31 +125,23 @@ void Assignment2::createFrameListener(void)
 
     // Create a params panel for displaying sample details
     Ogre::StringVector items;
-    items.push_back("cam.pX");
-    items.push_back("cam.pY");
-    items.push_back("cam.pZ");
+    items.push_back("TestScore:");
     items.push_back("");
-    items.push_back("cam.oW");
-    items.push_back("cam.oX");
-    items.push_back("cam.oY");
-    items.push_back("cam.oZ");
-    items.push_back("");
-    items.push_back("Filtering");
-    items.push_back("Poly Mode");
     items.push_back("Ball.pX");
     items.push_back("Ball.pY");
     items.push_back("Ball.pZ");
 
-    OgreBites::Button* menu1 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton", "Click Me!", 250);
-    OgreBites::Button* menu2 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton2", "Click Me!2", 50);
+    menu1 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton1", "Increase Score", 250);
+    menu2 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton2", "Exit", 50);
     mDetailsPanel = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "DetailsPanel", 200, items);
-    mDetailsPanel->setParamValue(9, "Bilinear");
-    mDetailsPanel->setParamValue(10, "Solid");
+    mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(mScore));
     mDetailsPanel->show();
     mRoot->addFrameListener(this);
 
-    menu1->show();
-    menu2->show();
+    menu1->hide();
+    menu2->hide();
+    mTrayMgr->removeWidgetFromTray(menu1);
+    mTrayMgr->removeWidgetFromTray(menu2);
     mTrayMgr->setTrayPadding(12);
     mTrayMgr->hideBackdrop();
 
@@ -288,16 +282,10 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
         mCameraMan->frameRenderingQueued(evt);   // If dialog isn't up, then update the camera
         if (mDetailsPanel->isVisible())          // If details panel is visible, then update its contents
         {
-            mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(mCamera->getDerivedPosition().x));
-            mDetailsPanel->setParamValue(1, Ogre::StringConverter::toString(mCamera->getDerivedPosition().y));
-            mDetailsPanel->setParamValue(2, Ogre::StringConverter::toString(mCamera->getDerivedPosition().z));
-            mDetailsPanel->setParamValue(4, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().w));
-            mDetailsPanel->setParamValue(5, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().x));
-            mDetailsPanel->setParamValue(6, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().y));
-            mDetailsPanel->setParamValue(7, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().z));
-            mDetailsPanel->setParamValue(11, Ogre::StringConverter::toString(mSceneMgr->getSceneNode("node_ball")->getPosition().x));
-            mDetailsPanel->setParamValue(12, Ogre::StringConverter::toString(mSceneMgr->getSceneNode("node_ball")->getPosition().y));
-            mDetailsPanel->setParamValue(13, Ogre::StringConverter::toString(mSceneMgr->getSceneNode("node_ball")->getPosition().z));
+
+            mDetailsPanel->setParamValue(2, Ogre::StringConverter::toString(mSceneMgr->getSceneNode("node_ball")->getPosition().x));
+            mDetailsPanel->setParamValue(3, Ogre::StringConverter::toString(mSceneMgr->getSceneNode("node_ball")->getPosition().y));
+            mDetailsPanel->setParamValue(4, Ogre::StringConverter::toString(mSceneMgr->getSceneNode("node_ball")->getPosition().z));
         }
     }
 
@@ -309,9 +297,23 @@ bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
     //if (mTrayMgr->isDialogVisible()) return true;   // don't process any more keys if dialog is up
 
     if (arg.key == OIS::KC_ESCAPE){
-        if(!mPause) {mPause=true;
+        if(!mPause) {
+            mTrayMgr->showCursor();
+            mPause=true;
+            menu1->show();
+            menu2->show();
+            mTrayMgr->moveWidgetToTray(menu2, OgreBites::TL_CENTER, 0);
+            mTrayMgr->moveWidgetToTray(menu1, OgreBites::TL_CENTER, 0);
         }
-        else{mPause=false;}
+        else{
+            mTrayMgr->hideCursor();
+            mPause=false;
+            mTrayMgr->removeWidgetFromTray(menu1);
+            mTrayMgr->removeWidgetFromTray(menu2);
+            menu1->hide();
+            menu2->hide();
+            
+        }
 
     }
 
@@ -407,35 +409,41 @@ bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
     {
         mShutDown = true;
     }
-
+    if(mPause) return false;
     mCameraMan->injectKeyDown(arg);
     return true;
 }
 //---------------------------------------------------------------------------
 bool Assignment2::keyReleased(const OIS::KeyEvent &arg)
 {
+    if(mPause) return false;
     mCameraMan->injectKeyUp(arg);
     return true;
 }
 //---------------------------------------------------------------------------
 bool Assignment2::mouseMoved(const OIS::MouseEvent &arg)
 {
+   
     if (mTrayMgr->injectMouseMove(arg)) return true;
-    mCameraMan->injectMouseMove(arg);
+    if(!mPause)
+        mCameraMan->injectMouseMove(arg);
     return true;
 }
 //---------------------------------------------------------------------------
 bool Assignment2::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
+ 
     if (mTrayMgr->injectMouseDown(arg, id)) return true;
-    mCameraMan->injectMouseDown(arg, id);
+    if(!mPause)
+        mCameraMan->injectMouseDown(arg, id);
     return true;
 }
 //---------------------------------------------------------------------------
 bool Assignment2::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
     if (mTrayMgr->injectMouseUp(arg, id)) return true;
-    mCameraMan->injectMouseUp(arg, id);
+    if(!mPause)
+        mCameraMan->injectMouseUp(arg, id);
     return true;
 }
 //---------------------------------------------------------------------------
@@ -467,5 +475,19 @@ void Assignment2::windowClosed(Ogre::RenderWindow* rw)
         }
     }
 }
+
+void Assignment2::buttonHit(OgreBites::Button * button) {
+    if(button->getName() == "MyButton1") {
+        mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(++mScore));
+        getBall()->reset(mSceneMgr, getBall(), getSimulator());
+        oneFrame=true;
+    }
+    else if(button->getName()=="MyButton2"){
+        mShutDown = true;
+    }
+}
+
+
+
 //---------------------------------------------------------------------------
 

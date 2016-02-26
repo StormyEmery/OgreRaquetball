@@ -47,6 +47,8 @@ protected:
   virtual void createCamera();
   virtual void createViewports();
   virtual bool frameStarted(const Ogre::FrameEvent& fe);
+  virtual Ball* getBall();
+  virtual Simulator* getSimulator();
 
 private:
 	bool processUnbufferedInput(const Ogre::FrameEvent& fe);

@@ -95,6 +95,11 @@ public:
     // Unattach OIS before window shutdown (very important under Linux)
     virtual void windowClosed(Ogre::RenderWindow* rw);
 
+    virtual void buttonHit(OgreBites::Button * button);
+
+    virtual Ball* getBall()=0;
+    virtual Simulator* getSimulator()=0;
+
     Ogre::Root*                 mRoot;
     Ogre::Camera*               mCamera;
     Ogre::SceneManager*         mSceneMgr;
@@ -116,6 +121,7 @@ public:
     bool                        mCursorWasVisible;  // Was cursor visible before dialog appeared?
     bool                        mShutDown;
     bool                        mPause;
+    bool                        oneFrame;
 
     //OIS Input devices
     OIS::InputManager*          mInputManager;
@@ -126,6 +132,11 @@ public:
     Ogre::String                 m_ResourcePath;
     Sound track1;
     Sound track2;
+    OgreBites::Button* menu1;
+    OgreBites::Button* menu2;
+    int mScore;
+
+
 
 
 
