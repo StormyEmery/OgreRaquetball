@@ -39,7 +39,7 @@ void Ball::reset(SceneManager* mSceneMgr, Ball* ball, Simulator* simulator) {
     btVector3 inertia = btVector3(0.0f, 0.0f, 0.0f);
     btScalar restitution = .95f;
     ball->create_bounding_box(simulator, .2f, inertia, restitution);
-    ball->get_rigidbody()->applyCentralForce(btVector3(btScalar(2500.0f), btScalar(0.0f), btScalar(2500.0f)));
+    ball->get_rigidbody()->applyCentralForce(btVector3(btScalar(rand()%5000 - 2500), btScalar(rand()%5000 - 2500), btScalar(rand()%5000 - 2500)));
 }
 
 btRigidBody* Ball::get_rigidbody() {

@@ -131,7 +131,7 @@ void Assignment2::createFrameListener(void)
     items.push_back("Ball.pY");
     items.push_back("Ball.pZ");
 
-    menu1 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton1", "Increase Score", 250);
+    menu1 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton1", "Reset Ball", 250);
     menu2 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton2", "Exit", 50);
     mDetailsPanel = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "DetailsPanel", 200, items);
     mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(mScore));
@@ -341,66 +341,66 @@ bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
             mDetailsPanel->hide();
         }
     }
-    else if (arg.key == OIS::KC_T)   // cycle polygon rendering mode
-    {
-        Ogre::String newVal;
-        Ogre::TextureFilterOptions tfo;
-        unsigned int aniso;
+    // else if (arg.key == OIS::KC_T)   // cycle polygon rendering mode
+    // {
+    //     Ogre::String newVal;
+    //     Ogre::TextureFilterOptions tfo;
+    //     unsigned int aniso;
 
-        switch (mDetailsPanel->getParamValue(9).asUTF8()[0])
-        {
-        case 'B':
-            newVal = "Trilinear";
-            tfo = Ogre::TFO_TRILINEAR;
-            aniso = 1;
-            break;
-        case 'T':
-            newVal = "Anisotropic";
-            tfo = Ogre::TFO_ANISOTROPIC;
-            aniso = 8;
-            break;
-        case 'A':
-            newVal = "None";
-            tfo = Ogre::TFO_NONE;
-            aniso = 1;
-            break;
-        default:
-            newVal = "Bilinear";
-            tfo = Ogre::TFO_BILINEAR;
-            aniso = 1;
-        }
+    //     switch (mDetailsPanel->getParamValue(9).asUTF8()[0])
+    //     {
+    //     case 'B':
+    //         newVal = "Trilinear";
+    //         tfo = Ogre::TFO_TRILINEAR;
+    //         aniso = 1;
+    //         break;
+    //     case 'T':
+    //         newVal = "Anisotropic";
+    //         tfo = Ogre::TFO_ANISOTROPIC;
+    //         aniso = 8;
+    //         break;
+    //     case 'A':
+    //         newVal = "None";
+    //         tfo = Ogre::TFO_NONE;
+    //         aniso = 1;
+    //         break;
+    //     default:
+    //         newVal = "Bilinear";
+    //         tfo = Ogre::TFO_BILINEAR;
+    //         aniso = 1;
+    //     }
 
-        Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(tfo);
-        Ogre::MaterialManager::getSingleton().setDefaultAnisotropy(aniso);
-        mDetailsPanel->setParamValue(9, newVal);
-    }
-    else if (arg.key == OIS::KC_R)   // cycle polygon rendering mode
-    {
-        Ogre::String newVal;
-        Ogre::PolygonMode pm;
+    //     Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(tfo);
+    //     Ogre::MaterialManager::getSingleton().setDefaultAnisotropy(aniso);
+    //     mDetailsPanel->setParamValue(9, newVal);
+    // }
+    // else if (arg.key == OIS::KC_R)   // cycle polygon rendering mode
+    // {
+    //     Ogre::String newVal;
+    //     Ogre::PolygonMode pm;
 
-        switch (mCamera->getPolygonMode())
-        {
-        case Ogre::PM_SOLID:
-            newVal = "Wireframe";
-            pm = Ogre::PM_WIREFRAME;
-            break;
-        case Ogre::PM_WIREFRAME:
-            newVal = "Points";
-            pm = Ogre::PM_POINTS;
-            break;
-        default:
-            newVal = "Solid";
-            pm = Ogre::PM_SOLID;
-        }
+    //     switch (mCamera->getPolygonMode())
+    //     {
+    //     case Ogre::PM_SOLID:
+    //         newVal = "Wireframe";
+    //         pm = Ogre::PM_WIREFRAME;
+    //         break;
+    //     case Ogre::PM_WIREFRAME:
+    //         newVal = "Points";
+    //         pm = Ogre::PM_POINTS;
+    //         break;
+    //     default:
+    //         newVal = "Solid";
+    //         pm = Ogre::PM_SOLID;
+    //     }
 
-        mCamera->setPolygonMode(pm);
-        mDetailsPanel->setParamValue(10, newVal);
-    }
-    else if(arg.key == OIS::KC_F5)   // refresh all textures
-    {
-        Ogre::TextureManager::getSingleton().reloadAll();
-    }
+    //     mCamera->setPolygonMode(pm);
+    //     mDetailsPanel->setParamValue(10, newVal);
+    // }
+    // else if(arg.key == OIS::KC_F5)   // refresh all textures
+    // {
+    //     Ogre::TextureManager::getSingleton().reloadAll();
+    // }
     else if (arg.key == OIS::KC_SYSRQ)   // take a screenshot
     {
         mWindow->writeContentsToTimestampedFile("screenshot", ".jpg");
