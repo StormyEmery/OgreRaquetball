@@ -14,6 +14,7 @@ protected:
 public:
 	btTransform ballTransform;
 	btCollisionShape* ballShape;
+	btCollisionObject* ballObject;
 	SceneNode* ballNode;
 	Entity* entBall;
 	btRigidBody* ballRB;

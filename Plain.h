@@ -16,6 +16,7 @@ protected:
 public:
 	btTransform groundTransform;
 	btCollisionShape* groundShape;
+	btCollisionObject* groundObject;
 	SceneNode* groundNode;
 	Entity* entGround;
 

@@ -16,8 +16,12 @@ btDiscreteDynamicsWorld* Simulator::getDynamicsWorld() {
 	return dynamicsWorld;
 }
 
-btAlignedObjectArray<btCollisionShape*> Simulator::getCollisionShapes() {
-	return collisionShapes;
+btAlignedObjectArray<btCollisionShape*>* Simulator::getCollisionShapes() {
+	return &collisionShapes;
+}
+
+btCollisionDispatcher* Simulator::getDispatcher() {
+	return dispatcher;
 }
 
 void Simulator::addObject(GameObject* o) {

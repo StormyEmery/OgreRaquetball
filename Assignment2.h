@@ -99,6 +99,7 @@ public:
 
     virtual Ball* getBall()=0;
     virtual Simulator* getSimulator()=0;
+    virtual int getScore()=0;
 
     Ogre::Root*                 mRoot;
     Ogre::Camera*               mCamera;

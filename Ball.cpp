@@ -18,8 +18,14 @@ void Ball::set_bounding_box(btScalar radius) {
 }
 
 void Ball::create_bounding_box(Simulator* simulator, btScalar mass, btVector3 inertia, btScalar restitution) {
-	simulator->getCollisionShapes().push_back(ballShape);
+	simulator->getCollisionShapes()->push_back(ballShape);
 	ballShape->calculateLocalInertia(mass, inertia);
+	ballShape->setUserPointer(ballNode);
+	ballObject = new btCollisionObject();
+    ballObject->setCollisionShape(ballShape);
+    ballObject->setWorldTransform(ballTransform);
+    // ballObject->forceActivationState(DISABLE_DEACTIVATION);
+    simulator->getDynamicsWorld()->addCollisionObject(ballObject);
 
 	btDefaultMotionState* ballMotionState = new btDefaultMotionState(ballTransform);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, ballMotionState, ballShape, inertia);
@@ -39,7 +45,10 @@ void Ball::reset(SceneManager* mSceneMgr, Ball* ball, Simulator* simulator) {
     btVector3 inertia = btVector3(0.0f, 0.0f, 0.0f);
     btScalar restitution = .95f;
     ball->create_bounding_box(simulator, .2f, inertia, restitution);
-    ball->get_rigidbody()->applyCentralForce(btVector3(btScalar(rand()%5000 - 2500), btScalar(rand()%5000 - 2500), btScalar(rand()%5000 - 2500)));
+
+    //will need to change this later
+    // ball->get_rigidbody()->applyCentralForce(btVector3(btScalar(rand()%5000 - 2500), btScalar(rand()%5000 - 2500), btScalar(rand()%5000 - 2500)));
+    ball->get_rigidbody()->applyCentralForce(btVector3(btScalar(0), btScalar(0), btScalar(-1000)));
 }
 
 btRigidBody* Ball::get_rigidbody() {

@@ -36,7 +36,10 @@ protected:
   btSequentialImpulseConstraintSolver* solver;
   btDiscreteDynamicsWorld* dynamicsWorld;
 
+  int score;
+
   bool music_running;
+  bool already_detected;
 
   Mix_Chunk* file;
   Mix_Music* music;
@@ -49,9 +52,11 @@ protected:
   virtual bool frameStarted(const Ogre::FrameEvent& fe);
   virtual Ball* getBall();
   virtual Simulator* getSimulator();
+  virtual int getScore();
 
 private:
 	bool processUnbufferedInput(const Ogre::FrameEvent& fe);
+  String getName(const btCollisionObject* collObj);
   void checkBoundary();
 };
 

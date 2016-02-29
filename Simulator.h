@@ -25,7 +25,8 @@ public:
 	//void stepSimulation(const Ogre::Real elapsedTime,
 	//					int maxSubSteps = 1, const Ogre::Real fixedTimestep = 1.0f/60.0f);
 	btDiscreteDynamicsWorld* getDynamicsWorld(void);
-	btAlignedObjectArray<btCollisionShape*> getCollisionShapes(void);
+	btAlignedObjectArray<btCollisionShape*>* getCollisionShapes(void);
+	btCollisionDispatcher* getDispatcher();
 };
 
 #endif

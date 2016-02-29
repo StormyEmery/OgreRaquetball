@@ -93,6 +93,7 @@ void Assignment2::createCamera(void)
 //---------------------------------------------------------------------------
 void Assignment2::createFrameListener(void)
 {
+    std::cout << "HELLO\n";
     Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing OIS ***");
     OIS::ParamList pl;
     size_t windowHnd = 0;
@@ -134,7 +135,7 @@ void Assignment2::createFrameListener(void)
     menu1 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton1", "Reset Ball", 250);
     menu2 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton2", "Exit", 50);
     mDetailsPanel = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "DetailsPanel", 200, items);
-    mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(mScore));
+    mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(getScore()));
     mDetailsPanel->show();
     mRoot->addFrameListener(this);
 
@@ -282,7 +283,7 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
         mCameraMan->frameRenderingQueued(evt);   // If dialog isn't up, then update the camera
         if (mDetailsPanel->isVisible())          // If details panel is visible, then update its contents
         {
-
+            mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(getScore()));
             mDetailsPanel->setParamValue(2, Ogre::StringConverter::toString(mSceneMgr->getSceneNode("node_ball")->getPosition().x));
             mDetailsPanel->setParamValue(3, Ogre::StringConverter::toString(mSceneMgr->getSceneNode("node_ball")->getPosition().y));
             mDetailsPanel->setParamValue(4, Ogre::StringConverter::toString(mSceneMgr->getSceneNode("node_ball")->getPosition().z));
@@ -478,7 +479,7 @@ void Assignment2::windowClosed(Ogre::RenderWindow* rw)
 
 void Assignment2::buttonHit(OgreBites::Button * button) {
     if(button->getName() == "MyButton1") {
-        mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(++mScore));
+        // mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(++mScore));
         getBall()->reset(mSceneMgr, getBall(), getSimulator());
         oneFrame=true;
     }
