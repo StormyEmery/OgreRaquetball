@@ -16,7 +16,7 @@ http://www.ogre3d.org/wiki/
 */
 
 #include "TutorialApplication.h"
-#include "Paddle.h"
+
 
 using namespace Ogre;
 
@@ -27,7 +27,7 @@ const float speed = 250.0;
 //---------------------------------------------------------------------------
 TutorialApplication::TutorialApplication(void)
 {
-    Simulator* simulator = NULL;
+    
     Ball* ball = NULL;
     already_detected = false;
     score = 0;
@@ -46,38 +46,38 @@ void TutorialApplication::createScene(void)
 
     mSceneMgr->setAmbientLight(ColourValue(0.25,0.25,0.25));
 
-    Plain plain1(mSceneMgr, Vector3::UNIT_Y, Vector3::UNIT_Z, 1500, 2000, -750, "ground1", "node_ground1", "Examples/BumpyMetal");
-    plain1.set_origin(btVector3(btScalar(0), btScalar(-750), btScalar(0)));
-    plain1.set_bounding_box(btVector3(btScalar(1500), btScalar(0), btScalar(2000)));
+    Plain plain1(mSceneMgr, Vector3::UNIT_Y, Vector3::UNIT_Z, 1500, 3000, -500, "ground1", "node_ground1", "Examples/BumpyMetal");
+    plain1.set_origin(btVector3(btScalar(0), btScalar(-500), btScalar(0)));
+    plain1.set_bounding_box(btVector3(btScalar(1500), btScalar(0), btScalar(3000)));
     plain1.create_bounding_box(simulator);
 
-    Plain plain2(mSceneMgr, Vector3::NEGATIVE_UNIT_Y, Vector3::UNIT_Z, 1500, 2000, -750, "ground2", "node_ground2", "Examples/BumpyMetal");
-    plain2.set_origin(btVector3(btScalar(0), btScalar(750), btScalar(0)));
-    plain2.set_bounding_box(btVector3(btScalar(1500), btScalar(0), btScalar(2000)));
+    Plain plain2(mSceneMgr, Vector3::NEGATIVE_UNIT_Y, Vector3::UNIT_Z, 1500, 3000, -500, "ground2", "node_ground2", "Examples/BumpyMetal");
+    plain2.set_origin(btVector3(btScalar(0), btScalar(500), btScalar(0)));
+    plain2.set_bounding_box(btVector3(btScalar(1500), btScalar(0), btScalar(3000)));
     plain2.create_bounding_box(simulator);
 
-    Plain plain3(mSceneMgr, Vector3::UNIT_X, Vector3::UNIT_Y, 2000, 1500, -750, "ground3", "node_ground3", "Examples/BumpyMetal");
+    Plain plain3(mSceneMgr, Vector3::UNIT_X, Vector3::UNIT_Y, 3000, 1000, -750, "ground3", "node_ground3", "Examples/BumpyMetal");
     plain3.set_origin(btVector3(btScalar(-750), btScalar(0), btScalar(0)));
-    plain3.set_bounding_box(btVector3(btScalar(0), btScalar(1500), btScalar(2000)));
+    plain3.set_bounding_box(btVector3(btScalar(0), btScalar(1000), btScalar(3000)));
     plain3.create_bounding_box(simulator);
 
-    Plain plain4(mSceneMgr, Vector3::NEGATIVE_UNIT_X, Vector3::UNIT_Y, 2000, 1500, -750, "ground4", "node_ground4", "Examples/BumpyMetal");
+    Plain plain4(mSceneMgr, Vector3::NEGATIVE_UNIT_X, Vector3::UNIT_Y, 3000, 1000, -750, "ground4", "node_ground4", "Examples/BumpyMetal");
     plain4.set_origin(btVector3(btScalar(750), btScalar(0), btScalar(0)));
-    plain4.set_bounding_box(btVector3(btScalar(0), btScalar(1500), btScalar(2000)));
+    plain4.set_bounding_box(btVector3(btScalar(0), btScalar(1000), btScalar(3000)));
     plain4.create_bounding_box(simulator);
 
-    Plain plain5(mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 1500, 1500, -1000, "ground5", "node_ground5", "Examples/BumpyMetal");
-    plain5.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(-1000)));
-    plain5.set_bounding_box(btVector3(btScalar(1500), btScalar(1500), btScalar(0)));
+    Plain plain5(mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 1000, 1500, -1500, "ground5", "node_ground5", "Examples/BumpyMetal");
+    plain5.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(-1500)));
+    plain5.set_bounding_box(btVector3(btScalar(1000), btScalar(1500), btScalar(0)));
     plain5.create_bounding_box(simulator);
 
-    Plain plain6(mSceneMgr, Vector3::NEGATIVE_UNIT_Z, Vector3::UNIT_X, 1500, 1500, -1000, "ground6", "node_ground6", "Examples/BumpyMetal");
-    plain6.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(1000)));
-    plain6.set_bounding_box(btVector3(btScalar(1500), btScalar(1500), btScalar(0)));
+    Plain plain6(mSceneMgr, Vector3::NEGATIVE_UNIT_Z, Vector3::UNIT_X, 1000, 1500, -1500, "ground6", "node_ground6", "Examples/BumpyMetal");
+    plain6.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(1500)));
+    plain6.set_bounding_box(btVector3(btScalar(1000), btScalar(1500), btScalar(0)));
     plain6.create_bounding_box(simulator);
     plain6.groundNode->showBoundingBox(true);
 
-    Plain goal(mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 562.5, 750, -950, "goal", "node_goal", "Examples/CloudySky");
+    Plain goal(mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 400, 750, -1450, "goal", "node_goal", "Examples/Chrome");
     goal.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(-950)));
     goal.set_bounding_box(btVector3(btScalar(750), btScalar(562.5), btScalar(0)));
     goal.create_bounding_box(simulator);
@@ -98,9 +98,10 @@ void TutorialApplication::createScene(void)
     // PadNode->attachObject(PaddleCube);
     // PadNode->attachObject(mCamera);
 
-    ball = new Ball(mSceneMgr, "ball", "node_ball");
-    ball->reset(mSceneMgr, ball, simulator);
-    ball->ballNode->showBoundingBox(true);
+    Ball* b = new Ball(mSceneMgr, "node_ball");
+    b->reset(mSceneMgr, b, simulator);
+    b->ballNode->showBoundingBox(true);
+    setBall(b);
 
     srand(time(NULL));
 
@@ -144,42 +145,77 @@ void TutorialApplication::createViewports() {
 
 bool TutorialApplication::frameStarted(const FrameEvent& fe) {
     bool ret = Assignment2::frameRenderingQueued(fe);
+
+
     // cout << "Already Detected: " << already_detected << "\n";
 
     //game_music.play(-1);
+    duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+    if(duration > 1){
+        score_ok = true;    
+    }
+    //std::cout << score_ok << std::endl;
+    //std::cout << duration << std::endl;
+
     if(simulator != NULL) {
         if(oneFrame) {
             mPause = false; 
         }
-
         if(!mPause){
              if(simulator != NULL) {
                // simulator->getDynamicsWorld()->performDiscreteCollisionDetection();
                 simulator->getDynamicsWorld()->stepSimulation(1.0f/60.0f);
+                int numManifolds = simulator->getDispatcher()->getNumManifolds();
+                for(int i = 0; i < numManifolds; i++) {
+                    btPersistentManifold* contactManifold = simulator->getDispatcher()->getManifoldByIndexInternal(i);
+                    const btCollisionObject* obOne = contactManifold->getBody0();
+                    const btCollisionObject* obTwo = contactManifold->getBody1();
 
-                if(!already_detected) {
-                    int numManifolds = simulator->getDispatcher()->getNumManifolds();
-                    for(int i = 0; i < numManifolds; i++) {
-                        btPersistentManifold* contactManifold = simulator->getDispatcher()->getManifoldByIndexInternal(i);
-                        const btCollisionObject* obOne = contactManifold->getBody0();
-                        const btCollisionObject* obTwo = contactManifold->getBody1();
+                    const String obOneName = getName(obOne);
+                    const String obTwoName = getName(obTwo);
 
-                        const String obOneName = getName(obOne);
-                        const String obTwoName = getName(obTwo);
+                    // std::cout << "Object One: " << obOneName << "\n";
+                    // std::cout << "Object Two: " << obTwoName << "\n";
+                    //asadasdasd
 
-                        if(obOneName == "node_goal" && obTwoName == "node_ball" && !already_detected) {
+
+
+                    // if(obOneName == "node_ground1" && obTwoName == "node_ball" && !already_detected) {
+                    //     Real current_y = static_cast<SceneNode*>(obTwo->getCollisionShape()->getUserPointer())->getPosition().y;
+                    //     std::cout << current_y << " : " << y << std::endl;
+                    //     if(current_y != y){
+                    //         wall_collision_sound.play(0); 
+                    //     }
+
+                    //     y = static_cast<SceneNode*>(obTwo->getCollisionShape()->getUserPointer())->getPosition().y;
+
+                    //     break; 
+                    // }
+                    // if(obOneName == "node_ground2" && obTwoName == "node_ball" && !already_detected) { wall_collision_sound.play(0); break; }
+                    // if(obOneName == "node_ground3" && obTwoName == "node_ball" && !already_detected) { wall_collision_sound.play(0); break; }
+                    // if(obOneName == "node_ground4" && obTwoName == "node_ball" && !already_detected) { wall_collision_sound.play(0); break; }
+                    // if(obOneName == "node_ground5" && obTwoName == "node_ball" && !already_detected) { wall_collision_sound.play(0); break; }
+                    // if(obOneName == "node_ground6" && obTwoName == "node_ball" && !already_detected) { wall_collision_sound.play(0); break; }
+
+
+                    std::cout << obOneName << ":" << obTwoName << ":" << score_ok << std::endl;
+                    if(obOneName == "node_goal" && obTwoName == "node_ball" && !already_detected && score_ok) {
+                            //std::cout << "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" << std::endl;
+                            start = clock();
                             score_sound.play(0);
                             cout << "Score += 1\n";
                             score++;
                             already_detected = true;
                             cout << "Detected: " << already_detected << "\n\n";
+                            score_ok = false;
                             break;
-                        }
-                        else if(obOneName != "node_goal" && obTwoName == "node_ball" && already_detected) {
-                            cout << "Another bounce detected!\n";
-                            already_detected = false;
-                        }
                     }
+                    // else if(obOneName != "node_goal" && obTwoName == "node_ball" && already_detected) {
+                    //     cout << "Another bounce detected!\n";
+                    //     already_detected = false;
+                    //     cout << "Detected: " << already_detected << "\n\n";
+                    //     break;
+                    // }
                 }
 
                 btTransform trans;
@@ -195,14 +231,13 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                 }
             }
         }
-
         if(oneFrame) {
             mPause = true;
             oneFrame = false;
         }
         return ret;
     }     
-} 
+}   
 
 bool TutorialApplication::processUnbufferedInput(const FrameEvent& fe) {
     static Real move = 5;
@@ -211,6 +246,10 @@ bool TutorialApplication::processUnbufferedInput(const FrameEvent& fe) {
 
 Ball* TutorialApplication::getBall(){
     return ball;
+}
+
+void TutorialApplication::setBall(Ball* b){
+    ball = b;
 }
 
 Simulator* TutorialApplication::getSimulator() {

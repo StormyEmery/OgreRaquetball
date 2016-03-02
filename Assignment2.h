@@ -22,6 +22,7 @@
 
 #include <iostream>
 #include <time.h>
+#include <ctime>
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
 #  include <OIS/OISEvents.h>
@@ -98,6 +99,7 @@ public:
     virtual void buttonHit(OgreBites::Button * button);
 
     virtual Ball* getBall()=0;
+    virtual void setBall(Ball *b)=0;
     virtual Simulator* getSimulator()=0;
     virtual int getScore()=0;
 
@@ -138,6 +140,12 @@ public:
     Sound wall_collision_sound;
     Sound paddle_collision_sound;
     Sound test;
+
+    
+    Simulator* simulator;
+    clock_t start;
+    double duration;
+    bool score_ok;
 
     Real y;
     Real x;

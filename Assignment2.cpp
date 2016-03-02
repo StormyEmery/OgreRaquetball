@@ -20,7 +20,9 @@ Assignment2::Assignment2(void) :
     x(0),
     y(0),
     z(0),
-
+    score_ok(true),
+    duration(2),
+    simulator(NULL),
 
     //test("music/wall_collision.wav", 1),
     
@@ -496,7 +498,14 @@ void Assignment2::buttonHit(OgreBites::Button * button) {
     if(button->getName() == "MyButton1") {
         button_sound.play(0);
         // mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(++mScore));
-        getBall()->reset(mSceneMgr, getBall(), getSimulator());
+        //getBall()->reset(mSceneMgr, getBall(), getSimulator());
+        mSceneMgr->destroySceneNode("node_ball");
+        //std::cout << getBall() << std::endl;
+        //delete getBall();
+        // Ball *ball = new Ball(mSceneMgr, "node_ball");
+        // ball->reset(mSceneMgr, ball, simulator);
+        // ball->ballNode->showBoundingBox(true);
+        // setBall(ball);
         oneFrame=true;
     }
     else if(button->getName()=="MyButton2"){

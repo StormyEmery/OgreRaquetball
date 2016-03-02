@@ -28,7 +28,6 @@ public:
   virtual ~TutorialApplication(void);
 
 protected:
-  Simulator* simulator;
   Ball* ball;
   btDefaultCollisionConfiguration* collisionConfiguration;
   btCollisionDispatcher* dispatcher;
@@ -51,6 +50,7 @@ protected:
   virtual void createViewports();
   virtual bool frameStarted(const Ogre::FrameEvent& fe);
   virtual Ball* getBall();
+  virtual void setBall(Ball *b);
   virtual Simulator* getSimulator();
   virtual int getScore();
 

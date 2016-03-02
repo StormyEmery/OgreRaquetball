@@ -19,7 +19,7 @@ public:
 	Entity* entBall;
 	btRigidBody* ballRB;
 
-	Ball(SceneManager* mSceneMgr, String name, String node_name);
+	Ball(SceneManager* mSceneMgr, String node_name);
 	~Ball(void);
 
 	void set_origin(btVector3 origin, btQuaternion rotation);

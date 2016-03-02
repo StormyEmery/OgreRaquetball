@@ -1,7 +1,7 @@
 #include "Ball.h"
 
-Ball::Ball(SceneManager* mSceneMgr, String name, String node_name) {
-	entBall = mSceneMgr->createEntity(name, "sphere.mesh");
+Ball::Ball(SceneManager* mSceneMgr, String node_name) {
+	entBall = mSceneMgr->createEntity("sphere.mesh");
 	ballNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(node_name);
 	ballNode->setScale(.5, .5, .5);
 	ballNode->attachObject(entBall);
@@ -53,4 +53,12 @@ void Ball::reset(SceneManager* mSceneMgr, Ball* ball, Simulator* simulator) {
 
 btRigidBody* Ball::get_rigidbody() {
 	return ballRB;
+}
+
+Ball::~Ball(){
+	delete ballShape;
+	delete ballObject;
+	delete ballNode;
+	delete entBall;
+	delete ballRB;
 }
