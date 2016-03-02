@@ -130,6 +130,7 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
         if(oneFrame) {
             mPause = false; 
         }
+
         if(!mPause){
              if(simulator != NULL) {
                // simulator->getDynamicsWorld()->performDiscreteCollisionDetection();
