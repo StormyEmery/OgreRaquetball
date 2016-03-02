@@ -18,6 +18,7 @@
 #include "Plain.h"
 #include "Ball.h"
 #include "Sound.h"
+#include "Paddle.h"
 
 #include <iostream>
 #include <time.h>
@@ -76,7 +77,6 @@ public:
     virtual void createCamera(void);
     virtual void createFrameListener(void);
     virtual void createScene(void) = 0; // Override me!
-    // virtual Ogre::SceneNode* getBall(void) = 0;
     virtual void destroyScene(void);
     virtual void createViewports(void);
     virtual void setupResources(void);

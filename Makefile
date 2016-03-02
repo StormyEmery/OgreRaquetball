@@ -102,8 +102,8 @@ am_assignment2_OBJECTS = assignment2-Assignment2.$(OBJEXT) \
 	assignment2-OgreMotionState.$(OBJEXT) \
 	assignment2-Simulator.$(OBJEXT) \
 	assignment2-TutorialApplication.$(OBJEXT) \
-	assignment2-Plain.$(OBJEXT) assignment2-Sound.$(OBJEXT) \
-	assignment2-Ball.$(OBJEXT)
+	assignment2-Paddle.$(OBJEXT) assignment2-Plain.$(OBJEXT) \
+	assignment2-Sound.$(OBJEXT) assignment2-Ball.$(OBJEXT)
 assignment2_OBJECTS = $(am_assignment2_OBJECTS)
 am__DEPENDENCIES_1 =
 assignment2_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
@@ -196,13 +196,13 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /u/creap/Desktop/gametech/project2/missing aclocal-1.14
+ACLOCAL = ${SHELL} /v/filer4b/v38q001/stormy12/GameTech/Assignment2/OgreRaquetball/missing aclocal-1.14
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
 AR = ar
-AUTOCONF = ${SHELL} /u/creap/Desktop/gametech/project2/missing autoconf
-AUTOHEADER = ${SHELL} /u/creap/Desktop/gametech/project2/missing autoheader
-AUTOMAKE = ${SHELL} /u/creap/Desktop/gametech/project2/missing automake-1.14
+AUTOCONF = ${SHELL} /v/filer4b/v38q001/stormy12/GameTech/Assignment2/OgreRaquetball/missing autoconf
+AUTOHEADER = ${SHELL} /v/filer4b/v38q001/stormy12/GameTech/Assignment2/OgreRaquetball/missing autoheader
+AUTOMAKE = ${SHELL} /v/filer4b/v38q001/stormy12/GameTech/Assignment2/OgreRaquetball/missing automake-1.14
 AWK = gawk
 BULLET_CFLAGS = 
 BULLET_LIBS = 
@@ -241,7 +241,7 @@ LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LIPO = 
 LN_S = ln -s
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /u/creap/Desktop/gametech/project2/missing makeinfo
+MAKEINFO = ${SHELL} /v/filer4b/v38q001/stormy12/GameTech/Assignment2/OgreRaquetball/missing makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = /bin/mkdir -p
 NM = /usr/bin/nm -B
@@ -271,10 +271,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = strip
 VERSION = 0.1
-abs_builddir = /u/creap/Desktop/gametech/project2
-abs_srcdir = /u/creap/Desktop/gametech/project2
-abs_top_builddir = /u/creap/Desktop/gametech/project2
-abs_top_srcdir = /u/creap/Desktop/gametech/project2
+abs_builddir = /v/filer4b/v38q001/stormy12/GameTech/Assignment2/OgreRaquetball
+abs_srcdir = /v/filer4b/v38q001/stormy12/GameTech/Assignment2/OgreRaquetball
+abs_top_builddir = /v/filer4b/v38q001/stormy12/GameTech/Assignment2/OgreRaquetball
+abs_top_srcdir = /v/filer4b/v38q001/stormy12/GameTech/Assignment2/OgreRaquetball
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_CXX = g++
@@ -306,7 +306,7 @@ host_vendor = unknown
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /u/creap/Desktop/gametech/project2/install-sh
+install_sh = ${SHELL} /v/filer4b/v38q001/stormy12/GameTech/Assignment2/OgreRaquetball/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -326,9 +326,9 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-noinst_HEADERS = Assignment2.h GameObject.h OgreMotionState.h Simulator.h TutorialApplication.h Plain.h Sound.h Ball.h
+noinst_HEADERS = Assignment2.h GameObject.h OgreMotionState.h Simulator.h TutorialApplication.h Paddle.h Plain.h Sound.h Ball.h
 assignment2_CPPFLAGS = -I$(top_srcdir) -std=c++11 -I/usr/include/SDL
-assignment2_SOURCES = Assignment2.cpp GameObject.cpp OgreMotionState.cpp Simulator.cpp TutorialApplication.cpp Plain.cpp Sound.cpp Ball.cpp
+assignment2_SOURCES = Assignment2.cpp GameObject.cpp OgreMotionState.cpp Simulator.cpp TutorialApplication.cpp Paddle.cpp Plain.cpp Sound.cpp Ball.cpp
 assignment2_CXXFLAGS = $(OGRE_CFLAGS) $(OIS_CFLAGS) $(bullet_CFLAGS)
 assignment2_LDADD = $(OGRE_LIBS) $(OIS_LIBS) $(bullet_LIBS)
 assignment2_LDFLAGS = -lOgreOverlay -lboost_system -lSDL -lSDL_mixer
@@ -452,6 +452,7 @@ include ./$(DEPDIR)/assignment2-Assignment2.Po
 include ./$(DEPDIR)/assignment2-Ball.Po
 include ./$(DEPDIR)/assignment2-GameObject.Po
 include ./$(DEPDIR)/assignment2-OgreMotionState.Po
+include ./$(DEPDIR)/assignment2-Paddle.Po
 include ./$(DEPDIR)/assignment2-Plain.Po
 include ./$(DEPDIR)/assignment2-Simulator.Po
 include ./$(DEPDIR)/assignment2-Sound.Po
@@ -547,6 +548,20 @@ assignment2-TutorialApplication.obj: TutorialApplication.cpp
 #	$(AM_V_CXX)source='TutorialApplication.cpp' object='assignment2-TutorialApplication.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -c -o assignment2-TutorialApplication.obj `if test -f 'TutorialApplication.cpp'; then $(CYGPATH_W) 'TutorialApplication.cpp'; else $(CYGPATH_W) '$(srcdir)/TutorialApplication.cpp'; fi`
+
+assignment2-Paddle.o: Paddle.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -MT assignment2-Paddle.o -MD -MP -MF $(DEPDIR)/assignment2-Paddle.Tpo -c -o assignment2-Paddle.o `test -f 'Paddle.cpp' || echo '$(srcdir)/'`Paddle.cpp
+	$(AM_V_at)$(am__mv) $(DEPDIR)/assignment2-Paddle.Tpo $(DEPDIR)/assignment2-Paddle.Po
+#	$(AM_V_CXX)source='Paddle.cpp' object='assignment2-Paddle.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -c -o assignment2-Paddle.o `test -f 'Paddle.cpp' || echo '$(srcdir)/'`Paddle.cpp
+
+assignment2-Paddle.obj: Paddle.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -MT assignment2-Paddle.obj -MD -MP -MF $(DEPDIR)/assignment2-Paddle.Tpo -c -o assignment2-Paddle.obj `if test -f 'Paddle.cpp'; then $(CYGPATH_W) 'Paddle.cpp'; else $(CYGPATH_W) '$(srcdir)/Paddle.cpp'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/assignment2-Paddle.Tpo $(DEPDIR)/assignment2-Paddle.Po
+#	$(AM_V_CXX)source='Paddle.cpp' object='assignment2-Paddle.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -c -o assignment2-Paddle.obj `if test -f 'Paddle.cpp'; then $(CYGPATH_W) 'Paddle.cpp'; else $(CYGPATH_W) '$(srcdir)/Paddle.cpp'; fi`
 
 assignment2-Plain.o: Plain.cpp
 	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -MT assignment2-Plain.o -MD -MP -MF $(DEPDIR)/assignment2-Plain.Tpo -c -o assignment2-Plain.o `test -f 'Plain.cpp' || echo '$(srcdir)/'`Plain.cpp

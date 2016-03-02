@@ -10,8 +10,6 @@ using namespace Ogre;
 
 class Plain {
 protected:
-
-
 	
 public:
 	btTransform groundTransform;
