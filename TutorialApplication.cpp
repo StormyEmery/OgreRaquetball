@@ -16,6 +16,7 @@ http://www.ogre3d.org/wiki/
 */
 
 #include "TutorialApplication.h"
+#include "Paddle.h"
 
 using namespace Ogre;
 
@@ -30,6 +31,7 @@ TutorialApplication::TutorialApplication(void)
     Ball* ball = NULL;
     already_detected = false;
     score = 0;
+    
 }
 //---------------------------------------------------------------------------
 TutorialApplication::~TutorialApplication(void)
@@ -73,19 +75,32 @@ void TutorialApplication::createScene(void)
     plain6.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(1000)));
     plain6.set_bounding_box(btVector3(btScalar(1500), btScalar(1500), btScalar(0)));
     plain6.create_bounding_box(simulator);
+    plain6.groundNode->showBoundingBox(true);
 
-    Plain goal(mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 562.5, 750, -999, "goal", "node_goal", "Examples/CloudySky");
-    goal.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(-999)));
+    Plain goal(mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 562.5, 750, -950, "goal", "node_goal", "Examples/CloudySky");
+    goal.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(-950)));
     goal.set_bounding_box(btVector3(btScalar(750), btScalar(562.5), btScalar(0)));
     goal.create_bounding_box(simulator);
+    
+    Paddle paddle(mCamera, mSceneMgr, Vector3::NEGATIVE_UNIT_Z, Vector3::UNIT_X, 350, 350, -750, "paddle", "node_paddle", "");
+    paddle.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(750)));
+    paddle.set_bounding_box(btVector3(btScalar(350), btScalar(350), btScalar(0)));
+    paddle.create_bounding_box(simulator);
+    paddle.groundNode->showBoundingBox(true);
+    //paddle.groundNode->attachObject(mCamera);
 
-    Paddle paddle(mSceneMgr, Vector3::NEGATIVE_UNIT_Z, Vector3::UNIT_X, 750, 350, -750, "paddle", "node_paddle", "Examples/CloudySky");
-    //paddle.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(-750)));
-    //paddle.set_bounding_box(btVector3(btScalar(350), btScalar(750), btScalar(0)));
-    //paddle.create_bounding_box(simulator);
+/*    SceneNode* player = mSceneMgr->getRootSceneNode()->createChildSceneNode("Player_Paddle");
+    player->createChildSceneNode("Camera_Node")->attachObject(mCamera);
+    player->createChildSceneNode("Player_Node")->attachObject(paddle.entGround);
+    // printf("%s\n", paddle.groundNode->getName());*/
+    // Ogre::Entity* PaddleCube = mSceneMgr->createEntity("PaddleCube", "cube.mesh");
+    // SceneNode* PadNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("PadNode");
+    // PadNode->attachObject(PaddleCube);
+    // PadNode->attachObject(mCamera);
 
     ball = new Ball(mSceneMgr, "ball", "node_ball");
     ball->reset(mSceneMgr, ball, simulator);
+    ball->ballNode->showBoundingBox(true);
 
     srand(time(NULL));
 
@@ -108,8 +123,6 @@ void TutorialApplication::createScene(void)
     Light* light1 = mSceneMgr->createLight("ThirdLight");
     light1->setDiffuseColour(1,1,1);
     light1->setPosition(0,50,50);
-
-    //Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096);
 }
 
 void TutorialApplication::createCamera() {
@@ -118,7 +131,8 @@ void TutorialApplication::createCamera() {
     mCamera->lookAt(Vector3(0,0,0));
     mCamera->setNearClipDistance(5);
     mCameraMan = new OgreBites::SdkCameraMan(mCamera);
-}
+    // paddlePlayer->groundNode->attachObject(mCamera);
+ }
 
 void TutorialApplication::createViewports() {
      Viewport* vp = mWindow->addViewport(mCamera);
@@ -132,7 +146,7 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
     bool ret = Assignment2::frameRenderingQueued(fe);
     // cout << "Already Detected: " << already_detected << "\n";
 
-    track1.play(-1);
+    //game_music.play(-1);
     if(simulator != NULL) {
         if(oneFrame) {
             mPause = false; 
@@ -141,6 +155,7 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
              if(simulator != NULL) {
                // simulator->getDynamicsWorld()->performDiscreteCollisionDetection();
                 simulator->getDynamicsWorld()->stepSimulation(1.0f/60.0f);
+
                 if(!already_detected) {
                     int numManifolds = simulator->getDispatcher()->getNumManifolds();
                     for(int i = 0; i < numManifolds; i++) {
@@ -152,17 +167,16 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                         const String obTwoName = getName(obTwo);
 
                         if(obOneName == "node_goal" && obTwoName == "node_ball" && !already_detected) {
-                                cout << "Score += 1\n";
-                                score++;
-                                already_detected = true;
-                                cout << "Detected: " << already_detected << "\n\n";
-                                break;
+                            score_sound.play(0);
+                            cout << "Score += 1\n";
+                            score++;
+                            already_detected = true;
+                            cout << "Detected: " << already_detected << "\n\n";
+                            break;
                         }
                         else if(obOneName != "node_goal" && obTwoName == "node_ball" && already_detected) {
                             cout << "Another bounce detected!\n";
                             already_detected = false;
-                            cout << "Detected: " << already_detected << "\n\n";
-                            break;
                         }
                     }
                 }
@@ -180,13 +194,14 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                 }
             }
         }
+
         if(oneFrame) {
             mPause = true;
             oneFrame = false;
         }
         return ret;
     }     
-}   
+} 
 
 bool TutorialApplication::processUnbufferedInput(const FrameEvent& fe) {
     static Real move = 5;

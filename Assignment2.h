@@ -77,7 +77,6 @@ public:
     virtual void createCamera(void);
     virtual void createFrameListener(void);
     virtual void createScene(void) = 0; // Override me!
-    // virtual Ogre::SceneNode* getBall(void) = 0;
     virtual void destroyScene(void);
     virtual void createViewports(void);
     virtual void setupResources(void);
@@ -132,8 +131,17 @@ public:
 
     // Added for Mac compatibility
     Ogre::String                 m_ResourcePath;
-    Sound track1;
-    Sound track2;
+    Sound game_music;
+    Sound menu_sound;
+    Sound button_sound;
+    Sound score_sound;
+    Sound wall_collision_sound;
+    Sound paddle_collision_sound;
+    Sound test;
+
+    Real y;
+    Real x;
+    Real z;
     OgreBites::Button* menu1;
     OgreBites::Button* menu2;
     int mScore;

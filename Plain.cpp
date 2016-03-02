@@ -9,10 +9,8 @@ Plain::Plain(SceneManager* mSceneMgr, Vector3 normal, Vector3 up_vector, float x
     entGround->setMaterialName(path);
     groundNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(node_name);
 
-    groundNode->attachObject(entGround);
-
-    if(name == "paddle")
-        std::cout << "Plain created\n\n\n\n\n\n\n";
+    // if(name != "paddle")
+        groundNode->attachObject(entGround);
 }
 
 

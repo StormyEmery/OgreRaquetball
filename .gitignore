@@ -1,5 +1,6 @@
 *.m4
 *.cache
+*.log
 .deps
 compile
 config.guess
@@ -17,5 +18,4 @@ Makefile
 Makefile.in
 missing
 ogre.cfg
-Ogre.log
 stamp-hl
