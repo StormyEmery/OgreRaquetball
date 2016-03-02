@@ -18,9 +18,13 @@ public:
 
 
 	Sound(string path, int type);
+	Sound();
 	~Sound(void);
 
 	void play(int repetition);
+	void pause();
+	void resume();
+	void stop();
 };
 
 #endif

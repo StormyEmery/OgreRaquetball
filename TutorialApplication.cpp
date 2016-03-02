@@ -103,8 +103,6 @@ void TutorialApplication::createScene(void)
     Light* light1 = mSceneMgr->createLight("ThirdLight");
     light1->setDiffuseColour(1,1,1);
     light1->setPosition(0,50,50);
-
-    //Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096);
 }
 
 void TutorialApplication::createCamera() {
@@ -127,7 +125,7 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
     bool ret = Assignment2::frameRenderingQueued(fe);
     // cout << "Already Detected: " << already_detected << "\n";
 
-    track1.play(-1);
+    //game_music.play(-1);
     if(simulator != NULL) {
         if(oneFrame) {
             mPause = false; 
@@ -149,7 +147,28 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                     // std::cout << "Object Two: " << obTwoName << "\n";
 
 
+
+
+                    // if(obOneName == "node_ground1" && obTwoName == "node_ball" && !already_detected) {
+                    //     Real current_y = static_cast<SceneNode*>(obTwo->getCollisionShape()->getUserPointer())->getPosition().y;
+                    //     std::cout << current_y << " : " << y << std::endl;
+                    //     if(current_y != y){
+                    //         wall_collision_sound.play(0); 
+                    //     }
+
+                    //     y = static_cast<SceneNode*>(obTwo->getCollisionShape()->getUserPointer())->getPosition().y;
+
+                    //     break; 
+                    // }
+                    // if(obOneName == "node_ground2" && obTwoName == "node_ball" && !already_detected) { wall_collision_sound.play(0); break; }
+                    // if(obOneName == "node_ground3" && obTwoName == "node_ball" && !already_detected) { wall_collision_sound.play(0); break; }
+                    // if(obOneName == "node_ground4" && obTwoName == "node_ball" && !already_detected) { wall_collision_sound.play(0); break; }
+                    // if(obOneName == "node_ground5" && obTwoName == "node_ball" && !already_detected) { wall_collision_sound.play(0); break; }
+                    // if(obOneName == "node_ground6" && obTwoName == "node_ball" && !already_detected) { wall_collision_sound.play(0); break; }
+
+
                     if(obOneName == "node_goal" && obTwoName == "node_ball" && !already_detected) {
+                            score_sound.play(0);
                             cout << "Score += 1\n";
                             score++;
                             already_detected = true;

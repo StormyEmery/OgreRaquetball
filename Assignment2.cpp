@@ -17,9 +17,19 @@ Assignment2::Assignment2(void) :
     mKeyboard(0),
     mOverlaySystem(0),
     mBaller(0),
+    x(0),
+    y(0),
+    z(0),
 
-    track1("music/track1.wav", 0),
-    track2("music/collision.wav", 1),
+
+    //test("music/wall_collision.wav", 1),
+    
+    game_music("music/track1.wav", 0),
+    menu_sound("music/menu_sound.wav", 1),
+    button_sound("music/button_click.wav", 1),
+    score_sound("music/score.wav", 1),
+    wall_collision_sound("music/wall_collision.wav", 1),
+    paddle_collision_sound("music/paddle_collision.wav", 1),
 
     mPause(false),
     mMenu(0),
@@ -299,14 +309,19 @@ bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
 
     if (arg.key == OIS::KC_ESCAPE){
         if(!mPause) {
+            //play sound here
+            game_music.pause();
+            menu_sound.play(0);
             mTrayMgr->showCursor();
             mPause=true;
             menu1->show();
             menu2->show();
             mTrayMgr->moveWidgetToTray(menu2, OgreBites::TL_CENTER, 0);
             mTrayMgr->moveWidgetToTray(menu1, OgreBites::TL_CENTER, 0);
-        }
+        }   
         else{
+            menu_sound.play(0);
+            game_music.resume();
             mTrayMgr->hideCursor();
             mPause=false;
             mTrayMgr->removeWidgetFromTray(menu1);
@@ -320,9 +335,9 @@ bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
 
 
 
-    if(arg.key == OIS::KC_Q){
-        track2.play(0);
-    }
+    // if(arg.key == OIS::KC_Q){
+    //     test.play(0);
+    // }
     if (arg.key == OIS::KC_F)   // toggle visibility of advanced frame stats
     {
         mTrayMgr->toggleAdvancedFrameStats();
@@ -479,11 +494,13 @@ void Assignment2::windowClosed(Ogre::RenderWindow* rw)
 
 void Assignment2::buttonHit(OgreBites::Button * button) {
     if(button->getName() == "MyButton1") {
+        button_sound.play(0);
         // mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(++mScore));
         getBall()->reset(mSceneMgr, getBall(), getSimulator());
         oneFrame=true;
     }
     else if(button->getName()=="MyButton2"){
+        button_sound.play(0);
         mShutDown = true;
     }
 }
