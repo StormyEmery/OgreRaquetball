@@ -18,6 +18,7 @@
 #include "Plain.h"
 #include "Ball.h"
 #include "Sound.h"
+#include "Paddle.h"
 
 #include <iostream>
 #include <time.h>

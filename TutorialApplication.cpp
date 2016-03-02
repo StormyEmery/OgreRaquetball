@@ -79,6 +79,11 @@ void TutorialApplication::createScene(void)
     goal.set_bounding_box(btVector3(btScalar(750), btScalar(562.5), btScalar(0)));
     goal.create_bounding_box(simulator);
 
+    Paddle paddle(mSceneMgr, Vector3::NEGATIVE_UNIT_Z, Vector3::UNIT_X, 750, 350, -750, "paddle", "node_paddle", "Examples/CloudySky");
+    //paddle.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(-750)));
+    //paddle.set_bounding_box(btVector3(btScalar(350), btScalar(750), btScalar(0)));
+    //paddle.create_bounding_box(simulator);
+
     ball = new Ball(mSceneMgr, "ball", "node_ball");
     ball->reset(mSceneMgr, ball, simulator);
 
@@ -136,31 +141,29 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
              if(simulator != NULL) {
                // simulator->getDynamicsWorld()->performDiscreteCollisionDetection();
                 simulator->getDynamicsWorld()->stepSimulation(1.0f/60.0f);
-                int numManifolds = simulator->getDispatcher()->getNumManifolds();
-                for(int i = 0; i < numManifolds; i++) {
-                    btPersistentManifold* contactManifold = simulator->getDispatcher()->getManifoldByIndexInternal(i);
-                    const btCollisionObject* obOne = contactManifold->getBody0();
-                    const btCollisionObject* obTwo = contactManifold->getBody1();
+                if(!already_detected) {
+                    int numManifolds = simulator->getDispatcher()->getNumManifolds();
+                    for(int i = 0; i < numManifolds; i++) {
+                        btPersistentManifold* contactManifold = simulator->getDispatcher()->getManifoldByIndexInternal(i);
+                        const btCollisionObject* obOne = contactManifold->getBody0();
+                        const btCollisionObject* obTwo = contactManifold->getBody1();
 
-                    const String obOneName = getName(obOne);
-                    const String obTwoName = getName(obTwo);
+                        const String obOneName = getName(obOne);
+                        const String obTwoName = getName(obTwo);
 
-                    // std::cout << "Object One: " << obOneName << "\n";
-                    // std::cout << "Object Two: " << obTwoName << "\n";
-
-
-                    if(obOneName == "node_goal" && obTwoName == "node_ball" && !already_detected) {
-                            cout << "Score += 1\n";
-                            score++;
-                            already_detected = true;
+                        if(obOneName == "node_goal" && obTwoName == "node_ball" && !already_detected) {
+                                cout << "Score += 1\n";
+                                score++;
+                                already_detected = true;
+                                cout << "Detected: " << already_detected << "\n\n";
+                                break;
+                        }
+                        else if(obOneName != "node_goal" && obTwoName == "node_ball" && already_detected) {
+                            cout << "Another bounce detected!\n";
+                            already_detected = false;
                             cout << "Detected: " << already_detected << "\n\n";
                             break;
-                    }
-                    else if(obOneName != "node_goal" && obTwoName == "node_ball" && already_detected) {
-                        cout << "Another bounce detected!\n";
-                        already_detected = false;
-                        cout << "Detected: " << already_detected << "\n\n";
-                        break;
+                        }
                     }
                 }
 
