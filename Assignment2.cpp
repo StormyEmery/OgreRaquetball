@@ -21,8 +21,12 @@ Assignment2::Assignment2(void) :
     y(0),
     z(0),
     score_ok(true),
+    sound_ok(true),
     duration(2),
+    sound_duration(2),
     simulator(NULL),
+    ball(NULL),
+    background_music(true),
 
     //test("music/wall_collision.wav", 1),
     
@@ -144,8 +148,9 @@ void Assignment2::createFrameListener(void)
     items.push_back("Ball.pY");
     items.push_back("Ball.pZ");
 
-    menu1 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton1", "Reset Ball", 250);
-    menu2 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton2", "Exit", 50);
+    menu1 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton1", "Continue", 150);
+    menu2 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton2", "Exit", 150);
+    menu3 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton3", "Toggle Music", 150);
     mDetailsPanel = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "DetailsPanel", 200, items);
     mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(getScore()));
     mDetailsPanel->show();
@@ -153,8 +158,10 @@ void Assignment2::createFrameListener(void)
 
     menu1->hide();
     menu2->hide();
+    menu3->hide();
     mTrayMgr->removeWidgetFromTray(menu1);
     mTrayMgr->removeWidgetFromTray(menu2);
+    mTrayMgr->removeWidgetFromTray(menu3);
     mTrayMgr->setTrayPadding(12);
     mTrayMgr->hideBackdrop();
 
@@ -317,19 +324,24 @@ bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
             mTrayMgr->showCursor();
             mPause=true;
             menu1->show();
+            menu3->show();
             menu2->show();
             mTrayMgr->moveWidgetToTray(menu2, OgreBites::TL_CENTER, 0);
+            mTrayMgr->moveWidgetToTray(menu3, OgreBites::TL_CENTER, 0);
             mTrayMgr->moveWidgetToTray(menu1, OgreBites::TL_CENTER, 0);
         }   
         else{
             menu_sound.play(0);
-            game_music.resume();
+            if(background_music)
+                game_music.resume();
             mTrayMgr->hideCursor();
             mPause=false;
             mTrayMgr->removeWidgetFromTray(menu1);
             mTrayMgr->removeWidgetFromTray(menu2);
+            mTrayMgr->removeWidgetFromTray(menu3);
             menu1->hide();
             menu2->hide();
+            menu3->hide();
             
         }
 
@@ -337,9 +349,9 @@ bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
 
 
 
-    // if(arg.key == OIS::KC_Q){
-    //     test.play(0);
-    // }
+    if(arg.key == OIS::KC_Q){
+        ball->a();
+    }
     if (arg.key == OIS::KC_F)   // toggle visibility of advanced frame stats
     {
         mTrayMgr->toggleAdvancedFrameStats();
@@ -423,10 +435,6 @@ bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
     {
         mWindow->writeContentsToTimestampedFile("screenshot", ".jpg");
     }
-    else if (arg.key == OIS::KC_F12)
-    {
-        mShutDown = true;
-    }
     if(mPause) return false;
     mCameraMan->injectKeyDown(arg);
     return true;
@@ -497,20 +505,27 @@ void Assignment2::windowClosed(Ogre::RenderWindow* rw)
 void Assignment2::buttonHit(OgreBites::Button * button) {
     if(button->getName() == "MyButton1") {
         button_sound.play(0);
-        // mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(++mScore));
+        mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(++mScore));
         //getBall()->reset(mSceneMgr, getBall(), getSimulator());
-        mSceneMgr->destroySceneNode("node_ball");
+        //mSceneMgr->destroySceneNode("node_ball");
         //std::cout << getBall() << std::endl;
         //delete getBall();
         // Ball *ball = new Ball(mSceneMgr, "node_ball");
         // ball->reset(mSceneMgr, ball, simulator);
         // ball->ballNode->showBoundingBox(true);
         // setBall(ball);
-        oneFrame=true;
+        //oneFrame=true;
+        mTrayMgr->removeWidgetFromTray(menu1);
+        mTrayMgr->removeWidgetFromTray(menu2);
+        mPause = false;
     }
     else if(button->getName()=="MyButton2"){
         button_sound.play(0);
         mShutDown = true;
+    }
+    else if(button->getName()=="MyButton3"){
+        button_sound.play(0);
+        background_music = !background_music;
     }
 }
 

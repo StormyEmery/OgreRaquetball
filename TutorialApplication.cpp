@@ -28,7 +28,6 @@ const float speed = 250.0;
 TutorialApplication::TutorialApplication(void)
 {
     
-    Ball* ball = NULL;
     already_detected = false;
     score = 0;
     
@@ -145,17 +144,15 @@ void TutorialApplication::createViewports() {
 
 bool TutorialApplication::frameStarted(const FrameEvent& fe) {
     bool ret = Assignment2::frameRenderingQueued(fe);
-
-
-    // cout << "Already Detected: " << already_detected << "\n";
-
-    //game_music.play(-1);
+    
+    if(background_music)
+        game_music.play(-1);
     duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
-    if(duration > 1){
+    sound_duration = ( std::clock() - sound_clock ) / (double) CLOCKS_PER_SEC;
+    
+    if(duration > .1){
         score_ok = true;    
     }
-    //std::cout << score_ok << std::endl;
-    //std::cout << duration << std::endl;
 
     if(simulator != NULL) {
         if(oneFrame) {
@@ -163,7 +160,6 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
         }
         if(!mPause){
              if(simulator != NULL) {
-               // simulator->getDynamicsWorld()->performDiscreteCollisionDetection();
                 simulator->getDynamicsWorld()->stepSimulation(1.0f/60.0f);
                 int numManifolds = simulator->getDispatcher()->getNumManifolds();
                 for(int i = 0; i < numManifolds; i++) {
@@ -174,54 +170,67 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                     const String obOneName = getName(obOne);
                     const String obTwoName = getName(obTwo);
 
-                    // std::cout << "Object One: " << obOneName << "\n";
-                    // std::cout << "Object Two: " << obTwoName << "\n";
-                    //asadasdasd
+                    if(obOneName == "node_ground1" && obTwoName == "node_ball" && sound_duration > .1) {
+                        wall_collision_sound.play(0); 
+                        sound_clock = clock();
+                        break; 
+                    }
+                    else{ sound_clock = clock(); }
 
+                    if(obOneName == "node_ground2" && obTwoName == "node_ball" && sound_duration > .1) { 
+                        wall_collision_sound.play(0); 
+                        sound_clock = clock();
+                        break; 
+                    }
+                    else { sound_clock = clock(); }
 
+                    if(obOneName == "node_ground3" && obTwoName == "node_ball" && sound_duration > .1) { 
+                        wall_collision_sound.play(0); 
+                        sound_clock = clock();
+                        break; 
+                    }
+                    else { sound_clock = clock(); }
 
-                    // if(obOneName == "node_ground1" && obTwoName == "node_ball" && !already_detected) {
-                    //     Real current_y = static_cast<SceneNode*>(obTwo->getCollisionShape()->getUserPointer())->getPosition().y;
-                    //     std::cout << current_y << " : " << y << std::endl;
-                    //     if(current_y != y){
-                    //         wall_collision_sound.play(0); 
-                    //     }
+                    if(obOneName == "node_ground4" && obTwoName == "node_ball" && sound_duration > .1) { 
+                        wall_collision_sound.play(0); 
+                        sound_clock = clock();
+                        break; 
+                    }
+                    else { sound_clock = clock(); }
 
-                    //     y = static_cast<SceneNode*>(obTwo->getCollisionShape()->getUserPointer())->getPosition().y;
+                    if(obOneName == "node_ground5" && obTwoName == "node_ball" && sound_duration > .1) { 
+                        wall_collision_sound.play(0); 
+                        sound_clock = clock();
+                        break; 
+                    }
+                    else { sound_clock = clock(); }
 
-                    //     break; 
-                    // }
-                    // if(obOneName == "node_ground2" && obTwoName == "node_ball" && !already_detected) { wall_collision_sound.play(0); break; }
-                    // if(obOneName == "node_ground3" && obTwoName == "node_ball" && !already_detected) { wall_collision_sound.play(0); break; }
-                    // if(obOneName == "node_ground4" && obTwoName == "node_ball" && !already_detected) { wall_collision_sound.play(0); break; }
-                    // if(obOneName == "node_ground5" && obTwoName == "node_ball" && !already_detected) { wall_collision_sound.play(0); break; }
-                    // if(obOneName == "node_ground6" && obTwoName == "node_ball" && !already_detected) { wall_collision_sound.play(0); break; }
+                    if(obOneName == "node_ground6" && obTwoName == "node_ball" && sound_duration > .1) { 
+                        wall_collision_sound.play(0); 
+                        sound_clock = clock();
+                        break; 
+                    }
+                    else { sound_clock = clock(); }
 
+                    if(obOneName == "node_paddle" && obTwoName == "node_ball"){
+                        paddle_collision_sound.play(0);
+                        ball->a();
+                    } 
 
                     std::cout << obOneName << ":" << obTwoName << ":" << score_ok << std::endl;
-                    if(obOneName == "node_goal" && obTwoName == "node_ball" && !already_detected && score_ok) {
-                            //std::cout << "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" << std::endl;
+                    if(obOneName == "node_goal" && obTwoName == "node_ball" && score_ok) {
                             start = clock();
                             score_sound.play(0);
-                            cout << "Score += 1\n";
                             score++;
-                            already_detected = true;
-                            cout << "Detected: " << already_detected << "\n\n";
+                            cout << score << endl;
                             score_ok = false;
                             break;
                     }
-                    // else if(obOneName != "node_goal" && obTwoName == "node_ball" && already_detected) {
-                    //     cout << "Another bounce detected!\n";
-                    //     already_detected = false;
-                    //     cout << "Detected: " << already_detected << "\n\n";
-                    //     break;
-                    // }
                 }
 
                 btTransform trans;
                 ball->get_rigidbody()->getMotionState()->getWorldTransform(trans);
          
-                // ball->get_rigidbody()->applyCentralForce(btVector3(btScalar(-25.0f), btScalar(25.0f), btScalar(0.0f)));
                 void* userPointer = ball->get_rigidbody()->getUserPointer();
                 if(userPointer) {
                     btQuaternion orientation = trans.getRotation();

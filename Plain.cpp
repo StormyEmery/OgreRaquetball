@@ -10,7 +10,7 @@ Plain::Plain(SceneManager* mSceneMgr, Vector3 normal, Vector3 up_vector, float x
     groundNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(node_name);
 
     // if(name != "paddle")
-        groundNode->attachObject(entGround);
+    groundNode->attachObject(entGround);
 }
 
 

@@ -11,6 +11,7 @@
 #include <OgreManualObject.h>
 #include <OgreRenderOperation.h>
 #include <OgreAxisAlignedBox.h>
+#include <OgreParticleSystem.h>
 
 #include <SDL/SDL_mixer.h>
 
@@ -141,17 +142,23 @@ public:
     Sound paddle_collision_sound;
     Sound test;
 
+    Ball* ball;
     
     Simulator* simulator;
     clock_t start;
+    clock_t sound_clock;
     double duration;
+    double sound_duration;
     bool score_ok;
+    bool sound_ok;
+    bool background_music;
 
     Real y;
     Real x;
     Real z;
     OgreBites::Button* menu1;
     OgreBites::Button* menu2;
+    OgreBites::Button* menu3;
     int mScore;
 
 

@@ -5,6 +5,7 @@
 #include <btBulletDynamicsCommon.h>
 #include <Simulator.h>
 #include <OgreMeshManager.h>
+#include <OgreParticleSystem.h>
 
 using namespace Ogre;
 
@@ -18,6 +19,8 @@ public:
 	SceneNode* ballNode;
 	Entity* entBall;
 	btRigidBody* ballRB;
+	ParticleSystem* jet_particle;
+	SceneNode* particleNode;
 
 	Ball(SceneManager* mSceneMgr, String node_name);
 	~Ball(void);
@@ -26,6 +29,7 @@ public:
 	void set_bounding_box(btScalar radius);
 	void create_bounding_box(Simulator* simulator, btScalar mass, btVector3 inertia, btScalar restitution);
 	void reset(SceneManager* mSceneMgr, Ball* ball, Simulator* simulator);
+	void a();
 
 	btRigidBody* get_rigidbody();
 
