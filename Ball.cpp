@@ -16,8 +16,8 @@ Ball::Ball(SceneManager* mSceneMgr, String node_name) {
 
 void Ball::set_origin(btVector3 origin, btQuaternion rotation) {
 	ballTransform.setIdentity();
-	ballTransform.setRotation(rotation);
 	ballTransform.setOrigin(origin);
+	ballTransform.setRotation(rotation);
 }
 
 void Ball::set_bounding_box(btScalar radius) {
@@ -45,21 +45,20 @@ void Ball::create_bounding_box(Simulator* simulator, btScalar mass, btVector3 in
 }
 
 void Ball::reset(SceneManager* mSceneMgr, Ball* ball, Simulator* simulator) {
-    btVector3 origin = btVector3(btScalar(0), btScalar(400), btScalar(0));
+    btVector3 origin = btVector3(btScalar(300), btScalar(0), btScalar(0));
     btQuaternion rotation = btQuaternion(1.0f, 1.0f, 1.0f, 0);
     ball->set_origin(origin, rotation);
     ball->set_bounding_box(50.0f);
     btVector3 inertia = btVector3(0.0f, 0.0f, 0.0f);
-    btScalar restitution = 0.95f;
+    btScalar restitution = 1.0f;
     ball->create_bounding_box(simulator, .09f, inertia, restitution);
 
     //will need to change this later
-    // ball->get_rigidbody()->applyCentralForce(btVector3(btScalar(rand()%5000 - 2500), btScalar(rand()%5000 - 2500), btScalar(rand()%5000 - 2500)));
-    ball->get_rigidbody()->applyCentralForce(btVector3(btScalar(0), btScalar(0), btScalar(-1000)));
+    ball->get_rigidbody()->applyCentralForce(btVector3(btScalar(1000), btScalar(-500), btScalar(0)));
 }
 
 void Ball::a(){
-	ballRB->applyCentralForce(btVector3(btScalar(0), btScalar(0), btScalar(-400)));
+	ballRB->applyCentralForce(btVector3(btScalar(0), btScalar(0), btScalar(-1000)));
 }
 
 btRigidBody* Ball::get_rigidbody() {

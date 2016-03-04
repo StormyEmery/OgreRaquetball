@@ -28,13 +28,14 @@ public:
   virtual ~TutorialApplication(void);
 
 protected:
-  Ball* ball;
+  //Ball* ball;
   btDefaultCollisionConfiguration* collisionConfiguration;
   btCollisionDispatcher* dispatcher;
   btBroadphaseInterface* overlappingPairCache;
   btSequentialImpulseConstraintSolver* solver;
   btDiscreteDynamicsWorld* dynamicsWorld;
 
+  btScalar desired_velocity;
   int score;
 
   bool music_running;

@@ -22,7 +22,7 @@ public:
 	~Plain(void);
 
 	void set_origin(btVector3 origin);
-	void set_bounding_box(btVector3 bouding_box);
+	void set_bounding_box();
 	void create_bounding_box(Simulator* simulator);
 };
 

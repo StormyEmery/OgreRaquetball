@@ -18,11 +18,15 @@ Plain::Plain(SceneManager* mSceneMgr, Vector3 normal, Vector3 up_vector, float x
 void Plain::set_origin(btVector3 origin){
     groundTransform.setIdentity();
     groundTransform.setOrigin(origin);
-};
+    this->set_bounding_box();
+}
 
-void Plain::set_bounding_box(btVector3 bounding_box){
-	groundShape = new btBoxShape(bounding_box);
-};	
+void Plain::set_bounding_box(){
+    AxisAlignedBox boundingB = entGround->getBoundingBox();
+    Vector3 size = Vector3::ZERO;
+    size = boundingB.getSize()*0.95f;
+	groundShape = new btBoxShape(btVector3(size.x*0.5f, size.y*0.5f, size.z*0.5f));
+}	
 
 void Plain::create_bounding_box(Simulator* simulator){
     simulator->getCollisionShapes()->push_back(groundShape);
@@ -44,7 +48,7 @@ void Plain::create_bounding_box(Simulator* simulator){
     groundBody->setActivationState(DISABLE_DEACTIVATION);
     simulator->getDynamicsWorld()->addRigidBody(groundBody);
     groundBody->setUserPointer(groundNode);
-};
+}
 
 
 Plain::~Plain(){}
