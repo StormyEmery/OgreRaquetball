@@ -54,6 +54,7 @@ protected:
   virtual void setBall(Ball *b);
   virtual Simulator* getSimulator();
   virtual int getScore();
+  virtual void setPaddles(Paddle* f, Paddle* b);
 
 private:
 	bool processUnbufferedInput(const Ogre::FrameEvent& fe);

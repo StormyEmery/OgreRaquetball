@@ -43,6 +43,9 @@ void TutorialApplication::createScene(void)
 
     simulator = new Simulator();
 
+    SceneNode* translateNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("translate");
+    translateNode->attachObject(mCamera);
+
     mSceneMgr->setAmbientLight(ColourValue(0.25,0.25,0.25));
 
     Plain plain1(mSceneMgr, Vector3::UNIT_Y, Vector3::UNIT_Z, 1500, 3000, -500, "ground1", "node_ground1", "Examples/BumpyMetal");
@@ -77,6 +80,9 @@ void TutorialApplication::createScene(void)
     paddle.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(750)));
     paddle.create_bounding_box(simulator);
 
+    Paddle paddleB(mCamera, mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 350, 350, 750, "paddleB", "node_paddleB", "");
+
+    setPaddles(&paddle, &paddleB);
     //paddle.groundNode->attachObject(mCamera);
 
 /*    SceneNode* player = mSceneMgr->getRootSceneNode()->createChildSceneNode("Player_Paddle");
@@ -87,6 +93,10 @@ void TutorialApplication::createScene(void)
     // SceneNode* PadNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("PadNode");
     // PadNode->attachObject(PaddleCube);
     // PadNode->attachObject(mCamera);
+
+    mCameraMan->setTarget(mSceneMgr->getSceneNode("translate"));
+    mCameraMan->setYawPitchDist(Degree(0), Degree(15), 2500);
+
 
     Ball* b = new Ball(mSceneMgr, "node_ball");
     b->reset(mSceneMgr, b, simulator);
@@ -259,6 +269,11 @@ Ball* TutorialApplication::getBall(){
 
 void TutorialApplication::setBall(Ball* b){
     ball = b;
+}
+
+void TutorialApplication::setPaddles(Paddle* f, Paddle* b) {
+    paddleF = f;
+    paddleB = b;
 }
 
 Simulator* TutorialApplication::getSimulator() {
