@@ -525,15 +525,6 @@ void Assignment2::buttonHit(OgreBites::Button * button) {
     if(button->getName() == "MyButton1") {
         button_sound.play(0);
         mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(++mScore));
-        //getBall()->reset(mSceneMgr, getBall(), getSimulator());
-        //mSceneMgr->destroySceneNode("node_ball");
-        //std::cout << getBall() << std::endl;
-        //delete getBall();
-        // Ball *ball = new Ball(mSceneMgr, "node_ball");
-        // ball->reset(mSceneMgr, ball, simulator);
-        // ball->ballNode->showBoundingBox(true);
-        // setBall(ball);
-        //oneFrame=true;
         mTrayMgr->removeWidgetFromTray(menu1);
         mTrayMgr->removeWidgetFromTray(menu2);
         mTrayMgr->removeWidgetFromTray(menu3);
