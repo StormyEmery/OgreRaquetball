@@ -6,6 +6,7 @@
 #include <Simulator.h>
 #include <OgreMeshManager.h>
 #include <OgreParticleSystem.h>
+#include <OgreMotionState.h>
 
 using namespace Ogre;
 
@@ -21,6 +22,7 @@ public:
 	btRigidBody* ballRB;
 	ParticleSystem* jet_particle;
 	SceneNode* particleNode;
+	OgreMotionState* ballMotionState;
 
 	Ball(SceneManager* mSceneMgr, String node_name);
 	~Ball(void);
@@ -30,6 +32,7 @@ public:
 	void create_bounding_box(Simulator* simulator, btScalar mass, btVector3 inertia, btScalar restitution);
 	void reset(SceneManager* mSceneMgr, Ball* ball, Simulator* simulator);
 	void a();
+	void updateTransform();
 
 	btRigidBody* get_rigidbody();
 

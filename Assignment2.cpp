@@ -333,6 +333,9 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
         }
     }
 
+    // paddle1->update()
+    // paddle2->update()
+
     return true;
 }
 //---------------------------------------------------------------------------
@@ -482,9 +485,9 @@ bool Assignment2::mouseMoved(const OIS::MouseEvent &arg)
     if (mTrayMgr->injectMouseMove(arg)) return true;
     if(!mPause && !main_menu) {
         // mCameraMan->injectMouseMove(arg);
-        // mSceneMgr->getSceneNode("translate")->translate(arg.state.X.rel, -arg.state.Y.rel, 0);
-        paddleF->groundBody->applyCentralForce(btVector3(btScalar(arg.state.X.rel), btScalar(-arg.state.Y.rel), btScalar(0)));
-        paddleB->groundBody->applyCentralForce(btVector3(btScalar(arg.state.X.rel), btScalar(-arg.state.Y.rel), btScalar(0)));
+        mSceneMgr->getSceneNode("translate")->translate(arg.state.X.rel, -arg.state.Y.rel, 0);
+        paddleF->updateTransform();
+
     }
     return true;
 }

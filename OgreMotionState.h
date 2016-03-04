@@ -13,7 +13,7 @@ class OgreMotionState : public btMotionState
 {
 protected:
 	Ogre::SceneNode* mVisibleObj;
-	btTransform mPosl;
+	btTransform mPos1;
 
 public:
 
@@ -26,6 +26,7 @@ public:
 	
 	virtual void getWorldTransform(btTransform &worldTrans) const;
 	virtual void setWorldTransform(const btTransform &worldTrans);
+	void updateTransform(btTransform &newpos);
 };
 
 #endif

@@ -42,7 +42,7 @@ void Plain::create_bounding_box(Simulator* simulator){
     simulator->getDynamicsWorld()->addCollisionObject(groundObject);
 	btScalar groundMass(0.0);
     btVector3 localGroundInertia(0,0,0);
-    btDefaultMotionState* groundMotionState = new btDefaultMotionState(groundTransform);
+    groundMotionState = new OgreMotionState(groundTransform, groundNode);
 
     groundShape->calculateLocalInertia(groundMass, localGroundInertia);
     btRigidBody::btRigidBodyConstructionInfo groundRBInfo(groundMass, groundMotionState, groundShape, localGroundInertia);
@@ -54,9 +54,21 @@ void Plain::create_bounding_box(Simulator* simulator){
     groundBody->setUserPointer(groundNode);
 }
 
-// btRigidBody* get_rigid_body() {
-//     return groundBody;
+// void Plain::update_transform(){
+//     //groundTransform = get its position
+//     groundTransform.setOrigin(groundNode->getPosition());
+
+//     groundBody->getMotionState()->updateTransform(transform);
 // }
+
+void Plain::updateTransform(){
+    Ogre::Vector3 pos = groundNode->getPosition();
+    groundTransform.setOrigin(btVector3(pos.x, pos.y, pos.z));
+    Ogre::Quaternion qt = groundNode->getOrientation();
+    groundTransform.setRotation(btQuaternion(qt.x, qt.y, qt.z, qt.w));
+    if(groundMotionState)
+        groundMotionState->updateTransform(groundTransform);
+}
 
 
 Plain::~Plain(){}

@@ -34,7 +34,7 @@ void Ball::create_bounding_box(Simulator* simulator, btScalar mass, btVector3 in
  //    // ballObject->forceActivationState(DISABLE_DEACTIVATION);
  //    simulator->getDynamicsWorld()->addCollisionObject(ballObject);
 
-	btDefaultMotionState* ballMotionState = new btDefaultMotionState(ballTransform);
+	ballMotionState = new OgreMotionState(ballTransform, ballNode);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, ballMotionState, ballShape, inertia);
 	ballRB = new btRigidBody(rbInfo);
 	ballRB->activate(true);
@@ -64,6 +64,16 @@ void Ball::a(){
 btRigidBody* Ball::get_rigidbody() {
 	return ballRB;
 }
+
+void Ball::updateTransform(){
+	Ogre::Vector3 pos = ballNode->getPosition();
+	ballTransform.setOrigin(btVector3(pos.x, pos.y, pos.z));
+	Ogre::Quaternion qt = ballNode->getOrientation();
+	ballTransform.setRotation(btQuaternion(qt.x, qt.y, qt.z, qt.w));
+	if(ballMotionState)
+		ballMotionState->updateTransform(ballTransform);
+}
+
 
 Ball::~Ball(){
 	delete ballShape;

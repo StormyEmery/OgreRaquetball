@@ -4,13 +4,18 @@
 
 OgreMotionState::OgreMotionState(const btTransform &initialpos, Ogre::SceneNode* node) :
 	mVisibleObj(node),
-	mPosl(initialpos)
+	mPos1(initialpos)
 	{}
 
 
-void OgreMotionState::setNode(Ogre::SceneNode* node) { mVisibleObj = node;}
+void OgreMotionState::setNode(Ogre::SceneNode* node) { 
+	mVisibleObj = node;
+}
 
-void OgreMotionState::getWorldTransform(btTransform &worldTrans) const { worldTrans = mPosl;}
+void OgreMotionState::getWorldTransform(btTransform &worldTrans) const {
+	// std::cout << mPos1.getOrigin().y() << ":" << mPos1.getOrigin().x() << std::endl;
+	worldTrans = mPos1;
+}
 
 void OgreMotionState::setWorldTransform(const btTransform & worldTrans) {
 	if(mVisibleObj == NULL)
@@ -20,4 +25,8 @@ void OgreMotionState::setWorldTransform(const btTransform & worldTrans) {
 	mVisibleObj->setOrientation(rot.w(), rot.x(), rot.y(), rot.z());
 	btVector3 pos = worldTrans.getOrigin();
 	mVisibleObj->setPosition(pos.x(), pos.y(), pos.z());
+}
+
+void OgreMotionState::updateTransform(btTransform& newpos){
+	mPos1 = newpos;
 }

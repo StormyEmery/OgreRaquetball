@@ -76,13 +76,15 @@ void TutorialApplication::createScene(void)
     goal.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(-1450)));
     goal.create_bounding_box(simulator);
     
-    Paddle paddle(mCamera, mSceneMgr, Vector3::NEGATIVE_UNIT_Z, Vector3::UNIT_X, 350, 350, -750, "paddle", "node_paddle", "");
-    paddle.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(750)));
-    paddle.create_bounding_box(simulator);
+    Paddle* paddle = new Paddle(mCamera, mSceneMgr, Vector3::NEGATIVE_UNIT_Z, Vector3::UNIT_X, 350, 350, -750, "paddle", "node_paddle", "");
+    paddle->set_origin(btVector3(btScalar(0), btScalar(0), btScalar(750)));
+    paddle->create_bounding_box(simulator);
 
-    Paddle paddleB(mCamera, mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 350, 350, 750, "paddleB", "node_paddleB", "");
+    Paddle* paddleB = new Paddle(mCamera, mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 350, 350, 750, "paddleB", "node_paddleB", "");
+    paddleB->set_origin(btVector3(btScalar(0), btScalar(0), btScalar(750)));
+    paddleB->create_bounding_box(simulator);
 
-    setPaddles(&paddle, &paddleB);
+    setPaddles(paddle, paddleB);
     //paddle.groundNode->attachObject(mCamera);
 
 /*    SceneNode* player = mSceneMgr->getRootSceneNode()->createChildSceneNode("Player_Paddle");
@@ -172,8 +174,8 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                     const String obOneName = getName(obOne);
                     const String obTwoName = getName(obTwo);
 
-                    std::cout << "Collision Object One: " << obOneName << "\n";
-                    std::cout << "Collision Object Two: " << obTwoName << "\n";
+                    if(obOneName == "node_paddle" || obTwoName == "node_paddle")
+                        std::cout << "Collision Object One: " << obOneName << "\n";
                     if(obOneName == "node_ground1" && obTwoName == "node_ball" && sound_duration > .1) {
                         wall_collision_sound.play(0); 
                         sound_clock = clock();
@@ -230,16 +232,22 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                     }
                 }
 
-                btTransform trans;
-                ball->get_rigidbody()->getMotionState()->getWorldTransform(trans);
+                // btTransform trans;
+                // ball->ballMotionState->getWorldTransform(trans);
+                // ball->ballMotionState->setWorldTransform(trans);
+                ball->updateTransform();
+
+                // btTransform a;
+                // a.setOrigin(btVector3(ball->ballNode->getPosition().x, ball->ballNode->getPosition().y, ball->ballNode->getPosition().z));
+                // ball->ballMotionState->updateTransform(trans);
          
-                void* userPointer = ball->get_rigidbody()->getUserPointer();
-                if(userPointer) {
-                    btQuaternion orientation = trans.getRotation();
-                    SceneNode* sceneNode = static_cast<SceneNode*>(userPointer);
-                    sceneNode->setPosition(Vector3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));            
-                    sceneNode->setOrientation(Quaternion(orientation.getW(), orientation.getX(), orientation.getY(), orientation.getZ()));
-                }
+                // void* userPointer = ball->get_rigidbody()->getUserPointer();
+                // if(userPointer) {
+                    // btQuaternion orientation = trans.getRotation();
+                    // SceneNode* sceneNode = static_cast<SceneNode*>(userPointer);
+                    // sceneNode->setPosition(Vector3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));            
+                    // sceneNode->setOrientation(Quaternion(orientation.getW(), orientation.getX(), orientation.getY(), orientation.getZ()));
+                // }
             }
         }
         if(oneFrame) {
@@ -256,6 +264,7 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
 
         return ret;
     }     
+
 }   
 
 bool TutorialApplication::processUnbufferedInput(const FrameEvent& fe) {
