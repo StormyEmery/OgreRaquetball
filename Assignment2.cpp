@@ -27,6 +27,7 @@ Assignment2::Assignment2(void) :
     simulator(NULL),
     ball(NULL),
     background_music(true),
+    main_menu(true),
 
     //test("music/wall_collision.wav", 1),
     
@@ -148,7 +149,25 @@ void Assignment2::createFrameListener(void)
     items.push_back("Ball.pY");
     items.push_back("Ball.pZ");
 
+    // if(main_menu){
+    //     menu4->show();
+    //     menu2->show();
+    //     mTrayMgr->moveWidgetToTray(menu2, OgreBites::TL_CENTER, 0);
+    //     mTrayMgr->moveWidgetToTray(menu4, OgreBites::TL_CENTER, 0);
+    //     menu_sound.play(0);
+    //     mTrayMgr->showCursor();
+    // }
+    // else{
+    //     mTrayMgr->removeWidgetFromTray(menu2);
+    //     mTrayMgr->removeWidgetFromTray(menu4);
+    //     menu4->hide();
+    //     menu2->hide();
+    //     mTrayMgr->hideCursor();
+    // }
+
+
     menu1 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton1", "Continue", 150);
+    menu5 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton5", "New Game", 150);
     menu2 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton2", "Exit", 150);
     menu3 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton3", "Toggle Music", 150);
     mDetailsPanel = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "DetailsPanel", 200, items);
@@ -156,12 +175,16 @@ void Assignment2::createFrameListener(void)
     mDetailsPanel->show();
     mRoot->addFrameListener(this);
 
+
+    mTrayMgr->showCursor();
     menu1->hide();
-    menu2->hide();
+    //menu2->hide();
     menu3->hide();
+    //menu5->hide();
     mTrayMgr->removeWidgetFromTray(menu1);
-    mTrayMgr->removeWidgetFromTray(menu2);
+    //mTrayMgr->removeWidgetFromTray(menu2);
     mTrayMgr->removeWidgetFromTray(menu3);
+    //mTrayMgr->removeWidgetFromTray(menu5);
     mTrayMgr->setTrayPadding(12);
     mTrayMgr->hideBackdrop();
 
@@ -316,9 +339,8 @@ bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
 {
     //if (mTrayMgr->isDialogVisible()) return true;   // don't process any more keys if dialog is up
 
-    if (arg.key == OIS::KC_ESCAPE){
+    if (arg.key == OIS::KC_ESCAPE && !main_menu){
         if(!mPause) {
-            //play sound here
             game_music.pause();
             menu_sound.play(0);
             mTrayMgr->showCursor();
@@ -342,11 +364,8 @@ bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
             menu1->hide();
             menu2->hide();
             menu3->hide();
-            
         }
-
     }
-
 
 
     if(arg.key == OIS::KC_Q){
@@ -451,7 +470,7 @@ bool Assignment2::mouseMoved(const OIS::MouseEvent &arg)
 {
    
     if (mTrayMgr->injectMouseMove(arg)) return true;
-    if(!mPause)
+    if(!mPause && !main_menu)
         mCameraMan->injectMouseMove(arg);
     return true;
 }
@@ -517,6 +536,10 @@ void Assignment2::buttonHit(OgreBites::Button * button) {
         //oneFrame=true;
         mTrayMgr->removeWidgetFromTray(menu1);
         mTrayMgr->removeWidgetFromTray(menu2);
+        mTrayMgr->removeWidgetFromTray(menu3);
+        menu1->hide();
+        menu2->hide();
+        menu3->hide();
         mPause = false;
     }
     else if(button->getName()=="MyButton2"){
@@ -526,6 +549,15 @@ void Assignment2::buttonHit(OgreBites::Button * button) {
     else if(button->getName()=="MyButton3"){
         button_sound.play(0);
         background_music = !background_music;
+    }
+    else if(button->getName()=="MyButton5"){
+        button_sound.play(0);
+        main_menu = false;
+        mTrayMgr->removeWidgetFromTray(menu2);
+        mTrayMgr->removeWidgetFromTray(menu5);
+        menu5->hide();
+        menu2->hide();
+        mTrayMgr->hideCursor();
     }
 }
 

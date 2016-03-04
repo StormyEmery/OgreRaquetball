@@ -152,6 +152,7 @@ public:
     bool score_ok;
     bool sound_ok;
     bool background_music;
+    bool main_menu;
 
     Real y;
     Real x;
@@ -159,6 +160,7 @@ public:
     OgreBites::Button* menu1;
     OgreBites::Button* menu2;
     OgreBites::Button* menu3;
+    OgreBites::Button* menu5;
     int mScore;
 
 

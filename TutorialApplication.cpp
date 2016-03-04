@@ -145,7 +145,7 @@ void TutorialApplication::createViewports() {
 bool TutorialApplication::frameStarted(const FrameEvent& fe) {
     bool ret = Assignment2::frameRenderingQueued(fe);
     
-    if(background_music)
+    if(background_music && !main_menu)
         game_music.play(-1);
     duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
     sound_duration = ( std::clock() - sound_clock ) / (double) CLOCKS_PER_SEC;
@@ -158,7 +158,7 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
         if(oneFrame) {
             mPause = false; 
         }
-        if(!mPause){
+        if(!mPause && !main_menu){
              if(simulator != NULL) {
                 simulator->getDynamicsWorld()->stepSimulation(1.0f/60.0f);
                 int numManifolds = simulator->getDispatcher()->getNumManifolds();
@@ -217,12 +217,10 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                         ball->a();
                     } 
 
-                    std::cout << obOneName << ":" << obTwoName << ":" << score_ok << std::endl;
                     if(obOneName == "node_goal" && obTwoName == "node_ball" && score_ok) {
                             start = clock();
                             score_sound.play(0);
                             score++;
-                            cout << score << endl;
                             score_ok = false;
                             break;
                     }
@@ -235,7 +233,7 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                 if(userPointer) {
                     btQuaternion orientation = trans.getRotation();
                     SceneNode* sceneNode = static_cast<SceneNode*>(userPointer);
-                    sceneNode->setPosition(Vector3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));            // std::cout << "Position: " << sceneNode->getPosition() << "\n";
+                    sceneNode->setPosition(Vector3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));            
                     sceneNode->setOrientation(Quaternion(orientation.getW(), orientation.getX(), orientation.getY(), orientation.getZ()));
                 }
             }
