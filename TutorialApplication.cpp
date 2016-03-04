@@ -65,7 +65,6 @@ void TutorialApplication::createScene(void)
     plain5.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(-1500)));
     plain5.create_bounding_box(simulator);
 
-
     Plain plain6(mSceneMgr, Vector3::NEGATIVE_UNIT_Z, Vector3::UNIT_X, 1000, 1500, -1500, "ground6", "node_ground6", "Examples/BumpyMetal");
     plain6.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(1500)));
     plain6.create_bounding_box(simulator);
@@ -126,7 +125,7 @@ void TutorialApplication::createCamera() {
  }
 
 void TutorialApplication::createViewports() {
-     Viewport* vp = mWindow->addViewport(mCamera);
+    Viewport* vp = mWindow->addViewport(mCamera);
     vp->setBackgroundColour(ColourValue(0,0,0));
     mCamera->setAspectRatio(
         Real(vp->getActualWidth() /

@@ -28,11 +28,11 @@ void Ball::create_bounding_box(Simulator* simulator, btScalar mass, btVector3 in
 	simulator->getCollisionShapes()->push_back(ballShape);
 	ballShape->calculateLocalInertia(mass, inertia);
 	ballShape->setUserPointer(ballNode);
-	ballObject = new btCollisionObject();
-    ballObject->setCollisionShape(ballShape);
-    ballObject->setWorldTransform(ballTransform);
-    // ballObject->forceActivationState(DISABLE_DEACTIVATION);
-    simulator->getDynamicsWorld()->addCollisionObject(ballObject);
+	// ballObject = new btCollisionObject();
+ //    ballObject->setCollisionShape(ballShape);
+ //    ballObject->setWorldTransform(ballTransform);
+ //    // ballObject->forceActivationState(DISABLE_DEACTIVATION);
+ //    simulator->getDynamicsWorld()->addCollisionObject(ballObject);
 
 	btDefaultMotionState* ballMotionState = new btDefaultMotionState(ballTransform);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, ballMotionState, ballShape, inertia);
@@ -45,7 +45,7 @@ void Ball::create_bounding_box(Simulator* simulator, btScalar mass, btVector3 in
 }
 
 void Ball::reset(SceneManager* mSceneMgr, Ball* ball, Simulator* simulator) {
-    btVector3 origin = btVector3(btScalar(300), btScalar(0), btScalar(0));
+    btVector3 origin = btVector3(btScalar(0), btScalar(0), btScalar(0));
     btQuaternion rotation = btQuaternion(1.0f, 1.0f, 1.0f, 0);
     ball->set_origin(origin, rotation);
     ball->set_bounding_box(50.0f);
@@ -54,11 +54,11 @@ void Ball::reset(SceneManager* mSceneMgr, Ball* ball, Simulator* simulator) {
     ball->create_bounding_box(simulator, .09f, inertia, restitution);
 
     //will need to change this later
-    ball->get_rigidbody()->applyCentralForce(btVector3(btScalar(1000), btScalar(-500), btScalar(0)));
+    ball->get_rigidbody()->applyCentralForce(btVector3(btScalar(0), btScalar(0), btScalar(-1000)));
 }
 
 void Ball::a(){
-	ballRB->applyCentralForce(btVector3(btScalar(0), btScalar(0), btScalar(-1000)));
+	ballRB->applyCentralForce(btVector3(btScalar(0), btScalar(0), btScalar(-100)));
 }
 
 btRigidBody* Ball::get_rigidbody() {
