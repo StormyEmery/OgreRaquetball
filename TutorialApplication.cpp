@@ -43,49 +43,46 @@ void TutorialApplication::createScene(void)
 
     simulator = new Simulator();
 
+    SceneNode* translateNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("translate");
+    translateNode->attachObject(mCamera);
+
     mSceneMgr->setAmbientLight(ColourValue(0.25,0.25,0.25));
 
     Plain plain1(mSceneMgr, Vector3::UNIT_Y, Vector3::UNIT_Z, 1500, 3000, -500, "ground1", "node_ground1", "Examples/BumpyMetal");
     plain1.set_origin(btVector3(btScalar(0), btScalar(-500), btScalar(0)));
-    plain1.set_bounding_box(btVector3(btScalar(1500), btScalar(0), btScalar(3000)));
     plain1.create_bounding_box(simulator);
 
     Plain plain2(mSceneMgr, Vector3::NEGATIVE_UNIT_Y, Vector3::UNIT_Z, 1500, 3000, -500, "ground2", "node_ground2", "Examples/BumpyMetal");
     plain2.set_origin(btVector3(btScalar(0), btScalar(500), btScalar(0)));
-    plain2.set_bounding_box(btVector3(btScalar(1500), btScalar(0), btScalar(3000)));
     plain2.create_bounding_box(simulator);
 
     Plain plain3(mSceneMgr, Vector3::UNIT_X, Vector3::UNIT_Y, 3000, 1000, -750, "ground3", "node_ground3", "Examples/BumpyMetal");
     plain3.set_origin(btVector3(btScalar(-750), btScalar(0), btScalar(0)));
-    plain3.set_bounding_box(btVector3(btScalar(0), btScalar(1000), btScalar(3000)));
     plain3.create_bounding_box(simulator);
 
     Plain plain4(mSceneMgr, Vector3::NEGATIVE_UNIT_X, Vector3::UNIT_Y, 3000, 1000, -750, "ground4", "node_ground4", "Examples/BumpyMetal");
     plain4.set_origin(btVector3(btScalar(750), btScalar(0), btScalar(0)));
-    plain4.set_bounding_box(btVector3(btScalar(0), btScalar(1000), btScalar(3000)));
     plain4.create_bounding_box(simulator);
 
     Plain plain5(mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 1000, 1500, -1500, "ground5", "node_ground5", "Examples/BumpyMetal");
     plain5.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(-1500)));
-    plain5.set_bounding_box(btVector3(btScalar(1000), btScalar(1500), btScalar(0)));
     plain5.create_bounding_box(simulator);
 
     Plain plain6(mSceneMgr, Vector3::NEGATIVE_UNIT_Z, Vector3::UNIT_X, 1000, 1500, -1500, "ground6", "node_ground6", "Examples/BumpyMetal");
     plain6.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(1500)));
-    plain6.set_bounding_box(btVector3(btScalar(1000), btScalar(1500), btScalar(0)));
     plain6.create_bounding_box(simulator);
-    plain6.groundNode->showBoundingBox(true);
-
+                                                           //W  //H
     Plain goal(mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 400, 750, -1450, "goal", "node_goal", "Examples/Chrome");
-    goal.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(-950)));
-    goal.set_bounding_box(btVector3(btScalar(750), btScalar(562.5), btScalar(0)));
+    goal.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(-1450)));
     goal.create_bounding_box(simulator);
     
     Paddle paddle(mCamera, mSceneMgr, Vector3::NEGATIVE_UNIT_Z, Vector3::UNIT_X, 350, 350, -750, "paddle", "node_paddle", "");
     paddle.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(750)));
-    paddle.set_bounding_box(btVector3(btScalar(350), btScalar(350), btScalar(0)));
     paddle.create_bounding_box(simulator);
-    paddle.groundNode->showBoundingBox(true);
+
+    Paddle paddleB(mCamera, mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 350, 350, 750, "paddleB", "node_paddleB", "");
+
+    setPaddles(&paddle, &paddleB);
     //paddle.groundNode->attachObject(mCamera);
 
 /*    SceneNode* player = mSceneMgr->getRootSceneNode()->createChildSceneNode("Player_Paddle");
@@ -97,9 +94,12 @@ void TutorialApplication::createScene(void)
     // PadNode->attachObject(PaddleCube);
     // PadNode->attachObject(mCamera);
 
+    mCameraMan->setTarget(mSceneMgr->getSceneNode("translate"));
+    mCameraMan->setYawPitchDist(Degree(0), Degree(15), 2500);
+
+
     Ball* b = new Ball(mSceneMgr, "node_ball");
     b->reset(mSceneMgr, b, simulator);
-    b->ballNode->showBoundingBox(true);
     setBall(b);
 
     srand(time(NULL));
@@ -135,7 +135,7 @@ void TutorialApplication::createCamera() {
  }
 
 void TutorialApplication::createViewports() {
-     Viewport* vp = mWindow->addViewport(mCamera);
+    Viewport* vp = mWindow->addViewport(mCamera);
     vp->setBackgroundColour(ColourValue(0,0,0));
     mCamera->setAspectRatio(
         Real(vp->getActualWidth() /
@@ -145,6 +145,8 @@ void TutorialApplication::createViewports() {
 bool TutorialApplication::frameStarted(const FrameEvent& fe) {
     bool ret = Assignment2::frameRenderingQueued(fe);
     
+    desired_velocity = ball->ballRB->getLinearVelocity().length();
+
     if(background_music && !main_menu)
         game_music.play(-1);
     duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
@@ -170,6 +172,8 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                     const String obOneName = getName(obOne);
                     const String obTwoName = getName(obTwo);
 
+                    std::cout << "Collision Object One: " << obOneName << "\n";
+                    std::cout << "Collision Object Two: " << obTwoName << "\n";
                     if(obOneName == "node_ground1" && obTwoName == "node_ball" && sound_duration > .1) {
                         wall_collision_sound.play(0); 
                         sound_clock = clock();
@@ -214,7 +218,7 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
 
                     if(obOneName == "node_paddle" && obTwoName == "node_ball"){
                         paddle_collision_sound.play(0);
-                        ball->a();
+                        //ball->a();
                     } 
 
                     if(obOneName == "node_goal" && obTwoName == "node_ball" && score_ok) {
@@ -242,6 +246,14 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
             mPause = true;
             oneFrame = false;
         }
+
+        btVector3 current_velocity_direction = ball->ballRB->getLinearVelocity();
+        btScalar current_velocity = current_velocity_direction.length();
+        if(current_velocity < desired_velocity) {
+            current_velocity_direction *= desired_velocity/current_velocity;
+            ball->ballRB->setLinearVelocity(current_velocity_direction);
+        }
+
         return ret;
     }     
 }   
@@ -257,6 +269,11 @@ Ball* TutorialApplication::getBall(){
 
 void TutorialApplication::setBall(Ball* b){
     ball = b;
+}
+
+void TutorialApplication::setPaddles(Paddle* f, Paddle* b) {
+    paddleF = f;
+    paddleB = b;
 }
 
 Simulator* TutorialApplication::getSimulator() {

@@ -126,6 +126,7 @@ public:
     bool                        mShutDown;
     bool                        mPause;
     bool                        oneFrame;
+    bool                        mToggle;
 
     //OIS Input devices
     OIS::InputManager*          mInputManager;
@@ -143,6 +144,8 @@ public:
     Sound test;
 
     Ball* ball;
+    Paddle* paddleF;
+    Paddle* paddleB;
     
     Simulator* simulator;
     clock_t start;

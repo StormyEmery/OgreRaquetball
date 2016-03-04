@@ -41,7 +41,8 @@ Assignment2::Assignment2(void) :
     mPause(false),
     mMenu(0),
     mScore(0),
-    oneFrame(false)
+    oneFrame(false),
+    mToggle(false)
 
 {
 #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
@@ -326,7 +327,7 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
         if (mDetailsPanel->isVisible())          // If details panel is visible, then update its contents
         {
             mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(getScore()));
-            mDetailsPanel->setParamValue(2, Ogre::StringConverter::toString(mSceneMgr->getSceneNode("node_ball")->getPosition().x));
+            
             mDetailsPanel->setParamValue(3, Ogre::StringConverter::toString(mSceneMgr->getSceneNode("node_ball")->getPosition().y));
             mDetailsPanel->setParamValue(4, Ogre::StringConverter::toString(mSceneMgr->getSceneNode("node_ball")->getPosition().z));
         }
@@ -455,23 +456,36 @@ bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
         mWindow->writeContentsToTimestampedFile("screenshot", ".jpg");
     }
     if(mPause) return false;
-    mCameraMan->injectKeyDown(arg);
+    if(mToggle)
+        mCameraMan->injectKeyDown(arg);
+    // else 
+    //     mPaddleMan->injectKeyDown(arg);
     return true;
 }
 //---------------------------------------------------------------------------
 bool Assignment2::keyReleased(const OIS::KeyEvent &arg)
 {
     if(mPause) return false;
-    mCameraMan->injectKeyUp(arg);
+    if(mToggle)
+        mCameraMan->injectKeyUp(arg);
+    // else 
+    //     mPaddleMan->injectKeyUp(arg);
     return true;
 }
 //---------------------------------------------------------------------------
 bool Assignment2::mouseMoved(const OIS::MouseEvent &arg)
 {
+    mDetailsPanel->setParamValue(2, Ogre::StringConverter::toString(arg.state.X.rel));
+
+
    
     if (mTrayMgr->injectMouseMove(arg)) return true;
-    if(!mPause && !main_menu)
-        mCameraMan->injectMouseMove(arg);
+    if(!mPause && !main_menu) {
+        // mCameraMan->injectMouseMove(arg);
+        // mSceneMgr->getSceneNode("translate")->translate(arg.state.X.rel, -arg.state.Y.rel, 0);
+        paddleF->groundBody->applyCentralForce(btVector3(btScalar(arg.state.X.rel), btScalar(-arg.state.Y.rel), btScalar(0)));
+        paddleB->groundBody->applyCentralForce(btVector3(btScalar(arg.state.X.rel), btScalar(-arg.state.Y.rel), btScalar(0)));
+    }
     return true;
 }
 //---------------------------------------------------------------------------
