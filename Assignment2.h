@@ -128,6 +128,9 @@ public:
     bool                        mPause;
     bool                        oneFrame;
     bool                        mToggle;
+    int xDirection;
+    int yDirection;
+    int zDirection;
 
     //OIS Input devices
     OIS::InputManager*          mInputManager;
@@ -147,6 +150,8 @@ public:
     Ball* ball;
     Paddle* paddleF;
     Paddle* paddleB;
+    btTransform transform;
+    OgreMotionState* paddleMotionState;
     
     Simulator* simulator;
     clock_t start;
@@ -157,6 +162,9 @@ public:
     bool sound_ok;
     bool background_music;
     bool main_menu;
+    btRigidBody* paddleBody;
+    Real _x;
+    Real _y;
 
     Real y;
     Real x;

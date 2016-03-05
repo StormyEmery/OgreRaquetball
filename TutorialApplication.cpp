@@ -44,6 +44,7 @@ void TutorialApplication::createScene(void)
     simulator = new Simulator();
 
     SceneNode* translateNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("translate");
+    translateNode->translate(0,0,1000);
     translateNode->attachObject(mCamera);
 
     mSceneMgr->setAmbientLight(ColourValue(0.25,0.25,0.25));
@@ -76,21 +77,60 @@ void TutorialApplication::createScene(void)
     goal.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(-1450)));
     goal.create_bounding_box(simulator);
     
-    Paddle* paddle = new Paddle(mCamera, mSceneMgr, Vector3::NEGATIVE_UNIT_Z, Vector3::UNIT_X, 350, 350, -750, "paddle", "node_paddle", "");
-    paddle->set_origin(btVector3(btScalar(0), btScalar(0), btScalar(750)));
-    paddle->create_bounding_box(simulator);
+    Entity* paddle = mSceneMgr->createEntity("paddle","cube.mesh");
+    paddle->setMaterialName("Examples/Chrome");
+    SceneNode* paddleNode = mSceneMgr->getSceneNode("translate")->createChildSceneNode("node_paddle");
+    paddleNode->setScale(3, 2, .5);
+    paddleNode->attachObject(paddle);
+    paddleNode->showBoundingBox(true);
 
-    Paddle* paddleB = new Paddle(mCamera, mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 350, 350, 750, "paddleB", "node_paddleB", "");
-    paddleB->set_origin(btVector3(btScalar(0), btScalar(0), btScalar(750)));
-    paddleB->create_bounding_box(simulator);
+    transform.setIdentity();
+    transform.setOrigin(btVector3(0,-400,1000));
+    AxisAlignedBox boundingB = paddle->getBoundingBox();
+    Vector3 size = Vector3::ZERO;
+    size = boundingB.getSize()*0.95f;
+    cout << size.x << ":" << size.y << ":" << size.z << endl;
+    btCollisionShape* paddleShape = new btBoxShape(btVector3(size.x*0.5f, size.y*0.5f, size.z*0.5f));
 
-    setPaddles(paddle, paddleB);
-    //paddle.groundNode->attachObject(mCamera);
+    simulator->getCollisionShapes()->push_back(paddleShape);
+    paddleShape->setUserPointer(paddleNode);
+    btCollisionObject* paddleObject = new btCollisionObject();
+    paddleObject->setCollisionShape(paddleShape);
+    paddleObject->setWorldTransform(transform);
+    paddleObject->forceActivationState(DISABLE_DEACTIVATION);
+    simulator->getDynamicsWorld()->addCollisionObject(paddleObject);
+    btScalar groundMass(0.01);
+    btVector3 localGroundInertia(0,0,0);
+    paddleMotionState = new OgreMotionState(transform, paddleNode);
+
+    paddleShape->calculateLocalInertia(groundMass, localGroundInertia);
+    btRigidBody::btRigidBodyConstructionInfo paddleRBInfo(groundMass, paddleMotionState, paddleShape, localGroundInertia);
+    paddleBody = new btRigidBody(paddleRBInfo);
+    paddleBody->setRestitution(1.0f);
+    //paddleBody->setCollisionFlags(paddleBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+    paddleBody->setActivationState(DISABLE_DEACTIVATION);
+    paddleBody->activate(true);
+    paddleBody->setUserPointer(paddleNode);
+
+
+
+
+
+    // Paddle* paddle = new Paddle(mCamera, mSceneMgr, Vector3::NEGATIVE_UNIT_Z, Vector3::UNIT_X, 350, 350, -750, "paddle", "node_paddle", "");
+    // paddle->set_origin(btVector3(btScalar(0), btScalar(0), btScalar(750)));
+    // paddle->create_bounding_box(simulator);
+
+    // Paddle* paddleB = new Paddle(mCamera, mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 350, 350, 750, "paddleB", "node_paddleB", "");
+    // paddleB->set_origin(btVector3(btScalar(0), btScalar(0), btScalar(750)));
+    // paddleB->create_bounding_box(simulator);
+
+    //setPaddles(paddle, paddleB);
+    //paddle.paddleNode->attachObject(mCamera);
 
 /*    SceneNode* player = mSceneMgr->getRootSceneNode()->createChildSceneNode("Player_Paddle");
     player->createChildSceneNode("Camera_Node")->attachObject(mCamera);
     player->createChildSceneNode("Player_Node")->attachObject(paddle.entGround);
-    // printf("%s\n", paddle.groundNode->getName());*/
+    // printf("%s\n", paddle.paddleNode->getName());*/
     // Ogre::Entity* PaddleCube = mSceneMgr->createEntity("PaddleCube", "cube.mesh");
     // SceneNode* PadNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("PadNode");
     // PadNode->attachObject(PaddleCube);
@@ -133,7 +173,7 @@ void TutorialApplication::createCamera() {
     mCamera->lookAt(Vector3(0,0,0));
     mCamera->setNearClipDistance(5);
     mCameraMan = new OgreBites::SdkCameraMan(mCamera);
-    // paddlePlayer->groundNode->attachObject(mCamera);
+    // paddlePlayer->paddleNode->attachObject(mCamera);
  }
 
 void TutorialApplication::createViewports() {
@@ -237,9 +277,17 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                 // ball->ballMotionState->setWorldTransform(trans);
                 ball->updateTransform();
 
-                // btTransform a;
-                // a.setOrigin(btVector3(ball->ballNode->getPosition().x, ball->ballNode->getPosition().y, ball->ballNode->getPosition().z));
-                // ball->ballMotionState->updateTransform(trans);
+                Vector3 pos = mSceneMgr->getSceneNode("node_paddle")->getPosition();
+                    cout << pos.x << ":" << pos.y << ":" << pos.z << endl;
+
+                
+                // Quaternion qt = mSceneMgr->getSceneNode("node_paddle")->getOrientation();
+                // transform.setRotation((btQuaternion(qt.w, qt.x, qt.y, qt.z)));
+                // if(paddleMotionState)
+                //     paddleMotionState->updateTransform(transform);
+
+                // paddleBody->applyCentralForce(btVector3(0,-10, 0));
+                
          
                 // void* userPointer = ball->get_rigidbody()->getUserPointer();
                 // if(userPointer) {
@@ -259,7 +307,7 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
         btScalar current_velocity = current_velocity_direction.length();
         if(current_velocity < desired_velocity) {
             current_velocity_direction *= desired_velocity/current_velocity;
-            ball->ballRB->setLinearVelocity(current_velocity_direction);
+            // ball->ballRB->setLinearVelocity(current_velocity_direction);
         }
 
         return ret;
@@ -299,6 +347,7 @@ String TutorialApplication::getName(const btCollisionObject* collObj) {
 int TutorialApplication::getScore() {
     return score;
 }
+
 
 //---------------------------------------------------------------------------
 

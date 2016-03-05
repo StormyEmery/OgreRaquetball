@@ -28,6 +28,8 @@ Assignment2::Assignment2(void) :
     ball(NULL),
     background_music(true),
     main_menu(true),
+    _x(0),
+    _y(0),
 
     //test("music/wall_collision.wav", 1),
     
@@ -459,8 +461,7 @@ bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
         mWindow->writeContentsToTimestampedFile("screenshot", ".jpg");
     }
     if(mPause) return false;
-    if(mToggle)
-        mCameraMan->injectKeyDown(arg);
+    mCameraMan->injectKeyDown(arg);
     // else 
     //     mPaddleMan->injectKeyDown(arg);
     return true;
@@ -469,9 +470,9 @@ bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
 bool Assignment2::keyReleased(const OIS::KeyEvent &arg)
 {
     if(mPause) return false;
-    if(mToggle)
-        mCameraMan->injectKeyUp(arg);
+    mCameraMan->injectKeyUp(arg);
     // else 
+
     //     mPaddleMan->injectKeyUp(arg);
     return true;
 }
@@ -484,10 +485,29 @@ bool Assignment2::mouseMoved(const OIS::MouseEvent &arg)
    
     if (mTrayMgr->injectMouseMove(arg)) return true;
     if(!mPause && !main_menu) {
-        // mCameraMan->injectMouseMove(arg);
-        mSceneMgr->getSceneNode("translate")->translate(arg.state.X.rel, -arg.state.Y.rel, 0);
-        paddleF->updateTransform();
 
+        
+        if(arg.state.X.rel > 0)
+            xDirection = 1;
+        else
+            xDirection = -1;
+        if(arg.state.Y.rel > 0)
+            yDirection = 1;
+        else
+            yDirection = -1;
+        if(arg.state.Z.rel > 0)
+            zDirection = 1;
+        else
+            zDirection = -1;
+
+        SceneNode* temp = mSceneMgr->getSceneNode("node_paddle");
+        mSceneMgr->getSceneNode("translate")->translate(arg.state.X.rel, -arg.state.Y.rel, 0);
+        temp->setPosition(temp->getPosition().x+xDirection,temp->getPosition().y-yDirection,temp->getPosition().z);
+        Vector3 pos = mSceneMgr->getSceneNode("node_paddle")->_getDerivedPosition();
+        
+        transform.setOrigin(btVector3(pos.x, pos.y, -1000));
+        paddleMotionState->setWorldTransform(transform);
+        // paddleBody->translate(btVector3(xDirection*100, yDirection*100, zDirection*100));
     }
     return true;
 }

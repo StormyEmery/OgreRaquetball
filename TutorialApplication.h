@@ -56,6 +56,9 @@ protected:
   virtual int getScore();
   virtual void setPaddles(Paddle* f, Paddle* b);
 
+  void updateTransform();
+  
+
 private:
 	bool processUnbufferedInput(const Ogre::FrameEvent& fe);
   String getName(const btCollisionObject* collObj);
