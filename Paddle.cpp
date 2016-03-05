@@ -23,7 +23,7 @@ void Paddle::set_bounding_box() {
 	AxisAlignedBox boundingB = paddleEntity->getBoundingBox();
     Vector3 size = Vector3::ZERO;
     size = boundingB.getSize();
-    std::cout << size.x << ":" << size.y << ":" << size.z << std::endl;
+    // std::cout << size.x *1.5 << ":" << size.y << ":" << size.z << std::endl;
     paddleShape = new btBoxShape(btVector3(size.x*1.5, size.y, size.z*.25));
 }
 
@@ -53,8 +53,8 @@ void Paddle::create_bounding_box(Simulator* simulator, btScalar mass, btScalar r
 void Paddle::updateTransform() {
 	Ogre::Vector3 pos = translationNode->_getDerivedPosition();
 	paddleTransform.setOrigin(btVector3(pos.x, pos.y, pos.z));
-	//Ogre::Quaternion qt = ballNode->getOrientation();
-	// paddleTransform.setRotation(btQuaternion(0, 0, 0, 1));
+	Ogre::Quaternion qt = paddleNode->_getDerivedOrientation();
+	paddleTransform.setRotation(btQuaternion(qt.x, qt.y, qt.z, qt.w));
 	if(paddleMotionState)
 		paddleMotionState->updateTransform(paddleTransform);
 }

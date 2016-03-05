@@ -13,6 +13,7 @@
 #include <OgreAxisAlignedBox.h>
 #include <OgreParticleSystem.h>
 #include <OgreMotionState.h>
+#include <OgreNode.h>
 
 #include <SDL/SDL_mixer.h>
 

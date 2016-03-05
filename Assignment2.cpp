@@ -373,10 +373,56 @@ bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
         }
     }
 
+    SceneNode* temp = paddle->paddleNode;
+    // Quaternion qt = temp->getOrientation();
+
+    if (arg.key == OIS::KC_W)   // toggle visibility of advanced frame stats
+    {
+        // temp->pitch(Degree(45));
+        temp->setOrientation(Quaternion(Degree(45), Vector3(1,0,0)));
+
+        //-------------------
+    }
+    if (arg.key == OIS::KC_A)   // toggle visibility of advanced frame stats
+    {
+        temp->setOrientation(Quaternion(Degree(25), Vector3(0,1,0)));
+
+        //-------------------
+    }
+    if (arg.key == OIS::KC_S)   // toggle visibility of advanced frame stats
+    {
+        temp->setOrientation(Quaternion(Degree(-45), Vector3(1,0,0)));
+
+        //-------------------
+    }
+    if (arg.key == OIS::KC_D)   // toggle visibility of advanced frame stats
+    {
+       temp->setOrientation(Quaternion(Degree(-25), Vector3(0,1,0)));
+
+        //-------------------
+    }
 
     if(arg.key == OIS::KC_Q){
-        ball->a();
+        // ball->a();
+        temp->setOrientation(Quaternion(Degree(0), Vector3(0,1,0)));
     }
+   
+    paddle->updateTransform();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     if (arg.key == OIS::KC_F)   // toggle visibility of advanced frame stats
     {
         mTrayMgr->toggleAdvancedFrameStats();
@@ -396,6 +442,15 @@ bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
             mDetailsPanel->hide();
         }
     }
+
+
+
+
+
+
+
+
+
     // else if (arg.key == OIS::KC_T)   // cycle polygon rendering mode
     // {
     //     Ogre::String newVal;
@@ -461,7 +516,7 @@ bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
         mWindow->writeContentsToTimestampedFile("screenshot", ".jpg");
     }
     if(mPause) return false;
-    mCameraMan->injectKeyDown(arg);
+    //mCameraMan->injectKeyDown(arg);
     // else 
     //     mPaddleMan->injectKeyDown(arg);
     return true;
@@ -479,36 +534,30 @@ bool Assignment2::keyReleased(const OIS::KeyEvent &arg)
 //---------------------------------------------------------------------------
 bool Assignment2::mouseMoved(const OIS::MouseEvent &arg)
 {
+    if (mTrayMgr->injectMouseMove(arg)) return true;
     mDetailsPanel->setParamValue(2, Ogre::StringConverter::toString(arg.state.X.rel));
 
+    SceneNode* temp = mSceneMgr->getSceneNode("translate");
+    Vector3 bounds = temp->getPosition();
 
-   
-    if (mTrayMgr->injectMouseMove(arg)) return true;
-    if(!mPause && !main_menu) {
 
-        
-        // if(arg.state.X.rel > 0)
-        //     xDirection = 1;
-        // else
-        //     xDirection = -1;
-        // if(arg.state.Y.rel > 0)
-        //     yDirection = 1;
-        // else
-        //     yDirection = -1;
-        // if(arg.state.Z.rel > 0)
-        //     zDirection = 1;
-        // else
-        //     zDirection = -1;
+    if(!mPause && !main_menu ) {        
+       if( bounds.x > 597 || bounds.x < -570 ||
+        bounds.y > 398 || bounds.y < -398){
+            if(bounds.x  > 597)
+                temp->setPosition(bounds.x - 50, bounds.y, bounds.z);
+            else if(bounds.x < -570) 
+                temp->setPosition(bounds.x + 50, bounds.y, bounds.z);
+            else if(bounds.y > 398)
+                temp->setPosition(bounds.x, bounds.y -50, bounds.z);
+            else if(bounds.y < 398)                                
+                temp->setPosition(bounds.x, bounds.y + 50, bounds.z);
 
-        // SceneNode* temp = mSceneMgr->getSceneNode("node_paddle");
-        mSceneMgr->getSceneNode("translate")->translate(arg.state.X.rel, -arg.state.Y.rel, 0);
-        paddle->updateTransform();
-        // temp->setPosition(temp->getPosition().x+xDirection,temp->getPosition().y-yDirection,temp->getPosition().z);
-        // Vector3 pos = mSceneMgr->getSceneNode("node_paddle")->_getDerivedPosition();
-        
-        // transform.setOrigin(btVector3(pos.x, pos.y, -1000));
-        // paddleMotionState->setWorldTransform(transform);
-        // paddleBody->translate(btVector3(xDirection*100, yDirection*100, zDirection*100));
+            paddle->updateTransform();
+        }else{
+            temp->translate(arg.state.X.rel, -arg.state.Y.rel, 0);
+            paddle->updateTransform();
+        }
     }
     return true;
 }
