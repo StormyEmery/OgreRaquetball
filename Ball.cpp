@@ -50,15 +50,15 @@ void Ball::reset(SceneManager* mSceneMgr, Ball* ball, Simulator* simulator) {
     ball->set_origin(origin, rotation);
     ball->set_bounding_box(50.0f);
     btVector3 inertia = btVector3(0.0f, 0.0f, 0.0f);
-    btScalar restitution = .75f;
-    ball->create_bounding_box(simulator, .5f, inertia, restitution);
+    btScalar restitution = 1.0f;
+    ball->create_bounding_box(simulator, .01f, inertia, restitution);
 
     //will need to change this later
     ball->get_rigidbody()->applyCentralForce(btVector3(btScalar(0), btScalar(0), btScalar(-100)));
 }
 
 void Ball::a(){
-	ballRB->applyCentralForce(btVector3(btScalar(0), btScalar(0), btScalar(-100)));
+	ballRB->applyCentralForce(btVector3(btScalar(0), btScalar(0), btScalar(-75)));
 }
 
 btRigidBody* Ball::get_rigidbody() {

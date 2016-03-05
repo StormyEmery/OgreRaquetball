@@ -25,7 +25,7 @@ public:
 
 	void set_origin(btVector3 origin);
 	void set_bounding_box();
-	void create_bounding_box(Simulator* simulator);
+	void create_bounding_box(Simulator* simulator, btScalar restitution);
 	void updateTransform();
 	// void update_transform();
 

@@ -54,7 +54,7 @@ protected:
   virtual void setBall(Ball *b);
   virtual Simulator* getSimulator();
   virtual int getScore();
-  virtual void setPaddles(Paddle* f, Paddle* b);
+  virtual void setPaddle(Paddle* p);
 
   void updateTransform();
   

@@ -487,26 +487,27 @@ bool Assignment2::mouseMoved(const OIS::MouseEvent &arg)
     if(!mPause && !main_menu) {
 
         
-        if(arg.state.X.rel > 0)
-            xDirection = 1;
-        else
-            xDirection = -1;
-        if(arg.state.Y.rel > 0)
-            yDirection = 1;
-        else
-            yDirection = -1;
-        if(arg.state.Z.rel > 0)
-            zDirection = 1;
-        else
-            zDirection = -1;
+        // if(arg.state.X.rel > 0)
+        //     xDirection = 1;
+        // else
+        //     xDirection = -1;
+        // if(arg.state.Y.rel > 0)
+        //     yDirection = 1;
+        // else
+        //     yDirection = -1;
+        // if(arg.state.Z.rel > 0)
+        //     zDirection = 1;
+        // else
+        //     zDirection = -1;
 
-        SceneNode* temp = mSceneMgr->getSceneNode("node_paddle");
+        // SceneNode* temp = mSceneMgr->getSceneNode("node_paddle");
         mSceneMgr->getSceneNode("translate")->translate(arg.state.X.rel, -arg.state.Y.rel, 0);
-        temp->setPosition(temp->getPosition().x+xDirection,temp->getPosition().y-yDirection,temp->getPosition().z);
-        Vector3 pos = mSceneMgr->getSceneNode("node_paddle")->_getDerivedPosition();
+        paddle->updateTransform();
+        // temp->setPosition(temp->getPosition().x+xDirection,temp->getPosition().y-yDirection,temp->getPosition().z);
+        // Vector3 pos = mSceneMgr->getSceneNode("node_paddle")->_getDerivedPosition();
         
-        transform.setOrigin(btVector3(pos.x, pos.y, -1000));
-        paddleMotionState->setWorldTransform(transform);
+        // transform.setOrigin(btVector3(pos.x, pos.y, -1000));
+        // paddleMotionState->setWorldTransform(transform);
         // paddleBody->translate(btVector3(xDirection*100, yDirection*100, zDirection*100));
     }
     return true;

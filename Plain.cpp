@@ -32,7 +32,7 @@ void Plain::set_bounding_box(){
 	groundShape = new btBoxShape(btVector3(size.x*0.5f, size.y*0.5f, size.z*0.5f));
 }	
 
-void Plain::create_bounding_box(Simulator* simulator){
+void Plain::create_bounding_box(Simulator* simulator, btScalar resititution){
     simulator->getCollisionShapes()->push_back(groundShape);
     groundShape->setUserPointer(groundNode);
     groundObject = new btCollisionObject();
@@ -47,7 +47,7 @@ void Plain::create_bounding_box(Simulator* simulator){
     groundShape->calculateLocalInertia(groundMass, localGroundInertia);
     btRigidBody::btRigidBodyConstructionInfo groundRBInfo(groundMass, groundMotionState, groundShape, localGroundInertia);
     groundBody = new btRigidBody(groundRBInfo);
-    groundBody->setRestitution(1.0f);
+    groundBody->setRestitution(resititution);
     groundBody->setCollisionFlags(groundBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
     groundBody->setActivationState(DISABLE_DEACTIVATION);
     simulator->getDynamicsWorld()->addRigidBody(groundBody);

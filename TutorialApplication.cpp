@@ -51,93 +51,40 @@ void TutorialApplication::createScene(void)
 
     Plain plain1(mSceneMgr, Vector3::UNIT_Y, Vector3::UNIT_Z, 1500, 3000, -500, "ground1", "node_ground1", "Examples/BumpyMetal");
     plain1.set_origin(btVector3(btScalar(0), btScalar(-500), btScalar(0)));
-    plain1.create_bounding_box(simulator);
+    plain1.create_bounding_box(simulator, 0.5f);
 
     Plain plain2(mSceneMgr, Vector3::NEGATIVE_UNIT_Y, Vector3::UNIT_Z, 1500, 3000, -500, "ground2", "node_ground2", "Examples/BumpyMetal");
     plain2.set_origin(btVector3(btScalar(0), btScalar(500), btScalar(0)));
-    plain2.create_bounding_box(simulator);
+    plain2.create_bounding_box(simulator, 0.0f);
 
     Plain plain3(mSceneMgr, Vector3::UNIT_X, Vector3::UNIT_Y, 3000, 1000, -750, "ground3", "node_ground3", "Examples/BumpyMetal");
     plain3.set_origin(btVector3(btScalar(-750), btScalar(0), btScalar(0)));
-    plain3.create_bounding_box(simulator);
+    plain3.create_bounding_box(simulator, 0.5f);
 
     Plain plain4(mSceneMgr, Vector3::NEGATIVE_UNIT_X, Vector3::UNIT_Y, 3000, 1000, -750, "ground4", "node_ground4", "Examples/BumpyMetal");
     plain4.set_origin(btVector3(btScalar(750), btScalar(0), btScalar(0)));
-    plain4.create_bounding_box(simulator);
+    plain4.create_bounding_box(simulator, 0.5f);
 
     Plain plain5(mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 1000, 1500, -1500, "ground5", "node_ground5", "Examples/BumpyMetal");
     plain5.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(-1500)));
-    plain5.create_bounding_box(simulator);
+    plain5.create_bounding_box(simulator, 0.5f);
 
     Plain plain6(mSceneMgr, Vector3::NEGATIVE_UNIT_Z, Vector3::UNIT_X, 1000, 1500, -1500, "ground6", "node_ground6", "Examples/BumpyMetal");
     plain6.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(1500)));
-    plain6.create_bounding_box(simulator);
+    plain6.create_bounding_box(simulator, 0.5f);
                                                            //W  //H
     Plain goal(mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 400, 750, -1450, "goal", "node_goal", "Examples/Chrome");
     goal.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(-1450)));
-    goal.create_bounding_box(simulator);
-    
-    Entity* paddle = mSceneMgr->createEntity("paddle","cube.mesh");
-    paddle->setMaterialName("Examples/Chrome");
-    SceneNode* paddleNode = mSceneMgr->getSceneNode("translate")->createChildSceneNode("node_paddle");
-    paddleNode->setScale(3, 2, .5);
-    paddleNode->attachObject(paddle);
-    paddleNode->showBoundingBox(true);
+    goal.create_bounding_box(simulator, 1.0f);
 
-    transform.setIdentity();
-    transform.setOrigin(btVector3(0,-400,1000));
-    AxisAlignedBox boundingB = paddle->getBoundingBox();
-    Vector3 size = Vector3::ZERO;
-    size = boundingB.getSize()*0.95f;
-    cout << size.x << ":" << size.y << ":" << size.z << endl;
-    btCollisionShape* paddleShape = new btBoxShape(btVector3(size.x*0.5f, size.y*0.5f, size.z*0.5f));
+    Paddle* paddleNew = new Paddle(mSceneMgr, "paddle", "node_paddle", Vector3(3, 2, .5));
+    paddleNew->set_origin(btVector3(0, 0, 1000));
+    paddleNew->create_bounding_box(simulator, 1.0f, 1.0f);
+    setPaddle(paddleNew);
 
-    simulator->getCollisionShapes()->push_back(paddleShape);
-    paddleShape->setUserPointer(paddleNode);
-    btCollisionObject* paddleObject = new btCollisionObject();
-    paddleObject->setCollisionShape(paddleShape);
-    paddleObject->setWorldTransform(transform);
-    paddleObject->forceActivationState(DISABLE_DEACTIVATION);
-    simulator->getDynamicsWorld()->addCollisionObject(paddleObject);
-    btScalar groundMass(0.01);
-    btVector3 localGroundInertia(0,0,0);
-    paddleMotionState = new OgreMotionState(transform, paddleNode);
-
-    paddleShape->calculateLocalInertia(groundMass, localGroundInertia);
-    btRigidBody::btRigidBodyConstructionInfo paddleRBInfo(groundMass, paddleMotionState, paddleShape, localGroundInertia);
-    paddleBody = new btRigidBody(paddleRBInfo);
-    paddleBody->setRestitution(1.0f);
-    //paddleBody->setCollisionFlags(paddleBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
-    paddleBody->setActivationState(DISABLE_DEACTIVATION);
-    paddleBody->activate(true);
-    paddleBody->setUserPointer(paddleNode);
-
-
-
-
-
-    // Paddle* paddle = new Paddle(mCamera, mSceneMgr, Vector3::NEGATIVE_UNIT_Z, Vector3::UNIT_X, 350, 350, -750, "paddle", "node_paddle", "");
-    // paddle->set_origin(btVector3(btScalar(0), btScalar(0), btScalar(750)));
-    // paddle->create_bounding_box(simulator);
-
-    // Paddle* paddleB = new Paddle(mCamera, mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 350, 350, 750, "paddleB", "node_paddleB", "");
-    // paddleB->set_origin(btVector3(btScalar(0), btScalar(0), btScalar(750)));
-    // paddleB->create_bounding_box(simulator);
-
-    //setPaddles(paddle, paddleB);
-    //paddle.paddleNode->attachObject(mCamera);
-
-/*    SceneNode* player = mSceneMgr->getRootSceneNode()->createChildSceneNode("Player_Paddle");
-    player->createChildSceneNode("Camera_Node")->attachObject(mCamera);
-    player->createChildSceneNode("Player_Node")->attachObject(paddle.entGround);
-    // printf("%s\n", paddle.paddleNode->getName());*/
-    // Ogre::Entity* PaddleCube = mSceneMgr->createEntity("PaddleCube", "cube.mesh");
-    // SceneNode* PadNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("PadNode");
-    // PadNode->attachObject(PaddleCube);
-    // PadNode->attachObject(mCamera);
 
     mCameraMan->setTarget(mSceneMgr->getSceneNode("translate"));
-    mCameraMan->setYawPitchDist(Degree(0), Degree(15), 2500);
+    mCameraMan->setYawPitchDist(Degree(0), Degree(45), 1000);
 
 
     Ball* b = new Ball(mSceneMgr, "node_ball");
@@ -173,7 +120,6 @@ void TutorialApplication::createCamera() {
     mCamera->lookAt(Vector3(0,0,0));
     mCamera->setNearClipDistance(5);
     mCameraMan = new OgreBites::SdkCameraMan(mCamera);
-    // paddlePlayer->paddleNode->attachObject(mCamera);
  }
 
 void TutorialApplication::createViewports() {
@@ -214,8 +160,6 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                     const String obOneName = getName(obOne);
                     const String obTwoName = getName(obTwo);
 
-                    if(obOneName == "node_paddle" || obTwoName == "node_paddle")
-                        std::cout << "Collision Object One: " << obOneName << "\n";
                     if(obOneName == "node_ground1" && obTwoName == "node_ball" && sound_duration > .1) {
                         wall_collision_sound.play(0); 
                         sound_clock = clock();
@@ -254,13 +198,14 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                     if(obOneName == "node_ground6" && obTwoName == "node_ball" && sound_duration > .1) { 
                         wall_collision_sound.play(0); 
                         sound_clock = clock();
+                        mPause = true;
                         break; 
                     }
                     else { sound_clock = clock(); }
 
                     if(obOneName == "node_paddle" && obTwoName == "node_ball"){
                         paddle_collision_sound.play(0);
-                        //ball->a();
+                        ball->a();
                     } 
 
                     if(obOneName == "node_goal" && obTwoName == "node_ball" && score_ok) {
@@ -277,8 +222,8 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                 // ball->ballMotionState->setWorldTransform(trans);
                 ball->updateTransform();
 
-                Vector3 pos = mSceneMgr->getSceneNode("node_paddle")->getPosition();
-                    cout << pos.x << ":" << pos.y << ":" << pos.z << endl;
+                // Vector3 pos = mSceneMgr->getSceneNode("node_paddle")->getPosition();
+                //     cout << pos.x << ":" << pos.y << ":" << pos.z << endl;
 
                 
                 // Quaternion qt = mSceneMgr->getSceneNode("node_paddle")->getOrientation();
@@ -328,9 +273,8 @@ void TutorialApplication::setBall(Ball* b){
     ball = b;
 }
 
-void TutorialApplication::setPaddles(Paddle* f, Paddle* b) {
-    paddleF = f;
-    paddleB = b;
+void TutorialApplication::setPaddle(Paddle* p) {
+    paddle = p;
 }
 
 Simulator* TutorialApplication::getSimulator() {

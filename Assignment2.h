@@ -101,9 +101,10 @@ public:
     virtual void buttonHit(OgreBites::Button * button);
 
     virtual Ball* getBall()=0;
-    virtual void setBall(Ball *b)=0;
+    virtual void setBall(Ball* b)=0;
     virtual Simulator* getSimulator()=0;
     virtual int getScore()=0;
+    virtual void setPaddle(Paddle* p)=0;
 
     Ogre::Root*                 mRoot;
     Ogre::Camera*               mCamera;
@@ -148,10 +149,10 @@ public:
     Sound test;
 
     Ball* ball;
-    Paddle* paddleF;
-    Paddle* paddleB;
-    btTransform transform;
-    OgreMotionState* paddleMotionState;
+    Paddle* paddle;
+    //btTransform transform;
+    //OgreMotionState* paddleMotionState;
+    //btRigidBody* paddleBody;
     
     Simulator* simulator;
     clock_t start;
@@ -162,7 +163,6 @@ public:
     bool sound_ok;
     bool background_music;
     bool main_menu;
-    btRigidBody* paddleBody;
     Real _x;
     Real _y;
 

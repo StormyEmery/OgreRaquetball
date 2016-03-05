@@ -1,14 +1,32 @@
 #ifndef __PADDLE_h_
 #define __PADDLE_h_
 
-#include "Plain.h"
+#include <btBulletCollisionCommon.h>
+#include <btBulletDynamicsCommon.h>
+#include <Simulator.h>
+#include <OgreMeshManager.h>
 
-class Paddle : public Plain{
+using namespace Ogre;
+
+class Paddle {
 public:
-	Paddle(Camera* camera, SceneManager* mSceneMgr, Vector3 normal, Vector3 up_vector, 
-		   float x, float y, float offset, String name, String node_name, String path);
+	btTransform paddleTransform;
+	Entity* paddleEntity;
+	SceneNode* paddleNode;
+	SceneNode* translationNode;
+	btCollisionShape* paddleShape;
+	btCollisionObject* paddleObject;
+	OgreMotionState* paddleMotionState;
+	btRigidBody* paddleRigidBody;
+
+	Paddle(SceneManager* mSceneMgr, String name, String node, Vector3 scale);
 
 	~Paddle(void);
+
+	void set_origin(btVector3 origin);
+	void set_bounding_box();
+	void create_bounding_box(Simulator* simulator, btScalar mass, btScalar restitution);
+	void updateTransform();
 
 protected:
 
