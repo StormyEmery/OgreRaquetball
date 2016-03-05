@@ -168,7 +168,7 @@ void Assignment2::createFrameListener(void)
     //     mTrayMgr->hideCursor();
     // }
 
-
+    gameOver = mTrayMgr->createTextBox(OgreBites::TL_CENTER, DisplayString("Game Over"), "Game Over", real(250.0), real(100.0));
     menu1 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton1", "Continue", 150);
     menu5 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton5", "New Game", 150);
     menu2 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton2", "Exit", 150);
@@ -178,7 +178,8 @@ void Assignment2::createFrameListener(void)
     mDetailsPanel->show();
     mRoot->addFrameListener(this);
 
-
+    gameOver->hide();
+    mTrayMgr->removeWidgetFromTray(gameOver);
     mTrayMgr->showCursor();
     menu1->hide();
     //menu2->hide();

@@ -174,6 +174,7 @@ public:
     OgreBites::Button* menu2;
     OgreBites::Button* menu3;
     OgreBites::Button* menu5;
+    OgreBites::TextBox* gameOver;
     int mScore;
 
 

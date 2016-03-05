@@ -53,7 +53,7 @@ void Paddle::create_bounding_box(Simulator* simulator, btScalar mass, btScalar r
 void Paddle::updateTransform() {
 	Ogre::Vector3 pos = translationNode->_getDerivedPosition();
 	paddleTransform.setOrigin(btVector3(pos.x, pos.y, pos.z));
-	Ogre::Quaternion qt = paddleNode->_getDerivedOrientation();
+	Ogre::Quaternion qt = paddleNode->getOrientation();
 	paddleTransform.setRotation(btQuaternion(qt.x, qt.y, qt.z, qt.w));
 	if(paddleMotionState)
 		paddleMotionState->updateTransform(paddleTransform);

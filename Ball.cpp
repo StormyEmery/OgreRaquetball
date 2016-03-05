@@ -57,8 +57,8 @@ void Ball::reset(SceneManager* mSceneMgr, Ball* ball, Simulator* simulator) {
     ball->get_rigidbody()->applyCentralForce(btVector3(btScalar(0), btScalar(0), btScalar(-100)));
 }
 
-void Ball::a(){
-	//ballRB->applyCentralForce(btVector3(btScalar(0), btScalar(0), btScalar(-75)));
+void Ball::a(btVector3 dir){
+	ballRB->applyCentralForce(dir * 10);
 }
 
 btRigidBody* Ball::get_rigidbody() {

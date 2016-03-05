@@ -31,7 +31,7 @@ public:
 	void set_bounding_box(btScalar radius);
 	void create_bounding_box(Simulator* simulator, btScalar mass, btVector3 inertia, btScalar restitution);
 	void reset(SceneManager* mSceneMgr, Ball* ball, Simulator* simulator);
-	void a();
+	void a(btVector3 dir);
 	void updateTransform();
 
 	btRigidBody* get_rigidbody();

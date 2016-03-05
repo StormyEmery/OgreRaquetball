@@ -195,17 +195,24 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                     }
                     else { sound_clock = clock(); }
 
-                    if(obOneName == "node_ground6" && obTwoName == "node_ball" && sound_duration > .1) { 
+                    if(obOneName == "node_ground6" && obTwoName == "node_ball") { 
                         wall_collision_sound.play(0); 
                         sound_clock = clock();
-                        mPause = true;
-                        break; 
+                        mPause=true;
+                        mTrayMgr->showCursor();
+                        mTrayMgr->moveWidgetToTray(gameOver,OgreBites::TL_CENTER, 0);
+                        mTrayMgr->moveWidgetToTray(menu5,OgreBites::TL_CENTER, 0);
+                        mTrayMgr->moveWidgetToTray(menu2,OgreBites::TL_CENTER, 0);
+                        gameOver->show();
+                        menu5->show();
+                        menu2->show();
                     }
                     else { sound_clock = clock(); }
 
                     if(obOneName == "node_paddle" && obTwoName == "node_ball"){
                         paddle_collision_sound.play(0);
-                        ball->a();
+                        Quaternion qt = paddle->paddleNode->getOrientation();
+                        ball->a(btVector3(qt.x, qt.y, qt.z));
                     } 
 
                     if(obOneName == "node_goal" && obTwoName == "node_ball" && score_ok) {

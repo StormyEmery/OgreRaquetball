@@ -54,13 +54,6 @@ void Plain::create_bounding_box(Simulator* simulator, btScalar resititution){
     groundBody->setUserPointer(groundNode);
 }
 
-// void Plain::update_transform(){
-//     //groundTransform = get its position
-//     groundTransform.setOrigin(groundNode->getPosition());
-
-//     groundBody->getMotionState()->updateTransform(transform);
-// }
-
 void Plain::updateTransform(){
     Ogre::Vector3 pos = groundNode->getPosition();
     groundTransform.setOrigin(btVector3(pos.x, pos.y, pos.z));
