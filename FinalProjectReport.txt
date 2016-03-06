@@ -1,0 +1,18 @@
+CS354R 
+Group 10: Sihai Tang, Rafik Rizik, Stormy Emery 
+EID: st24899, ror279, sre478 
+late days used on this project: 1
+
+Final Project Report:
+
+	In terms of getting the game finished by the due date, we definitely did worse than expected. It's only one day late, but I feel we could have gotten it turned in on time if a few more things had gone our way. Unfortunately we all have busy schedules and it's hard to have all three of us meet up at the same time, but we still managed to meet up enough to have everything but paddle movement working by Friday. Paddle movement is actually the aspect of the game that kept us from turning it in on time. As time was ticking closer to the deadline, we kept getting more discouraged and frantic and were just throwing sloppy code around to try and get something to work. Of course, this didn't work, hardly every does, and we just decided to use a slip day and finsih it on Saturday with freshminds. Of course, the problem was solved within the first 30 minutes of working on Saturday. Turns out that we had left out the line of code that added our paddle's rigid body to the dynamic bullet world. Since we had the rest of the day to work on the game, we decided to go ahead and tighten things up and make it look/function better.
+
+	Looking back at the time spent on this project, we can identify our successes and failures and what caused them.
+
+	In terms of successes, we were able to work together as a team to make a simple game using Ogre and Bullet. We were able to get a majority of the game working on time by cooridinating our free time as well as we could and helping out eachother as much as we could. This project also really flung us into Ogre and Bullet and forced us to learn a lot about them both, which we can apply to our future projects.
+
+	In terms of failures, we weren't able to get the entire game done by the deadline. This was caused by several factors. Mainly because we all tired close to the deadline and weren't thinking as clearly as we could, so we didn't realize our error in time. Another thing that attributed to this was the fact that we all have busy schedules, so sometimes when we were working, one or two people would have to leave while we were stuck on something, reducing our potential to find problems in the code and fix them. It's also hard to get input about how the game is progressing when you can't meet up with everybody in your group. 
+
+	Due to these failures, we have learned that we should try to schedule meeting times that work for everyone and try to make sure that we can stay for the entire scheduled meeting. We have also learned that taking breaks from working on the game is very valuable. It helps us calm down and refocus our attention on what is really happening in the code.
+
+	We all feel like we will be able to get the next project done on time and will have fewer conflicts with meeting times.

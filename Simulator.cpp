@@ -24,14 +24,3 @@ btCollisionDispatcher* Simulator::getDispatcher() {
 	return dispatcher;
 }
 
-void Simulator::addObject(GameObject* o) {
-	objList.push_back(o);
-	dynamicsWorld->addRigidBody(o->getBody());
-}
-
-void Simulator::removeObject(GameObject* o, int index) {
-	objList.erase(objList.begin() + index);
-	dynamicsWorld->removeRigidBody(o->getBody());
-	delete &o;
-	o = NULL;
-}

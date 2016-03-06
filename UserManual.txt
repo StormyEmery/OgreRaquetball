@@ -1,0 +1,59 @@
+CS354R 
+Group 10: Sihai Tang, Rafik Rizik, Stormy Emery 
+EID: st24899, ror279, sre478 
+late days used on this project: 1
+
+User Manual:
+
+	Controls:
+		Esc				Pause game, brings up pause menu
+		Mouse			moves the paddle around the room
+		WASD			changes the orientation of the paddle
+		Q				resets orientation of paddle to defualt
+		SysRQ/PrtScn	takes a screenshot
+
+
+	Menus:
+		-Start Menu Buttons:
+			-New Game:
+				-starts a new game
+			-Exit:
+				-exits the game
+
+		-Pause Menu Buttons:
+			-Reset Ball:
+				-reset ball to initial position, does not reset your score
+			-Continue:
+				- exits pause mode
+			-Toggle Music:
+				-toggles the background music on and off
+			-Exit:
+				-exits the game
+
+		-Game Over Menu Buttons:
+			- same as Start Menu buttons
+
+
+
+	Objective:
+		The objective of the game is to try and get the ball to hit the chrome rectangle at the back of the room by making the ball collide with the paddle. Each time the ball hits the chrome rectangle, you gain a point, which is displayed in the top left corner of the game window. If you miss ball with the paddle, it's game over.
+
+
+	Features:
+
+		- There is a background music track that plays while you are playing the game. You can toggle it on and off in the pause menu.
+
+		- There are sound effects that play depending on which surface the ball hits. A different sound effect plays for a collision with the walls, the goal (chrome rectangle), and the paddle. There is also a sound effect when you pause the game and when you click on buttons in the menus.
+
+		- The ball has a flame tail particle effect on it that is always flowing in the opposite direction that the ball is moving/rotating.
+
+		- There is a game over state, as described above, and once entered, you have the choice of starting a new game or exiting.
+
+		- There is also a reset ball button that resets the ball to it's original position, but doesn't start a new game. 
+
+		- The camera follows the paddle from a third person point of view.
+
+
+	Comments:
+		The camera position makes it a little hard to know exactly where the ball is going to be sometiems. While this adds to the difficulty of the game, we would have liked to have fine tuned this a little more and maybe give the player an option to move the camera to where they want it.
+

@@ -7,11 +7,18 @@ Paddle::Paddle(SceneManager* mSceneMgr, String name, String node, Vector3 scale)
     paddleNode = mSceneMgr->getSceneNode("translate")->createChildSceneNode(node);
     paddleNode->setScale(scale);
     paddleNode->attachObject(paddleEntity);
-    paddleNode->showBoundingBox(true);
 }
 
 		
-Paddle::~Paddle(void){}
+Paddle::~Paddle(void){
+	delete paddleEntity;
+	delete paddleNode;
+	delete translationNode;
+	delete paddleShape;
+	delete paddleObject;
+	delete paddleMotionState;
+	delete paddleRigidBody;
+}
 
 void Paddle::set_origin(btVector3 origin) {
 	paddleTransform.setIdentity();

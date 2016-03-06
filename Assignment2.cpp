@@ -17,9 +17,6 @@ Assignment2::Assignment2(void) :
     mKeyboard(0),
     mOverlaySystem(0),
     mBaller(0),
-    x(0),
-    y(0),
-    z(0),
     score_ok(true),
     sound_ok(true),
     duration(2),
@@ -28,8 +25,6 @@ Assignment2::Assignment2(void) :
     ball(NULL),
     background_music(true),
     main_menu(true),
-    _x(0),
-    _y(0),
 
     //test("music/wall_collision.wav", 1),
     
@@ -41,10 +36,10 @@ Assignment2::Assignment2(void) :
     paddle_collision_sound("music/paddle_collision.wav", 1),
 
     mPause(false),
+    gameOver(false),
     mMenu(0),
     mScore(0),
-    oneFrame(false),
-    mToggle(false)
+    oneFrame(false)
 
 {
 #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
@@ -113,7 +108,6 @@ void Assignment2::createCamera(void)
 //---------------------------------------------------------------------------
 void Assignment2::createFrameListener(void)
 {
-    std::cout << "HELLO\n";
     Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing OIS ***");
     OIS::ParamList pl;
     size_t windowHnd = 0;
@@ -140,55 +134,38 @@ void Assignment2::createFrameListener(void)
     mInputContext.mKeyboard = mKeyboard;
     mInputContext.mMouse = mMouse;
     mTrayMgr = new OgreBites::SdkTrayManager("InterfaceName", mWindow, mInputContext, this);
-    mTrayMgr->showFrameStats(OgreBites::TL_BOTTOMLEFT);
-    //mTrayMgr->showLogo(OgreBites::TL_BOTTOMRIGHT);
+
     mTrayMgr->hideCursor();
 
     // Create a params panel for displaying sample details
     Ogre::StringVector items;
-    items.push_back("TestScore:");
-    items.push_back("");
-    items.push_back("Ball.pX");
-    items.push_back("Ball.pY");
-    items.push_back("Ball.pZ");
+    items.push_back("Score");
 
-    // if(main_menu){
-    //     menu4->show();
-    //     menu2->show();
-    //     mTrayMgr->moveWidgetToTray(menu2, OgreBites::TL_CENTER, 0);
-    //     mTrayMgr->moveWidgetToTray(menu4, OgreBites::TL_CENTER, 0);
-    //     menu_sound.play(0);
-    //     mTrayMgr->showCursor();
-    // }
-    // else{
-    //     mTrayMgr->removeWidgetFromTray(menu2);
-    //     mTrayMgr->removeWidgetFromTray(menu4);
-    //     menu4->hide();
-    //     menu2->hide();
-    //     mTrayMgr->hideCursor();
-    // }
-
-    gameOver = mTrayMgr->createTextBox(OgreBites::TL_CENTER, DisplayString("Game Over"), "Game Over", real(250.0), real(100.0));
+    gameOverLabel = mTrayMgr->createLabel(OgreBites::TL_CENTER, "Game Over", DisplayString("Game Over"), real(175.0));
+    separator = mTrayMgr->createSeparator(OgreBites::TL_CENTER, "Separator", real(175.0));
     menu1 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton1", "Continue", 150);
     menu5 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton5", "New Game", 150);
     menu2 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton2", "Exit", 150);
     menu3 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton3", "Toggle Music", 150);
+    menu6 = mTrayMgr->createButton(OgreBites::TL_CENTER, "myButton6", "Reset ball", 150);
     mDetailsPanel = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "DetailsPanel", 200, items);
     mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(getScore()));
     mDetailsPanel->show();
     mRoot->addFrameListener(this);
 
-    gameOver->hide();
-    mTrayMgr->removeWidgetFromTray(gameOver);
+    gameOverLabel->hide();
+    mTrayMgr->removeWidgetFromTray(gameOverLabel);
+
+    separator->hide();
+    mTrayMgr->removeWidgetFromTray(separator);
+
     mTrayMgr->showCursor();
     menu1->hide();
-    //menu2->hide();
     menu3->hide();
-    //menu5->hide();
+    menu6->hide();
     mTrayMgr->removeWidgetFromTray(menu1);
-    //mTrayMgr->removeWidgetFromTray(menu2);
     mTrayMgr->removeWidgetFromTray(menu3);
-    //mTrayMgr->removeWidgetFromTray(menu5);
+    mTrayMgr->removeWidgetFromTray(menu6);
     mTrayMgr->setTrayPadding(12);
     mTrayMgr->hideBackdrop();
 
@@ -303,7 +280,6 @@ bool Assignment2::setup(void)
 
     // Create the scene
     createScene();
-    // mBaller= getBall();
 
     createFrameListener();
 
@@ -329,45 +305,41 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
         mCameraMan->frameRenderingQueued(evt);   // If dialog isn't up, then update the camera
         if (mDetailsPanel->isVisible())          // If details panel is visible, then update its contents
         {
-            mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(getScore()));
-            
-            mDetailsPanel->setParamValue(3, Ogre::StringConverter::toString(mSceneMgr->getSceneNode("node_ball")->getPosition().y));
-            mDetailsPanel->setParamValue(4, Ogre::StringConverter::toString(mSceneMgr->getSceneNode("node_ball")->getPosition().z));
+            mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(getScore()));            
         }
     }
-
-    // paddle1->update()
-    // paddle2->update()
 
     return true;
 }
 //---------------------------------------------------------------------------
 bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
 {
-    //if (mTrayMgr->isDialogVisible()) return true;   // don't process any more keys if dialog is up
-
     if (arg.key == OIS::KC_ESCAPE && !main_menu){
-        if(!mPause) {
+        if(!mPause && !gameOver) {
             game_music.pause();
             menu_sound.play(0);
             mTrayMgr->showCursor();
             mPause=true;
+            menu6->show();
             menu1->show();
             menu3->show();
             menu2->show();
             mTrayMgr->moveWidgetToTray(menu2, OgreBites::TL_CENTER, 0);
             mTrayMgr->moveWidgetToTray(menu3, OgreBites::TL_CENTER, 0);
             mTrayMgr->moveWidgetToTray(menu1, OgreBites::TL_CENTER, 0);
+            mTrayMgr->moveWidgetToTray(menu6, OgreBites::TL_CENTER, 0);
         }   
-        else{
+        else if(!gameOver){
             menu_sound.play(0);
             if(background_music)
                 game_music.resume();
             mTrayMgr->hideCursor();
             mPause=false;
+            mTrayMgr->removeWidgetFromTray(menu6);
             mTrayMgr->removeWidgetFromTray(menu1);
             mTrayMgr->removeWidgetFromTray(menu2);
             mTrayMgr->removeWidgetFromTray(menu3);
+            menu6->hide();
             menu1->hide();
             menu2->hide();
             menu3->hide();
@@ -375,151 +347,56 @@ bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
     }
 
     SceneNode* temp = paddle->paddleNode;
-    // Quaternion qt = temp->getOrientation();
 
-    if (arg.key == OIS::KC_W)   // toggle visibility of advanced frame stats
-    {
-        // temp->pitch(Degree(45));
-        temp->setOrientation(Quaternion(Degree(45), Vector3(1,0,0)));
-
-        //-------------------
+    if (arg.key == OIS::KC_W) {
+        temp->setOrientation(Quaternion(Degree(15), Vector3(1,0,0)));
     }
-    if (arg.key == OIS::KC_A)   // toggle visibility of advanced frame stats
-    {
-        temp->setOrientation(Quaternion(Degree(25), Vector3(0,1,0)));
 
-        //-------------------
+    if (arg.key == OIS::KC_A)  {
+        temp->setOrientation(Quaternion(Degree(15), Vector3(0,1,0)));
     }
-    if (arg.key == OIS::KC_S)   // toggle visibility of advanced frame stats
-    {
-        temp->setOrientation(Quaternion(Degree(-45), Vector3(1,0,0)));
 
-        //-------------------
+    if (arg.key == OIS::KC_S) {
+        temp->setOrientation(Quaternion(Degree(-15), Vector3(1,0,0)));
     }
-    if (arg.key == OIS::KC_D)   // toggle visibility of advanced frame stats
-    {
-       temp->setOrientation(Quaternion(Degree(-25), Vector3(0,1,0)));
 
-        //-------------------
+    if (arg.key == OIS::KC_D)  {
+       temp->setOrientation(Quaternion(Degree(-15), Vector3(0,1,0)));
     }
 
     if(arg.key == OIS::KC_Q){
-        // ball->a();
         temp->setOrientation(Quaternion(Degree(0), Vector3(0,1,0)));
     }
    
     paddle->updateTransform();
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    if (arg.key == OIS::KC_F)   // toggle visibility of advanced frame stats
-    {
-        mTrayMgr->toggleAdvancedFrameStats();
-
-        //-------------------
-    }
-    else if (arg.key == OIS::KC_G)   // toggle visibility of even rarer debugging details
-    {
-        if (mDetailsPanel->getTrayLocation() == OgreBites::TL_NONE)
-        {
-            mTrayMgr->moveWidgetToTray(mDetailsPanel, OgreBites::TL_TOPRIGHT, 0);
-            mDetailsPanel->show();
-        }
-        else
-        {
-            mTrayMgr->removeWidgetFromTray(mDetailsPanel);
-            mDetailsPanel->hide();
-        }
-    }
-
-
-
-
-
-
-
-
-
-    // else if (arg.key == OIS::KC_T)   // cycle polygon rendering mode
+    // if (arg.key == OIS::KC_F)   // toggle visibility of advanced frame stats
     // {
-    //     Ogre::String newVal;
-    //     Ogre::TextureFilterOptions tfo;
-    //     unsigned int aniso;
+    //     mTrayMgr->toggleAdvancedFrameStats();
 
-    //     switch (mDetailsPanel->getParamValue(9).asUTF8()[0])
+    // }
+
+    // else if (arg.key == OIS::KC_G)   // toggle visibility of even rarer debugging details
+    // {
+    //     if (mDetailsPanel->getTrayLocation() == OgreBites::TL_NONE)
     //     {
-    //     case 'B':
-    //         newVal = "Trilinear";
-    //         tfo = Ogre::TFO_TRILINEAR;
-    //         aniso = 1;
-    //         break;
-    //     case 'T':
-    //         newVal = "Anisotropic";
-    //         tfo = Ogre::TFO_ANISOTROPIC;
-    //         aniso = 8;
-    //         break;
-    //     case 'A':
-    //         newVal = "None";
-    //         tfo = Ogre::TFO_NONE;
-    //         aniso = 1;
-    //         break;
-    //     default:
-    //         newVal = "Bilinear";
-    //         tfo = Ogre::TFO_BILINEAR;
-    //         aniso = 1;
+    //         mTrayMgr->moveWidgetToTray(mDetailsPanel, OgreBites::TL_TOPRIGHT, 0);
+    //         mDetailsPanel->show();
     //     }
-
-    //     Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(tfo);
-    //     Ogre::MaterialManager::getSingleton().setDefaultAnisotropy(aniso);
-    //     mDetailsPanel->setParamValue(9, newVal);
-    // }
-    // else if (arg.key == OIS::KC_F9)   // cycle polygon rendering mode
-    // {
-    //     Ogre::String newVal;
-    //     Ogre::PolygonMode pm;
-
-    //     switch (mCamera->getPolygonMode())
+    //     else
     //     {
-    //     case Ogre::PM_SOLID:
-    //         newVal = "Wireframe";
-    //         pm = Ogre::PM_WIREFRAME;
-    //         break;
-    //     case Ogre::PM_WIREFRAME:
-    //         newVal = "Points";
-    //         pm = Ogre::PM_POINTS;
-    //         break;
-    //     default:
-    //         newVal = "Solid";
-    //         pm = Ogre::PM_SOLID;
+    //         mTrayMgr->removeWidgetFromTray(mDetailsPanel);
+    //         mDetailsPanel->hide();
     //     }
+    // }
 
-    //     mCamera->setPolygonMode(pm);
-    //     mDetailsPanel->setParamValue(10, newVal);
-    // }
-    // else if(arg.key == OIS::KC_F5)   // refresh all textures
-    // {
-    //     Ogre::TextureManager::getSingleton().reloadAll();
-    // }
-    else if (arg.key == OIS::KC_SYSRQ)   // take a screenshot
+
+    if (arg.key == OIS::KC_SYSRQ)   // take a screenshot
     {
         mWindow->writeContentsToTimestampedFile("screenshot", ".jpg");
     }
     if(mPause) return false;
-    //mCameraMan->injectKeyDown(arg);
-    // else 
-    //     mPaddleMan->injectKeyDown(arg);
     return true;
 }
 //---------------------------------------------------------------------------
@@ -527,17 +404,12 @@ bool Assignment2::keyReleased(const OIS::KeyEvent &arg)
 {
     if(mPause) return false;
     mCameraMan->injectKeyUp(arg);
-    // else 
-
-    //     mPaddleMan->injectKeyUp(arg);
     return true;
 }
 //---------------------------------------------------------------------------
 bool Assignment2::mouseMoved(const OIS::MouseEvent &arg)
 {
     if (mTrayMgr->injectMouseMove(arg)) return true;
-    mDetailsPanel->setParamValue(2, Ogre::StringConverter::toString(arg.state.X.rel));
-
     SceneNode* temp = mSceneMgr->getSceneNode("translate");
     Vector3 bounds = temp->getPosition();
 
@@ -613,9 +485,11 @@ void Assignment2::buttonHit(OgreBites::Button * button) {
     if(button->getName() == "MyButton1") {
         button_sound.play(0);
         mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(++mScore));
+        mTrayMgr->removeWidgetFromTray(menu6);
         mTrayMgr->removeWidgetFromTray(menu1);
         mTrayMgr->removeWidgetFromTray(menu2);
         mTrayMgr->removeWidgetFromTray(menu3);
+        menu6->hide();
         menu1->hide();
         menu2->hide();
         menu3->hide();
@@ -632,11 +506,35 @@ void Assignment2::buttonHit(OgreBites::Button * button) {
     else if(button->getName()=="MyButton5"){
         button_sound.play(0);
         main_menu = false;
+        mPause = false;
+        gameOver = false;
+        menu2->hide();
+        menu5->hide();
+        gameOverLabel->hide();
+        separator->hide();
         mTrayMgr->removeWidgetFromTray(menu2);
         mTrayMgr->removeWidgetFromTray(menu5);
-        menu5->hide();
-        menu2->hide();
+        mTrayMgr->removeWidgetFromTray(gameOverLabel);
+        mTrayMgr->removeWidgetFromTray(separator);
         mTrayMgr->hideCursor();
+
+        resetScore();
+    }
+    else if(button->getName() == "myButton6") {
+        button_sound.play(0);
+        mTrayMgr->removeWidgetFromTray(menu6);
+        mTrayMgr->removeWidgetFromTray(menu1);
+        mTrayMgr->removeWidgetFromTray(menu2);
+        mTrayMgr->removeWidgetFromTray(menu3);
+        menu6->hide();
+        menu1->hide();
+        menu2->hide();
+        menu3->hide();
+        mTrayMgr->hideCursor();
+        mPause = false;
+        if(background_music)
+                game_music.resume();
+        ball->reset(mSceneMgr, ball, simulator);
     }
 }
 

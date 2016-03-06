@@ -13,7 +13,6 @@ void OgreMotionState::setNode(Ogre::SceneNode* node) {
 }
 
 void OgreMotionState::getWorldTransform(btTransform &worldTrans) const {
-	// std::cout << mPos1.getOrigin().y() << ":" << mPos1.getOrigin().x() << std::endl;
 	worldTrans = mPos1;
 }
 

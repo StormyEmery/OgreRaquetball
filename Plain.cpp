@@ -38,7 +38,7 @@ void Plain::create_bounding_box(Simulator* simulator, btScalar resititution){
     groundObject = new btCollisionObject();
     groundObject->setCollisionShape(groundShape);
     groundObject->setWorldTransform(groundTransform);
-    // groundObject->forceActivationState(DISABLE_DEACTIVATION);
+    groundObject->forceActivationState(DISABLE_DEACTIVATION);
     simulator->getDynamicsWorld()->addCollisionObject(groundObject);
 	btScalar groundMass(0.0);
     btVector3 localGroundInertia(0,0,0);

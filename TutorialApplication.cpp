@@ -51,30 +51,30 @@ void TutorialApplication::createScene(void)
 
     Plain plain1(mSceneMgr, Vector3::UNIT_Y, Vector3::UNIT_Z, 1500, 3000, -500, "ground1", "node_ground1", "Examples/BumpyMetal");
     plain1.set_origin(btVector3(btScalar(0), btScalar(-500), btScalar(0)));
-    plain1.create_bounding_box(simulator, 0.5f);
+    plain1.create_bounding_box(simulator, 1.0f);
 
     Plain plain2(mSceneMgr, Vector3::NEGATIVE_UNIT_Y, Vector3::UNIT_Z, 1500, 3000, -500, "ground2", "node_ground2", "Examples/BumpyMetal");
     plain2.set_origin(btVector3(btScalar(0), btScalar(500), btScalar(0)));
-    plain2.create_bounding_box(simulator, 0.0f);
+    plain2.create_bounding_box(simulator, 1.0f);
 
     Plain plain3(mSceneMgr, Vector3::UNIT_X, Vector3::UNIT_Y, 3000, 1000, -750, "ground3", "node_ground3", "Examples/BumpyMetal");
     plain3.set_origin(btVector3(btScalar(-750), btScalar(0), btScalar(0)));
-    plain3.create_bounding_box(simulator, 0.5f);
+    plain3.create_bounding_box(simulator, 1.0f);
 
     Plain plain4(mSceneMgr, Vector3::NEGATIVE_UNIT_X, Vector3::UNIT_Y, 3000, 1000, -750, "ground4", "node_ground4", "Examples/BumpyMetal");
     plain4.set_origin(btVector3(btScalar(750), btScalar(0), btScalar(0)));
-    plain4.create_bounding_box(simulator, 0.5f);
+    plain4.create_bounding_box(simulator, 1.0f);
 
     Plain plain5(mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 1000, 1500, -1500, "ground5", "node_ground5", "Examples/BumpyMetal");
     plain5.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(-1500)));
-    plain5.create_bounding_box(simulator, 0.5f);
+    plain5.create_bounding_box(simulator, 1.0f);
 
     Plain plain6(mSceneMgr, Vector3::NEGATIVE_UNIT_Z, Vector3::UNIT_X, 1000, 1500, -1500, "ground6", "node_ground6", "Examples/BumpyMetal");
     plain6.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(1500)));
-    plain6.create_bounding_box(simulator, 0.5f);
+    plain6.create_bounding_box(simulator, 1.0f);
                                                            //W  //H
-    Plain goal(mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 400, 750, -1450, "goal", "node_goal", "Examples/Chrome");
-    goal.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(-1450)));
+    Plain goal(mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 400, 750, -1490, "goal", "node_goal", "Examples/Chrome");
+    goal.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(-1490)));
     goal.create_bounding_box(simulator, 1.0f);
 
     Paddle* paddleNew = new Paddle(mSceneMgr, "paddle", "node_paddle", Vector3(3, 2, .5));
@@ -199,20 +199,26 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                         wall_collision_sound.play(0); 
                         sound_clock = clock();
                         mPause=true;
+                        gameOver = true;
                         mTrayMgr->showCursor();
-                        mTrayMgr->moveWidgetToTray(gameOver,OgreBites::TL_CENTER, 0);
-                        mTrayMgr->moveWidgetToTray(menu5,OgreBites::TL_CENTER, 0);
                         mTrayMgr->moveWidgetToTray(menu2,OgreBites::TL_CENTER, 0);
-                        gameOver->show();
-                        menu5->show();
+                        mTrayMgr->moveWidgetToTray(menu5,OgreBites::TL_CENTER, 0);
+                        mTrayMgr->moveWidgetToTray(separator, OgreBites::TL_CENTER, 0);
+                        mTrayMgr->moveWidgetToTray(gameOverLabel,OgreBites::TL_CENTER, 0);
                         menu2->show();
+                        menu5->show();
+                        separator->show();
+                        gameOverLabel->show();
+
+                        ball->reset(mSceneMgr, ball, simulator);
                     }
                     else { sound_clock = clock(); }
 
                     if(obOneName == "node_paddle" && obTwoName == "node_ball"){
                         paddle_collision_sound.play(0);
                         Quaternion qt = paddle->paddleNode->getOrientation();
-                        ball->a(btVector3(qt.x, qt.y, qt.z));
+                        Vector3 v = qt * Vector3::NEGATIVE_UNIT_Z;
+                        ball->a(btVector3(v.x, v.y, v.z));
                     } 
 
                     if(obOneName == "node_goal" && obTwoName == "node_ball" && score_ok) {
@@ -224,42 +230,13 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                     }
                 }
 
-                // btTransform trans;
-                // ball->ballMotionState->getWorldTransform(trans);
-                // ball->ballMotionState->setWorldTransform(trans);
                 ball->updateTransform();
 
-                // Vector3 pos = mSceneMgr->getSceneNode("node_paddle")->getPosition();
-                //     cout << pos.x << ":" << pos.y << ":" << pos.z << endl;
-
-                
-                // Quaternion qt = mSceneMgr->getSceneNode("node_paddle")->getOrientation();
-                // transform.setRotation((btQuaternion(qt.w, qt.x, qt.y, qt.z)));
-                // if(paddleMotionState)
-                //     paddleMotionState->updateTransform(transform);
-
-                // paddleBody->applyCentralForce(btVector3(0,-10, 0));
-                
-         
-                // void* userPointer = ball->get_rigidbody()->getUserPointer();
-                // if(userPointer) {
-                    // btQuaternion orientation = trans.getRotation();
-                    // SceneNode* sceneNode = static_cast<SceneNode*>(userPointer);
-                    // sceneNode->setPosition(Vector3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));            
-                    // sceneNode->setOrientation(Quaternion(orientation.getW(), orientation.getX(), orientation.getY(), orientation.getZ()));
-                // }
             }
         }
         if(oneFrame) {
             mPause = true;
             oneFrame = false;
-        }
-
-        btVector3 current_velocity_direction = ball->ballRB->getLinearVelocity();
-        btScalar current_velocity = current_velocity_direction.length();
-        if(current_velocity < desired_velocity) {
-            current_velocity_direction *= desired_velocity/current_velocity;
-            // ball->ballRB->setLinearVelocity(current_velocity_direction);
         }
 
         return ret;
@@ -297,6 +274,10 @@ String TutorialApplication::getName(const btCollisionObject* collObj) {
 
 int TutorialApplication::getScore() {
     return score;
+}
+
+void TutorialApplication::resetScore() {
+    score = 0;
 }
 
 

@@ -12,6 +12,8 @@ Ball::Ball(SceneManager* mSceneMgr, String node_name) {
 	jet_particle = mSceneMgr->createParticleSystem("jet", "Examples/JetEngine1");
 	particleNode = ballNode->createChildSceneNode("Particle");
 	particleNode->attachObject(jet_particle);
+
+	ballRB = NULL;
 }
 
 void Ball::set_origin(btVector3 origin, btQuaternion rotation) {
@@ -25,14 +27,17 @@ void Ball::set_bounding_box(btScalar radius) {
 }
 
 void Ball::create_bounding_box(Simulator* simulator, btScalar mass, btVector3 inertia, btScalar restitution) {
+	
+	if(ballRB) {
+		simulator->getDynamicsWorld()->removeRigidBody(ballRB);
+		delete ballMotionState;
+		delete ballRB;
+	}
+
 	simulator->getCollisionShapes()->push_back(ballShape);
 	ballShape->calculateLocalInertia(mass, inertia);
 	ballShape->setUserPointer(ballNode);
-	// ballObject = new btCollisionObject();
- //    ballObject->setCollisionShape(ballShape);
- //    ballObject->setWorldTransform(ballTransform);
- //    // ballObject->forceActivationState(DISABLE_DEACTIVATION);
- //    simulator->getDynamicsWorld()->addCollisionObject(ballObject);
+
 
 	ballMotionState = new OgreMotionState(ballTransform, ballNode);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, ballMotionState, ballShape, inertia);
@@ -51,14 +56,14 @@ void Ball::reset(SceneManager* mSceneMgr, Ball* ball, Simulator* simulator) {
     ball->set_bounding_box(50.0f);
     btVector3 inertia = btVector3(0.0f, 0.0f, 0.0f);
     btScalar restitution = 1.0f;
-    ball->create_bounding_box(simulator, .01f, inertia, restitution);
+    ball->create_bounding_box(simulator, .035f, inertia, restitution);
 
-    //will need to change this later
-    ball->get_rigidbody()->applyCentralForce(btVector3(btScalar(0), btScalar(0), btScalar(-100)));
+    ball->get_rigidbody()->applyCentralForce(btVector3(btScalar(0), btScalar(0), btScalar(-500)));
 }
 
 void Ball::a(btVector3 dir){
-	ballRB->applyCentralForce(dir * 10);
+	dir.setY(dir.getY() + .75);
+	ballRB->setLinearVelocity(dir.normalize()*250);
 }
 
 btRigidBody* Ball::get_rigidbody() {
@@ -81,4 +86,7 @@ Ball::~Ball(){
 	delete ballNode;
 	delete entBall;
 	delete ballRB;
+	delete jet_particle;
+	delete particleNode;
+	delete ballMotionState;
 }

@@ -105,6 +105,7 @@ public:
     virtual void setBall(Ball* b)=0;
     virtual Simulator* getSimulator()=0;
     virtual int getScore()=0;
+    virtual void resetScore()=0;
     virtual void setPaddle(Paddle* p)=0;
 
     Ogre::Root*                 mRoot;
@@ -128,11 +129,8 @@ public:
     bool                        mCursorWasVisible;  // Was cursor visible before dialog appeared?
     bool                        mShutDown;
     bool                        mPause;
+    bool                        gameOver;
     bool                        oneFrame;
-    bool                        mToggle;
-    int xDirection;
-    int yDirection;
-    int zDirection;
 
     //OIS Input devices
     OIS::InputManager*          mInputManager;
@@ -164,17 +162,14 @@ public:
     bool sound_ok;
     bool background_music;
     bool main_menu;
-    Real _x;
-    Real _y;
 
-    Real y;
-    Real x;
-    Real z;
     OgreBites::Button* menu1;
     OgreBites::Button* menu2;
     OgreBites::Button* menu3;
     OgreBites::Button* menu5;
-    OgreBites::TextBox* gameOver;
+    OgreBites::Button* menu6;
+    OgreBites::Label* gameOverLabel;
+    OgreBites::Separator* separator;
     int mScore;
 
 

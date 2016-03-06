@@ -23,6 +23,7 @@ public:
 	ParticleSystem* jet_particle;
 	SceneNode* particleNode;
 	OgreMotionState* ballMotionState;
+	Simulator* sim;
 
 	Ball(SceneManager* mSceneMgr, String node_name);
 	~Ball(void);
