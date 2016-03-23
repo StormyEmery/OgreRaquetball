@@ -1,0 +1,39 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file '/v/filer4b/v38q001/stormy12/GameTech/Assignment3/OgreRaquetball/ceed/ceed/ui/editors/looknfeel/LookNFeelPropertyEditorDockWidget.ui'
+#
+# Created: Tue Mar 22 23:08:10 2016
+#      by: pyside-uic 0.2.15 running on PySide 1.2.1
+#
+# WARNING! All changes made in this file will be lost!
+
+from PySide import QtCore, QtGui
+
+class Ui_LookNFeelPropertyEditorDockWidget(object):
+    def setupUi(self, LookNFeelPropertyEditorDockWidget):
+        LookNFeelPropertyEditorDockWidget.setObjectName("LookNFeelPropertyEditorDockWidget")
+        LookNFeelPropertyEditorDockWidget.setEnabled(False)
+        LookNFeelPropertyEditorDockWidget.resize(550, 773)
+        LookNFeelPropertyEditorDockWidget.setMinimumSize(QtCore.QSize(336, 112))
+        self.dockWidgetContents = QtGui.QWidget()
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.dockWidgetContents.sizePolicy().hasHeightForWidth())
+        self.dockWidgetContents.setSizePolicy(sizePolicy)
+        self.dockWidgetContents.setMinimumSize(QtCore.QSize(336, 70))
+        self.dockWidgetContents.setObjectName("dockWidgetContents")
+        self.dockWidgetContents_2 = QtGui.QVBoxLayout(self.dockWidgetContents)
+        self.dockWidgetContents_2.setContentsMargins(-1, 0, -1, -1)
+        self.dockWidgetContents_2.setObjectName("dockWidgetContents_2")
+        self.verticalLayout = QtGui.QVBoxLayout()
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.dockWidgetContents_2.addLayout(self.verticalLayout)
+        LookNFeelPropertyEditorDockWidget.setWidget(self.dockWidgetContents)
+
+        self.retranslateUi(LookNFeelPropertyEditorDockWidget)
+        QtCore.QMetaObject.connectSlotsByName(LookNFeelPropertyEditorDockWidget)
+
+    def retranslateUi(self, LookNFeelPropertyEditorDockWidget):
+        LookNFeelPropertyEditorDockWidget.setWindowTitle(QtGui.QApplication.translate("LookNFeelPropertyEditorDockWidget", "WidgetLook Property Editor", None, QtGui.QApplication.UnicodeUTF8))
+
