@@ -14,6 +14,8 @@
 #include <OgreParticleSystem.h>
 #include <OgreMotionState.h>
 #include <OgreNode.h>
+#include <CEGUI/CEGUI.h>
+#include <CEGUI/RendererModules/Ogre/Renderer.h>
 
 #include <SDL/SDL_mixer.h>
 

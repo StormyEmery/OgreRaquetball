@@ -426,11 +426,11 @@ bool Assignment2::mouseMoved(const OIS::MouseEvent &arg)
             else if(bounds.y < 398)                                
                 temp->setPosition(bounds.x, bounds.y + 50, bounds.z);
 
-            paddle->updateTransform();
         }else{
             temp->translate(arg.state.X.rel, -arg.state.Y.rel, 0);
-            paddle->updateTransform();
         }
+        
+        paddle->updateTransform();
     }
     return true;
 }
