@@ -41,9 +41,6 @@ TutorialApplication::~TutorialApplication(void)
 void TutorialApplication::createScene(void)
 {
 
-    CEGUI::Renderer* myRenderer = 
-   new CEGUI::Renderer( myRenderWindow );
-
     simulator = new Simulator();
 
     SceneNode* translateNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("translate");

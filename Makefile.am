@@ -4,8 +4,8 @@ bin_PROGRAMS = assignment2
 assignment2_CPPFLAGS = -I$(top_srcdir)
 assignment2_SOURCES = Assignment2.cpp OgreMotionState.cpp Simulator.cpp TutorialApplication.cpp Paddle.cpp Plain.cpp Sound.cpp Ball.cpp
 
-assignment2_CXXFLAGS = $(OGRE_CFLAGS) $(OIS_CFLAGS) $(bullet_CFLAGS) $(CEGUI_CFLAGS)
-assignment2_LDADD = $(OGRE_LIBS) $(OIS_LIBS) $(bullet_LIBS) $(CEGUI_LIBS) $(CEGUI_OGRE_LIBS)
+assignment2_CXXFLAGS = $(OGRE_CFLAGS) $(OIS_CFLAGS) $(bullet_CFLAGS)
+assignment2_LDADD = $(OGRE_LIBS) $(OIS_LIBS) $(bullet_LIBS)
 assignment2_LDFLAGS = -lOgreOverlay -lboost_system
 
 assignment2_CPPFLAGS += -std=c++11
