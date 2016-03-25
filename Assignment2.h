@@ -116,6 +116,7 @@ public:
     Ogre::RenderWindow*         mWindow;
     Ogre::String                mResourcesCfg;
     Ogre::String                mPluginsCfg;
+    CEGUI::OgreRenderer*        mRenderer;
 
     Ogre::OverlaySystem*        mOverlaySystem;
 

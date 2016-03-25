@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project CEGUIDefaultResolution="1280x720" CEGUIVersion="0.8" baseDirectory="." fontsPath="fonts" imagesetsPath="imagesets" layoutsPath="layouts" looknfeelsPath="looknfeel" schemesPath="schemes" version="CEED Project 1" xmlSchemasPath="xml_schemas">
-    <Items />
+    <Items>
+        <Item path="images/high scores.png" type="file" />
+        <Item path="images/main menu background.png" type="file" />
+        <Item path="images/multi player.png" type="file" />
+        <Item path="images/new game.png" type="file" />
+        <Item path="images/quit.png" type="file" />
+        <Item path="images/restart.png" type="file" />
+        <Item path="images/settings.png" type="file" />
+        <Item path="images/single player.png" type="file" />
+        <Item path="images/splashscreen.bmp" type="file" />
+        <Item path="images/splashscreen.png" type="file" />
+        <Item path="images/splashscreen.svg" type="file" />
+        <Item path="images/toggle music.png" type="file" />
+    </Items>
 </Project>

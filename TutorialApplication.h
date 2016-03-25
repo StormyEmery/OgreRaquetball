@@ -19,6 +19,7 @@ http://www.ogre3d.org/wiki/
 #define __TutorialApplication_h_
 
 #include "Assignment2.h"
+
 //---------------------------------------------------------------------------
 
 class TutorialApplication : public Assignment2
