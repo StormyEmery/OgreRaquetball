@@ -37,7 +37,8 @@ protected:
   btDiscreteDynamicsWorld* dynamicsWorld;
 
   btScalar desired_velocity;
-  int score;
+  int player_one_score;
+  int player_two_score;
 
   bool music_running;
   bool already_detected;
@@ -54,15 +55,18 @@ protected:
   virtual Ball* getBall();
   virtual void setBall(Ball *b);
   virtual Simulator* getSimulator();
-  virtual int getScore();
+  virtual int getScoreOne();
+  virtual int getScoreTwo();
   virtual void resetScore();
-  virtual void setPaddle(Paddle* p);
+  virtual void setPaddleOne(Paddle* p);
+  virtual void setPaddleTwo(Paddle* p);
+  virtual void setGoal(Plain* g);
 
   void updateTransform();
   void initializeGUI();
   void InjectOISMouseButton(bool bButtonDown, OIS::MouseButtonID inButton);
   bool quit(const CEGUI::EventArgs &e);
-  bool mouseMoved( const OIS::MouseEvent &arg );
+  // bool mouseMoved( const OIS::MouseEvent &arg );
   
 
 private:
