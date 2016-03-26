@@ -29,7 +29,8 @@ TutorialApplication::TutorialApplication(void)
 {
     
     already_detected = false;
-    score = 0;
+    player_one_score = 0;
+    player_two_score = 0;
     
 }
 //---------------------------------------------------------------------------
@@ -44,8 +45,15 @@ void TutorialApplication::createScene(void)
     simulator = new Simulator();
 
     SceneNode* translateNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("translate");
-    translateNode->translate(0,0,1000);
-    translateNode->attachObject(mCamera);
+    translateNode->translate(10000,0,1000);
+    //translateNode->attachObject(mCamera);
+
+    SceneNode* translateNodeTwo = mSceneMgr->getRootSceneNode()->createChildSceneNode("translateTwo");
+    translateNodeTwo->translate(10000,0,-1000);
+    //translateNodeTwo->attachObject(mCamera);
+
+    SceneNode* translateNodeThree = mSceneMgr->getRootSceneNode()->createChildSceneNode("translateThree");
+    translateNodeThree->translate(10000,0,0);
 
     mSceneMgr->setAmbientLight(ColourValue(0.25,0.25,0.25));
 
@@ -72,19 +80,30 @@ void TutorialApplication::createScene(void)
     Plain plain6(mSceneMgr, Vector3::NEGATIVE_UNIT_Z, Vector3::UNIT_X, 1000, 1500, -1500, "ground6", "node_ground6", "Examples/BumpyMetal");
     plain6.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(1500)));
     plain6.create_bounding_box(simulator, 1.0f);
-                                                           //W  //H
-    Plain goal(mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 400, 750, -1490, "goal", "node_goal", "Examples/Chrome");
-    goal.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(-1490)));
-    goal.create_bounding_box(simulator, 1.0f);
 
-    Paddle* paddleNew = new Paddle(mSceneMgr, "paddle", "node_paddle", Vector3(3, 2, .5));
+    
+
+
+    Plain* g = new Plain(mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 400, 750, 0, "goal", "node_goal", "Examples/Chrome", "translateThree");
+    g->set_origin(btVector3(btScalar(0), btScalar(0), btScalar(10000)));
+    g->create_bounding_box(simulator, 1.0f);
+    setGoal(g);
+
+    
+
+    Paddle* paddleNew = new Paddle(mSceneMgr, "paddle", "node_paddle", Vector3(3, 2, .5), "translate");
     paddleNew->set_origin(btVector3(0, 0, 1000));
     paddleNew->create_bounding_box(simulator, 1.0f, 1.0f);
-    setPaddle(paddleNew);
+    setPaddleOne(paddleNew);
 
 
-    mCameraMan->setTarget(mSceneMgr->getSceneNode("translate"));
-    mCameraMan->setYawPitchDist(Degree(0), Degree(45), 1000);
+    Paddle* paddleNewTwo = new Paddle(mSceneMgr, "paddle2", "node_paddleTwo", Vector3(3, 2, .5), "translateTwo");
+    paddleNewTwo->set_origin(btVector3(0, 0, 2000));
+    paddleNewTwo->create_bounding_box(simulator, 1.0f, 1.0f);
+    setPaddleTwo(paddleNewTwo);
+    
+
+
 
 
     Ball* b = new Ball(mSceneMgr, "node_ball");
@@ -137,11 +156,16 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
 
     if(background_music && !main_menu)
         game_music.play(-1);
-    duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+    single_duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+    multi_duration = ( std::clock() - sound_clock2 ) / (double) CLOCKS_PER_SEC;
     sound_duration = ( std::clock() - sound_clock ) / (double) CLOCKS_PER_SEC;
     
-    if(duration > .1){
-        score_ok = true;    
+    if(single_duration > .5){
+        single_score_ok = true;    
+    }
+
+    if(multi_duration > .5){
+        multi_score_ok = true;
     }
 
     if(simulator != NULL) {
@@ -149,89 +173,209 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
             mPause = false; 
         }
         if(!mPause && !main_menu){
-             if(simulator != NULL) {
-                simulator->getDynamicsWorld()->stepSimulation(1.0f/60.0f);
-                int numManifolds = simulator->getDispatcher()->getNumManifolds();
-                for(int i = 0; i < numManifolds; i++) {
-                    btPersistentManifold* contactManifold = simulator->getDispatcher()->getManifoldByIndexInternal(i);
-                    const btCollisionObject* obOne = contactManifold->getBody0();
-                    const btCollisionObject* obTwo = contactManifold->getBody1();
 
-                    const String obOneName = getName(obOne);
-                    const String obTwoName = getName(obTwo);
+            if(single_player){
+                if(simulator != NULL) {
+                    simulator->getDynamicsWorld()->stepSimulation(1.0f/60.0f);
+                    int numManifolds = simulator->getDispatcher()->getNumManifolds();
+                    for(int i = 0; i < numManifolds; i++) {
+                        btPersistentManifold* contactManifold = simulator->getDispatcher()->getManifoldByIndexInternal(i);
+                        const btCollisionObject* obOne = contactManifold->getBody0();
+                        const btCollisionObject* obTwo = contactManifold->getBody1();
 
-                    if(obOneName == "node_ground1" && obTwoName == "node_ball" && sound_duration > .1) {
-                        wall_collision_sound.play(0); 
-                        sound_clock = clock();
-                        break; 
+                        const String obOneName = getName(obOne);
+                        const String obTwoName = getName(obTwo);
+
+                        if(obOneName == "node_ground1" && obTwoName == "node_ball" && sound_duration > .1) {
+                            wall_collision_sound.play(0); 
+                            sound_clock = clock();
+                            break; 
+                        }
+                        else{ sound_clock = clock(); }
+
+                        if(obOneName == "node_ground2" && obTwoName == "node_ball" && sound_duration > .1) { 
+                            wall_collision_sound.play(0); 
+                            sound_clock = clock();
+                            break; 
+                        }
+                        else { sound_clock = clock(); }
+
+                        if(obOneName == "node_ground3" && obTwoName == "node_ball" && sound_duration > .1) { 
+                            wall_collision_sound.play(0); 
+                            sound_clock = clock();
+                            break; 
+                        }
+                        else { sound_clock = clock(); }
+
+                        if(obOneName == "node_ground4" && obTwoName == "node_ball" && sound_duration > .1) { 
+                            wall_collision_sound.play(0); 
+                            sound_clock = clock();
+                            break; 
+                        }
+                        else { sound_clock = clock(); }
+
+                        if(obOneName == "node_ground5" && obTwoName == "node_ball" && sound_duration > .1) { 
+                            wall_collision_sound.play(0); 
+                            sound_clock = clock();
+                            break; 
+                        }
+                        else { sound_clock = clock(); }
+
+                        if(obOneName == "node_ground6" && obTwoName == "node_ball") { 
+                            wall_collision_sound.play(0); 
+                            sound_clock = clock();
+                            mPause=true;
+                            gameOver = true;
+                            mTrayMgr->showCursor();
+                            mTrayMgr->moveWidgetToTray(menu2,OgreBites::TL_CENTER, 0);
+                            mTrayMgr->moveWidgetToTray(menu5,OgreBites::TL_CENTER, 0);
+                            mTrayMgr->moveWidgetToTray(separator, OgreBites::TL_CENTER, 0);
+                            mTrayMgr->moveWidgetToTray(gameOverLabel,OgreBites::TL_CENTER, 0);
+                            menu2->show();
+                            menu5->show();
+                            separator->show();
+                            gameOverLabel->show();
+
+                            ball->reset(mSceneMgr, ball, simulator);
+                        }
+                        else { sound_clock = clock(); }
+
+                        if(obOneName == "node_paddle" && obTwoName == "node_ball"){
+                            paddle_collision_sound.play(0);
+                            Quaternion qt = paddleOne->paddleNode->getOrientation();
+                            Vector3 v = qt * Vector3::NEGATIVE_UNIT_Z;
+                            ball->a(btVector3(-v.x, -v.y, -v.z));
+                        }
+
+                        if(obOneName == "node_goal" && obTwoName == "node_ball" && single_score_ok) {
+                                start = clock();
+                                score_sound.play(0);
+                                player_one_score++;
+                                single_score_ok = false;
+                                break;
+                        }
                     }
-                    else{ sound_clock = clock(); }
 
-                    if(obOneName == "node_ground2" && obTwoName == "node_ball" && sound_duration > .1) { 
-                        wall_collision_sound.play(0); 
-                        sound_clock = clock();
-                        break; 
-                    }
-                    else { sound_clock = clock(); }
+                    ball->updateTransform();
 
-                    if(obOneName == "node_ground3" && obTwoName == "node_ball" && sound_duration > .1) { 
-                        wall_collision_sound.play(0); 
-                        sound_clock = clock();
-                        break; 
-                    }
-                    else { sound_clock = clock(); }
-
-                    if(obOneName == "node_ground4" && obTwoName == "node_ball" && sound_duration > .1) { 
-                        wall_collision_sound.play(0); 
-                        sound_clock = clock();
-                        break; 
-                    }
-                    else { sound_clock = clock(); }
-
-                    if(obOneName == "node_ground5" && obTwoName == "node_ball" && sound_duration > .1) { 
-                        wall_collision_sound.play(0); 
-                        sound_clock = clock();
-                        break; 
-                    }
-                    else { sound_clock = clock(); }
-
-                    if(obOneName == "node_ground6" && obTwoName == "node_ball") { 
-                        wall_collision_sound.play(0); 
-                        sound_clock = clock();
-                        mPause=true;
-                        gameOver = true;
-                        mTrayMgr->showCursor();
-                        mTrayMgr->moveWidgetToTray(menu2,OgreBites::TL_CENTER, 0);
-                        mTrayMgr->moveWidgetToTray(menu5,OgreBites::TL_CENTER, 0);
-                        mTrayMgr->moveWidgetToTray(separator, OgreBites::TL_CENTER, 0);
-                        mTrayMgr->moveWidgetToTray(gameOverLabel,OgreBites::TL_CENTER, 0);
-                        menu2->show();
-                        menu5->show();
-                        separator->show();
-                        gameOverLabel->show();
-
-                        ball->reset(mSceneMgr, ball, simulator);
-                    }
-                    else { sound_clock = clock(); }
-
-                    if(obOneName == "node_paddle" && obTwoName == "node_ball"){
-                        paddle_collision_sound.play(0);
-                        Quaternion qt = paddle->paddleNode->getOrientation();
-                        Vector3 v = qt * Vector3::NEGATIVE_UNIT_Z;
-                        ball->a(btVector3(v.x, v.y, v.z));
-                    } 
-
-                    if(obOneName == "node_goal" && obTwoName == "node_ball" && score_ok) {
-                            start = clock();
-                            score_sound.play(0);
-                            score++;
-                            score_ok = false;
-                            break;
-                    }
                 }
+            }
+            if(multi_player){
+                if(player_one_score == 8 || player_two_score == 8){
+                    mPause=true;
+                    gameOver = true;
+                    mTrayMgr->showCursor();
+                    mTrayMgr->moveWidgetToTray(menu2,OgreBites::TL_CENTER, 0);
+                    mTrayMgr->moveWidgetToTray(menu5,OgreBites::TL_CENTER, 0);
+                    mTrayMgr->moveWidgetToTray(separator, OgreBites::TL_CENTER, 0);
+                    if(player_one_score == 8){
+                        mTrayMgr->moveWidgetToTray(playerOneWins,OgreBites::TL_CENTER, 0);
+                        playerOneWins->show();
+                    }
+                    else{
+                        mTrayMgr->moveWidgetToTray(playerTwoWins,OgreBites::TL_CENTER, 0);
+                        playerTwoWins->show();
+                    }
+                    menu2->show();
+                    menu5->show();
+                    separator->show();
+                    
+                    ball->reset(mSceneMgr, ball, simulator);
+                }
+                if(simulator != NULL) {
+                    simulator->getDynamicsWorld()->stepSimulation(1.0f/60.0f);
+                    int numManifolds = simulator->getDispatcher()->getNumManifolds();
+                    for(int i = 0; i < numManifolds; i++) {
+                        btPersistentManifold* contactManifold = simulator->getDispatcher()->getManifoldByIndexInternal(i);
+                        const btCollisionObject* obOne = contactManifold->getBody0();
+                        const btCollisionObject* obTwo = contactManifold->getBody1();
 
-                ball->updateTransform();
+                        const String obOneName = getName(obOne);
+                        const String obTwoName = getName(obTwo);
 
+                        if(obOneName == "node_ground1" && obTwoName == "node_ball" && sound_duration > .1) {
+                            wall_collision_sound.play(0); 
+                            sound_clock = clock();
+                            break; 
+                        }
+                        else{ sound_clock = clock(); }
+
+                        if(obOneName == "node_ground2" && obTwoName == "node_ball" && sound_duration > .1) { 
+                            wall_collision_sound.play(0); 
+                            sound_clock = clock();
+                            break; 
+                        }
+                        else { sound_clock = clock(); }
+
+                        if(obOneName == "node_ground3" && obTwoName == "node_ball" && sound_duration > .1) { 
+                            wall_collision_sound.play(0); 
+                            sound_clock = clock();
+                            break; 
+                        }
+                        else { sound_clock = clock(); }
+
+                        if(obOneName == "node_ground4" && obTwoName == "node_ball" && sound_duration > .1) { 
+                            wall_collision_sound.play(0); 
+                            sound_clock = clock();
+                            break; 
+                        }
+                        else { sound_clock = clock(); }
+
+                        if(obOneName == "node_ground5" && obTwoName == "node_ball" && multi_score_ok) { 
+                            wall_collision_sound.play(0); 
+                            start = clock();
+                            multi_score_ok = false;
+                            sound_clock2 = clock();
+                            player_one_score++;
+                            break; 
+                        }
+                        else { sound_clock2 = clock(); }
+
+                        if(obOneName == "node_ground6" && obTwoName == "node_ball" && multi_score_ok) { 
+                            std::cout << "back_wall" << std::endl;
+                            wall_collision_sound.play(0); 
+                            start = clock();
+                            multi_score_ok = false;
+                            sound_clock2 = clock();
+                            player_two_score++;
+                            std::cout << player_two_score << std::endl;
+                            break; 
+                        }
+                        else { sound_clock2 = clock(); }
+
+                        // if(obOneName == "node_ground6" && obTwoName == "node_ball"){
+                        //     if(multi_duration > .5){
+                        //         multi_score_ok = true;
+                        //     }
+                        //     else
+                        //         sound_clock2 = clock();
+                        // }
+                        // if(obOneName == "node_ground5" && obTwoName == "node_ball"){
+                        //     if(multi_duration > .5){
+                        //         multi_score_ok = true;
+                        //     }
+                        //     else
+                        //         sound_clock2 = clock();
+                        // }
+
+                        if(obOneName == "node_paddle" && obTwoName == "node_ball"){
+                            score_sound.play(0);
+                            Quaternion qt = paddleOne->paddleNode->getOrientation();
+                            Vector3 v = qt * Vector3::NEGATIVE_UNIT_Z;
+                            ball->a(btVector3(-v.x, -v.y, -v.z));
+                        }
+
+                        if(obOneName == "node_paddleTwo" && obTwoName == "node_ball"){
+                            score_sound.play(0);
+                            Quaternion qt = paddleTwo->paddleNode->getOrientation();
+                            Vector3 v = qt * Vector3::NEGATIVE_UNIT_Z;
+                            ball->a(btVector3(v.x, v.y, v.z));
+                        }  
+                    }
+
+                    ball->updateTransform();
+
+                }
             }
         }
         if(oneFrame) {
@@ -257,8 +401,16 @@ void TutorialApplication::setBall(Ball* b){
     ball = b;
 }
 
-void TutorialApplication::setPaddle(Paddle* p) {
-    paddle = p;
+void TutorialApplication::setPaddleOne(Paddle* p) {
+    paddleOne = p;
+}
+
+void TutorialApplication::setPaddleTwo(Paddle* p) {
+    paddleTwo = p;
+}
+
+void TutorialApplication::setGoal(Plain* g){
+    goal = g;
 }
 
 Simulator* TutorialApplication::getSimulator() {
@@ -272,12 +424,17 @@ String TutorialApplication::getName(const btCollisionObject* collObj) {
     return shapeObjSceneNode->getName();
 }
 
-int TutorialApplication::getScore() {
-    return score;
+int TutorialApplication::getScoreOne() {
+    return player_one_score;
+}
+
+int TutorialApplication::getScoreTwo() {
+    return player_two_score;
 }
 
 void TutorialApplication::resetScore() {
-    score = 0;
+    player_one_score = 0;
+    player_two_score = 0;
 }
 
 

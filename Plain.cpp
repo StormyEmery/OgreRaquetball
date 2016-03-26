@@ -4,17 +4,27 @@ Plain::Plain(SceneManager* mSceneMgr, Vector3 normal, Vector3 up_vector, float x
 	Plane plane(normal, offset);
 	MeshManager::getSingleton().createPlane(name, ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane, x, y, 20, 20, true, 1, 5, 5, up_vector);	
 
-    if (name != "paddle" && name != "paddleB") {
-        entGround = mSceneMgr->createEntity(name);
-        entGround->setMaterialName(path);
-        groundNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(node_name);
-    }else {
-        entGround = mSceneMgr->createEntity(name);
-        entGround->setMaterialName(path);
-        groundNode = mSceneMgr->getSceneNode("translate")->createChildSceneNode(node_name);
-    }
 
+
+    
+    entGround = mSceneMgr->createEntity(name);
+    entGround->setMaterialName(path);
+    groundNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(node_name);
     groundNode->attachObject(entGround);
+
+}
+
+Plain::Plain(SceneManager* mSceneMgr, Vector3 normal, Vector3 up_vector, float x, float y, float offset, String name, String node_name, String path, String tname){
+    Plane plane(normal, offset);
+    MeshManager::getSingleton().createPlane(name, ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane, x, y, 20, 20, true, 1, 5, 5, up_vector);    
+
+    
+    entGround = mSceneMgr->createEntity(name);
+    entGround->setMaterialName(path);
+    translationNode = mSceneMgr->getSceneNode(tname);
+    groundNode = mSceneMgr->getSceneNode(tname)->createChildSceneNode(node_name);
+    groundNode->attachObject(entGround);
+
 }
 
 
@@ -54,14 +64,13 @@ void Plain::create_bounding_box(Simulator* simulator, btScalar resititution){
     groundBody->setUserPointer(groundNode);
 }
 
-void Plain::updateTransform(){
-    Ogre::Vector3 pos = groundNode->getPosition();
+void Plain::updateTransform() {
+    Ogre::Vector3 pos = translationNode->_getDerivedPosition();
     groundTransform.setOrigin(btVector3(pos.x, pos.y, pos.z));
     Ogre::Quaternion qt = groundNode->getOrientation();
     groundTransform.setRotation(btQuaternion(qt.x, qt.y, qt.z, qt.w));
     if(groundMotionState)
         groundMotionState->updateTransform(groundTransform);
 }
-
 
 Plain::~Plain(){}

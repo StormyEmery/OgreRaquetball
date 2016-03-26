@@ -18,8 +18,9 @@ public:
 	btCollisionObject* paddleObject;
 	OgreMotionState* paddleMotionState;
 	btRigidBody* paddleRigidBody;
+	Simulator* s;
 
-	Paddle(SceneManager* mSceneMgr, String name, String node, Vector3 scale);
+	Paddle(SceneManager* mSceneMgr, String name, String node, Vector3 scale, String tname);
 
 	~Paddle(void);
 

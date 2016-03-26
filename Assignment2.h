@@ -104,9 +104,14 @@ public:
     virtual Ball* getBall()=0;
     virtual void setBall(Ball* b)=0;
     virtual Simulator* getSimulator()=0;
-    virtual int getScore()=0;
+    virtual int getScoreOne()=0;
+    virtual int getScoreTwo()=0;
     virtual void resetScore()=0;
-    virtual void setPaddle(Paddle* p)=0;
+    virtual void setPaddleOne(Paddle* p)=0;
+    virtual void setPaddleTwo(Paddle* p)=0;
+    virtual void setGoal(Plain* g)=0;
+    virtual void render_single_paddle();
+    virtual void render_multi_paddle();
 
     Ogre::Root*                 mRoot;
     Ogre::Camera*               mCamera;
@@ -125,12 +130,31 @@ public:
     OgreBites::SdkTrayManager*  mTrayMgr;
     OgreBites::SdkCameraMan*    mCameraMan;         // Basic camera controller
     OgreBites::ParamsPanel*     mDetailsPanel;      // Sample details panel
+    OgreBites::ParamsPanel*     mDetailsPanel2;      // Sample details panel
     OgreBites::Button*          mMenu;
     bool                        mCursorWasVisible;  // Was cursor visible before dialog appeared?
     bool                        mShutDown;
     bool                        mPause;
     bool                        gameOver;
     bool                        oneFrame;
+    bool                        leftPressed;
+    bool                        rightPressed;
+    bool                        moveLeft;
+    bool                        moveRight;
+    bool                        moveUp;
+    bool                        moveDown;
+    bool                        player_two_rotate;
+    bool                        player_two_pan;
+    Real                        rotate_x;
+    Real                        pan_y;
+    Real                        x_pos;
+    Real                        y_pos;
+    bool                        single_player;
+    bool                        multi_player;
+    Real                        current_x;
+    Real                        current_y;
+
+
 
     //OIS Input devices
     OIS::InputManager*          mInputManager;
@@ -148,7 +172,9 @@ public:
     Sound test;
 
     Ball* ball;
-    Paddle* paddle;
+    Paddle* paddleOne;
+    Paddle* paddleTwo;
+    Plain* goal;
     //btTransform transform;
     //OgreMotionState* paddleMotionState;
     //btRigidBody* paddleBody;
@@ -156,9 +182,12 @@ public:
     Simulator* simulator;
     clock_t start;
     clock_t sound_clock;
-    double duration;
+    clock_t sound_clock2;
+    double single_duration;
+    double multi_duration;
     double sound_duration;
-    bool score_ok;
+    bool single_score_ok;
+    bool multi_score_ok;
     bool sound_ok;
     bool background_music;
     bool main_menu;
@@ -168,7 +197,13 @@ public:
     OgreBites::Button* menu3;
     OgreBites::Button* menu5;
     OgreBites::Button* menu6;
+    OgreBites::Button* menu7;
+    OgreBites::Button* menu8;
+    OgreBites::Button* menu9;
+    OgreBites::Button* menu10;
     OgreBites::Label* gameOverLabel;
+    OgreBites::Label* playerOneWins;
+    OgreBites::Label* playerTwoWins;
     OgreBites::Separator* separator;
     int mScore;
 

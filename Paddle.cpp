@@ -1,16 +1,18 @@
 #include "Paddle.h"
 
-Paddle::Paddle(SceneManager* mSceneMgr, String name, String node, Vector3 scale){
+Paddle::Paddle(SceneManager* mSceneMgr, String name, String node, Vector3 scale, String tname){
 	paddleEntity = mSceneMgr->createEntity(name,"cube.mesh");
     paddleEntity->setMaterialName("Examples/Chrome");
-    translationNode = mSceneMgr->getSceneNode("translate");
-    paddleNode = mSceneMgr->getSceneNode("translate")->createChildSceneNode(node);
+    translationNode = mSceneMgr->getSceneNode(tname);
+    paddleNode = mSceneMgr->getSceneNode(tname)->createChildSceneNode(node);
     paddleNode->setScale(scale);
     paddleNode->attachObject(paddleEntity);
+    
 }
 
 		
 Paddle::~Paddle(void){
+	s->getDynamicsWorld()->removeRigidBody(paddleRigidBody);
 	delete paddleEntity;
 	delete paddleNode;
 	delete translationNode;
@@ -35,12 +37,13 @@ void Paddle::set_bounding_box() {
 }
 
 void Paddle::create_bounding_box(Simulator* simulator, btScalar mass, btScalar restitution) {
+	s = simulator;
 	paddleShape->setUserPointer(paddleNode);
 	paddleObject = new btCollisionObject();
 	paddleObject->setCollisionShape(paddleShape);
 	paddleObject->setWorldTransform(paddleTransform); //might need to remove or update somewhere else?
 	paddleObject->forceActivationState(DISABLE_DEACTIVATION);
-	simulator->getDynamicsWorld()->addCollisionObject(paddleObject);
+	s->getDynamicsWorld()->addCollisionObject(paddleObject);
 
 	paddleMotionState = new OgreMotionState(paddleTransform, paddleNode);
 
@@ -54,7 +57,7 @@ void Paddle::create_bounding_box(Simulator* simulator, btScalar mass, btScalar r
 	paddleRigidBody->setCollisionFlags(paddleRigidBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
 	paddleRigidBody->setActivationState(DISABLE_DEACTIVATION);
 	paddleRigidBody->setUserPointer(paddleNode);
-	simulator->getDynamicsWorld()->addRigidBody(paddleRigidBody);
+	s->getDynamicsWorld()->addRigidBody(paddleRigidBody);
 }
 
 void Paddle::updateTransform() {
