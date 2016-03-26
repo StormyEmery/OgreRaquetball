@@ -6,7 +6,7 @@ assignment2_SOURCES = Assignment2.cpp OgreMotionState.cpp Simulator.cpp Tutorial
 
 assignment2_CXXFLAGS = $(OGRE_CFLAGS) $(OIS_CFLAGS) $(bullet_CFLAGS) $(CEGUI_CFLAGS)
 assignment2_LDADD = $(OGRE_LIBS) $(OIS_LIBS) $(bullet_LIBS) $(CEGUI_LIBS) $(CEGUI_OGRE_LIBS)
-assignment2_LDFLAGS = -lOgreOverlay -lboost_system
+assignment2_LDFLAGS = -lOgreOverlay -lboost_system -R/lusr/lib/cegui-0.8
 
 assignment2_CPPFLAGS += -std=c++11
 assignment2_CPPFLAGS += -I/usr/include/SDL

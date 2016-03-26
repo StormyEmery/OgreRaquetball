@@ -59,6 +59,10 @@ protected:
   virtual void setPaddle(Paddle* p);
 
   void updateTransform();
+  void initializeGUI();
+  void InjectOISMouseButton(bool bButtonDown, OIS::MouseButtonID inButton);
+  bool quit(const CEGUI::EventArgs &e);
+  bool mouseMoved( const OIS::MouseEvent &arg );
   
 
 private:

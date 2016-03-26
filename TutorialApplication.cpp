@@ -42,6 +42,7 @@ TutorialApplication::~TutorialApplication(void)
 void TutorialApplication::createScene(void)
 {
 
+    //initializeGUI();
     mRenderer = &CEGUI::OgreRenderer::bootstrapSystem();
 
     CEGUI::ImageManager::setImagesetDefaultResourceGroup("Imagesets");
@@ -49,15 +50,40 @@ void TutorialApplication::createScene(void)
     CEGUI::Scheme::setDefaultResourceGroup("Schemes");
     CEGUI::WidgetLookManager::setDefaultResourceGroup("LookNFeel");
     CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
-    CEGUI::SchemeManager::getSingleton().createFromFile("VanillaSkin.scheme");
+
+    CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
+    CEGUI::FontManager::getSingleton().createFromFile("DejaVuSans-10.font");
  
     CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
+
     CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
     
 
-    CEGUI::Window *guiRoot = CEGUI::WindowManager::getSingleton().loadLayoutFromFile("main_menu.layout"); 
-    CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(guiRoot);
-    //CEGUI::Window *backGround = wmgr.createWindow("TaharezLook/ClientBrush", "Background");
+    // CEGUI::Window *mainMenu = CEGUI::WindowManager::getSingleton().loadLayoutFromFile("main_menu.layout"); 
+    // sheet->addChild(mainMenu);
+
+    CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
+    CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
+
+    CEGUI::Window *backGround = wmgr.createWindow("TaharezLook/FrameWindow", "CEGUIDemo/Background");
+    backGround->setSize(CEGUI::USize(CEGUI::UDim(1.0f, 0.0f), CEGUI::UDim(1.0f, 1.0f)));
+    sheet->addChild(backGround);
+
+    CEGUI::Window *newGame = wmgr.createWindow("TaharezLook/TabButton", "CEGUIDemo/NewGameButton");
+    newGame->setText("New Game");
+    newGame->setPosition(CEGUI::UVector2(CEGUI::UDim(0.43,0), CEGUI::UDim(0.40,0)));
+    newGame->setSize(CEGUI::USize(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
+    sheet->addChild(newGame);
+
+    CEGUI::Window *quit = wmgr.createWindow("TaharezLook/TabButton", "CEGUIDemo/QuitButton");
+    quit->setText("Quit");
+    quit->setPosition(CEGUI::UVector2(CEGUI::UDim(0.43,0),CEGUI::UDim(0.5,0)));
+    quit->setSize(CEGUI::USize(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
+    sheet->addChild(quit);
+
+    CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
+
+    quit->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::quit, this));
 
     // CEGUI::Window *quit = wmgr.createWindow("TaharezLook/ClientBrush", "Background");
     // quit->setText("Quit");
@@ -142,6 +168,12 @@ void TutorialApplication::createScene(void)
     Light* light1 = mSceneMgr->createLight("ThirdLight");
     light1->setDiffuseColour(1,1,1);
     light1->setPosition(0,50,50);
+}
+
+bool TutorialApplication::quit(const CEGUI::EventArgs &e)
+{
+    mShutDown = true;
+    return true;
 }
 
 void TutorialApplication::createCamera() {
@@ -274,6 +306,65 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
 
 }   
 
+bool TutorialApplication::mouseMoved( const OIS::MouseEvent &arg )
+{
+    // CEGUI::System &sys = CEGUI::System::getSingleton();
+    // sys.injectMouseMove(arg.state.X.rel, arg.state.Y.rel);
+    // return true;
+}
+
+void TutorialApplication::InjectOISMouseButton(bool bButtonDown, OIS::MouseButtonID inButton)
+{
+    if (bButtonDown == true)
+    {
+        switch (inButton)
+        {
+        case OIS::MB_Left:
+            CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::LeftButton);
+            break;
+        case OIS::MB_Middle:
+            CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::MiddleButton);
+            break;
+        case OIS::MB_Right:
+            CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::RightButton);
+            break;
+        case OIS::MB_Button3:
+            CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::X1Button);
+            break;
+        case OIS::MB_Button4:
+            CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::X2Button);
+            break;
+        default:    
+            break;
+ 
+        }
+    }
+    else // bButtonDown = false
+    {
+        switch (inButton)
+        {
+        case OIS::MB_Left:
+            CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(CEGUI::LeftButton);
+            break;
+        case OIS::MB_Middle:
+            CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(CEGUI::MiddleButton);
+            break;
+        case OIS::MB_Right:
+            CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(CEGUI::RightButton);
+            break;
+        case OIS::MB_Button3:
+            CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(CEGUI::X1Button);
+            break;
+        case OIS::MB_Button4:
+            CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(CEGUI::X2Button);
+            break;
+        default:    
+            break;
+        }
+    }
+ 
+}
+
 bool TutorialApplication::processUnbufferedInput(const FrameEvent& fe) {
     static Real move = 5;
     return true;
@@ -308,6 +399,55 @@ int TutorialApplication::getScore() {
 
 void TutorialApplication::resetScore() {
     score = 0;
+}
+
+void TutorialApplication::initializeGUI() {
+    mRenderer = &CEGUI::OgreRenderer::bootstrapSystem();
+
+    // CEGUI::ImageManager::setImagesetDefaultResourceGroup("Imagesets");
+    // CEGUI::Font::setDefaultResourceGroup("Fonts");
+    // CEGUI::Scheme::setDefaultResourceGroup("Schemes");
+    // CEGUI::WidgetLookManager::setDefaultResourceGroup("LookNFeel");
+    // CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
+
+    // CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
+    // CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
+
+    // CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
+    // CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
+    // CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
+
+    // CEGUI::Window *guiRoot = CEGUI::WindowManager::getSingleton().loadLayoutFromFile("TaharezLook.layout"); 
+    // CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(guiRoot);
+
+    // CEGUI::Window *quit = wmgr.createWindow("TaharezLook/Button", "CEGUIDemo/QuitButton");
+    // quit->setText("Quit");
+    // quit->setSize(CEGUI::USize(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
+
+    // sheet->addChild(quit);
+    // CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
+    // CEGUI::DefaultResourceProvider* rp = static_cast<CEGUI::DefaultResourceProvider*>(CEGUI::System::getSingleton().getResourceProvider());
+    
+    // //Specify resource groups
+    // rp->setResourceGroupDirectory("schemes", "./ceed/data/schemes/");
+    // rp->setResourceGroupDirectory("imagesets", "/lusr/opt/cegui-0.8.4/share/cegui-0/imagesets/");
+    // rp->setResourceGroupDirectory("fonts", "./ceed/data/fonts/");
+    // rp->setResourceGroupDirectory("layouts", "./ceed/data/layouts/");
+    // rp->setResourceGroupDirectory("looknfeels", "./ceed/data/looknfeel/");
+    // rp->setResourceGroupDirectory("lua_scripts", "./ceed/data/lua_scripts/");
+
+    // //Specify which resources groups for the system to use
+    // CEGUI::Scheme::setDefaultResourceGroup("schemes");
+    // CEGUI::ImageManager::setImagesetDefaultResourceGroup("imagesets");
+
+    // CEGUI::Font::setDefaultResourceGroup("fonts");
+    // CEGUI::WidgetLookManager::setDefaultResourceGroup("looknfeels");
+    // CEGUI::WindowManager::setDefaultResourceGroup("layouts");
+    // CEGUI::ScriptModule::setDefaultResourceGroup("lua_scripts");
+
+    // CEGUI::System::getSingleton().getDefaultGUIContext().setDefaultFont( "DejaVuSans-10" );
+    // CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage( "TaharezLook/MouseArrow" );
+
 }
 
 
