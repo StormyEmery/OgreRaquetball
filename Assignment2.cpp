@@ -55,7 +55,8 @@ Assignment2::Assignment2(void) :
     gameOver(false),
     mMenu(0),
     mScore(0),
-    oneFrame(false)
+    oneFrame(false),
+    mRenderer(0)
 
 {
 #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
@@ -128,6 +129,7 @@ void Assignment2::createFrameListener(void)
     OIS::ParamList pl;
     size_t windowHnd = 0;
     std::ostringstream windowHndStr;
+
 
     mWindow->getCustomAttribute("WINDOW", &windowHnd);
     windowHndStr << windowHnd;
@@ -435,6 +437,9 @@ bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
             menu3->hide();
             menu10->hide();
         }
+    }
+    if (arg.key == OIS::KC_F12){
+        mShutDown = true;
     }
 
     if (arg.key == OIS::KC_W) { moveUp = true; }
