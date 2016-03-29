@@ -43,29 +43,7 @@ TutorialApplication::~TutorialApplication(void)
 void TutorialApplication::createScene(void)
 {
 
-    mRenderer = &CEGUI::OgreRenderer::bootstrapSystem();
 
-    CEGUI::ImageManager::setImagesetDefaultResourceGroup("Imagesets");
-    CEGUI::Font::setDefaultResourceGroup("Fonts");
-    CEGUI::Scheme::setDefaultResourceGroup("Schemes");
-    CEGUI::WidgetLookManager::setDefaultResourceGroup("LookNFeel");
-    CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
-    CEGUI::SchemeManager::getSingleton().createFromFile("VanillaSkin.scheme");
- 
-    CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
-    CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
-    
-
-    CEGUI::Window *guiRoot = CEGUI::WindowManager::getSingleton().loadLayoutFromFile("main_menu.layout"); 
-    CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(guiRoot);
-    //CEGUI::Window *backGround = wmgr.createWindow("TaharezLook/ClientBrush", "Background");
-
-    // CEGUI::Window *quit = wmgr.createWindow("TaharezLook/ClientBrush", "Background");
-    // quit->setText("Quit");
-    // quit->setSize(CEGUI::USize(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
- 
-    // sheet->addChild(quit);
-    // CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
  
 
 
