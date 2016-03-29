@@ -175,8 +175,11 @@ void Assignment2::createFrameListener(void)
     menu6 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton6", "Reset ball", 150);
     menu7 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton7", "Single Player", 150);
     menu8 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton8", "MultiPlayer", 150);
-    menu9 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton9", "Back", 150);
+    menu9 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton9", "Back1", 150);
     menu10 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton10", "Main Menu", 150);
+    menu11 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton11", "Start Server", 150);
+    menu12 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton12", "Start Client", 150);
+    menu13 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton13", "Back2", 150);
 
 
     mDetailsPanel = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "DetailsPanel", 200, items);
@@ -205,6 +208,9 @@ void Assignment2::createFrameListener(void)
     menu8->hide();
     menu9->hide();
     menu10->hide();
+    menu11->hide();
+    menu12->hide();
+    menu13->hide();
     mTrayMgr->removeWidgetFromTray(menu1);
     mTrayMgr->removeWidgetFromTray(menu3);
     mTrayMgr->removeWidgetFromTray(menu6);
@@ -212,6 +218,9 @@ void Assignment2::createFrameListener(void)
     mTrayMgr->removeWidgetFromTray(menu8);
     mTrayMgr->removeWidgetFromTray(menu9);
     mTrayMgr->removeWidgetFromTray(menu10);
+    mTrayMgr->removeWidgetFromTray(menu11);
+    mTrayMgr->removeWidgetFromTray(menu12);
+    mTrayMgr->removeWidgetFromTray(menu13);
     mTrayMgr->setTrayPadding(12);
     mTrayMgr->hideBackdrop();
 
@@ -701,21 +710,79 @@ void Assignment2::buttonHit(OgreBites::Button * button) {
     }
     else if(button->getName()=="MyButton8"){
         button_sound.play(0);
-        single_player = false;
-        multi_player = true;
-        main_menu = false;
-        mPause = false;
-        gameOver = false;
         menu7->hide();
         menu8->hide();
         menu9->hide();
         gameOverLabel->hide();
         playerOneWins->hide();
         playerTwoWins->hide();
-        separator->hide();
         mTrayMgr->removeWidgetFromTray(menu7);
         mTrayMgr->removeWidgetFromTray(menu8);
         mTrayMgr->removeWidgetFromTray(menu9);
+        menu13->show();
+        menu12->show();
+        menu11->show();
+        mTrayMgr->moveWidgetToTray(menu13, OgreBites::TL_CENTER, 0);
+        mTrayMgr->moveWidgetToTray(menu12, OgreBites::TL_CENTER, 0);
+        mTrayMgr->moveWidgetToTray(menu11, OgreBites::TL_CENTER, 0);
+    }
+    else if(button->getName()=="MyButton13"){
+        button_sound.play(0);
+        menu11->hide();
+        menu12->hide();
+        menu13->hide();
+        gameOverLabel->hide();
+        playerOneWins->hide();
+        playerTwoWins->hide();
+        mTrayMgr->removeWidgetFromTray(menu11);
+        mTrayMgr->removeWidgetFromTray(menu12);
+        mTrayMgr->removeWidgetFromTray(menu13);
+        menu9->show();
+        menu8->show();
+        menu7->show();
+        mTrayMgr->moveWidgetToTray(menu9, OgreBites::TL_CENTER, 0);
+        mTrayMgr->moveWidgetToTray(menu8, OgreBites::TL_CENTER, 0);
+        mTrayMgr->moveWidgetToTray(menu7, OgreBites::TL_CENTER, 0);
+    }
+    else if(button->getName()=="MyButton12"){
+        button_sound.play(0);
+        single_player = false;
+        multi_player = true;
+        main_menu = false;
+        mPause = false;
+        gameOver = false;
+        menu11->hide();
+        menu12->hide();
+        menu13->hide();
+        gameOverLabel->hide();
+        playerOneWins->hide();
+        playerTwoWins->hide();
+        mTrayMgr->removeWidgetFromTray(menu11);
+        mTrayMgr->removeWidgetFromTray(menu12);
+        mTrayMgr->removeWidgetFromTray(menu13);
+        render_multi_paddle();
+
+        netManager.initNetManager();
+        netManager.addNetworkInfo(PROTOCOL_UDP, netManager.getHostname().c_str(), 50000);
+        netManager.startClient();
+    }
+    else if(button->getName()=="MyButton11"){
+        button_sound.play(0);
+        single_player = false;
+        multi_player = true;
+        main_menu = false;
+        mPause = false;
+        gameOver = false;
+        menu11->hide();
+        menu12->hide();
+        menu13->hide();
+        gameOverLabel->hide();
+        playerOneWins->hide();
+        playerTwoWins->hide();
+        separator->hide();
+        mTrayMgr->removeWidgetFromTray(menu11);
+        mTrayMgr->removeWidgetFromTray(menu12);
+        mTrayMgr->removeWidgetFromTray(menu13);
         mTrayMgr->removeWidgetFromTray(gameOverLabel);
         mTrayMgr->removeWidgetFromTray(playerOneWins);
         mTrayMgr->removeWidgetFromTray(playerTwoWins);
@@ -723,6 +790,32 @@ void Assignment2::buttonHit(OgreBites::Button * button) {
         mTrayMgr->hideCursor();
         resetScore();
         render_multi_paddle();
+
+        netManager.initNetManager();
+        netManager.addNetworkInfo(PROTOCOL_UDP, NULL, 50000);
+
+
+        std::cout << netManager.startServer() << std::endl;
+
+            std::cout << "server started" << std::endl;
+            std::cout << "server started" << std::endl;
+            std::cout << "server started" << std::endl;
+            std::cout << "server started" << std::endl;
+            std::cout << "server started" << std::endl;
+            std::cout << "server started" << std::endl;
+            std::cout << "server started" << std::endl;
+        std::cout << netManager.multiPlayerInit(512) << std::endl;
+
+            std::cout << "server started" << std::endl;
+            std::cout << "server started" << std::endl;
+            std::cout << "server started" << std::endl;
+            std::cout << "server started" << std::endl;
+            std::cout << "server started" << std::endl;
+            std::cout << "server started" << std::endl;
+            std::cout << "server started" << std::endl;
+            std::cout << "server started" << std::endl;
+            std::cout << "server started" << std::endl;
+
     }
     else if(button->getName()=="MyButton9"){
         button_sound.play(0);

@@ -18,6 +18,7 @@
 #include <CEGUI/RendererModules/Ogre/Renderer.h>
 
 #include <SDL/SDL_mixer.h>
+#include "NetManager.h"
 
 #include <Simulator.h>
 #include "Plain.h"
@@ -128,6 +129,8 @@ public:
 
     Ogre::SceneNode*            mBaller;
 
+    NetManager                  netManager;
+
     // OgreBites
     OgreBites::InputContext     mInputContext;
     OgreBites::SdkTrayManager*  mTrayMgr;
@@ -204,6 +207,9 @@ public:
     OgreBites::Button* menu8;
     OgreBites::Button* menu9;
     OgreBites::Button* menu10;
+    OgreBites::Button* menu11;
+    OgreBites::Button* menu12;
+    OgreBites::Button* menu13;
     OgreBites::Label* gameOverLabel;
     OgreBites::Label* playerOneWins;
     OgreBites::Label* playerTwoWins;

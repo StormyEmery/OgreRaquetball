@@ -43,7 +43,7 @@ TutorialApplication::~TutorialApplication(void)
 void TutorialApplication::createScene(void)
 {
 
-    //initializeGUI();
+    // //initializeGUI();
     // mRenderer = &CEGUI::OgreRenderer::bootstrapSystem();
 
     // CEGUI::ImageManager::setImagesetDefaultResourceGroup("Imagesets");
@@ -53,7 +53,7 @@ void TutorialApplication::createScene(void)
     // CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
 
     // CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
-    // CEGUI::FontManager::getSingleton().createFromFile("DejaVuSans-10.font");
+    // CEGUI::FontManager::getSingleton().createFromFile("DejaVuSans-12.font");
  
     // CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
 
@@ -66,9 +66,9 @@ void TutorialApplication::createScene(void)
     // CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
     // CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
 
-    // CEGUI::Window *backGround = wmgr.createWindow("TaharezLook/FrameWindow", "CEGUIDemo/Background");
-    // backGround->setSize(CEGUI::USize(CEGUI::UDim(1.0f, 0.0f), CEGUI::UDim(1.0f, 1.0f)));
-    // sheet->addChild(backGround);
+    //     // CEGUI::Window *backGround = wmgr.createWindow("TaharezLook/FrameWindow", "CEGUIDemo/Background");
+    //     // backGround->setSize(CEGUI::USize(CEGUI::UDim(1.0f, 0.0f), CEGUI::UDim(1.0f, 1.0f)));
+    //     // sheet->addChild(backGround);
 
     // CEGUI::Window *newGame = wmgr.createWindow("TaharezLook/TabButton", "CEGUIDemo/NewGameButton");
     // newGame->setText("New Game");
@@ -86,9 +86,9 @@ void TutorialApplication::createScene(void)
 
     // quit->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::quit, this));
 
-    // CEGUI::Window *quit = wmgr.createWindow("TaharezLook/ClientBrush", "Background");
-    // quit->setText("Quit");
-    // quit->setSize(CEGUI::USize(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
+    // // CEGUI::Window *quit = wmgr.createWindow("TaharezLook/ClientBrush", "Background");
+    // // quit->setText("Quit");
+    // // quit->setSize(CEGUI::USize(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
  
     // sheet->addChild(quit);
     // CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
@@ -394,13 +394,11 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                         else { sound_clock2 = clock(); }
 
                         if(obOneName == "node_ground6" && obTwoName == "node_ball" && multi_score_ok) { 
-                            std::cout << "back_wall" << std::endl;
                             wall_collision_sound.play(0); 
                             start = clock();
                             multi_score_ok = false;
                             sound_clock2 = clock();
                             player_two_score++;
-                            std::cout << player_two_score << std::endl;
                             break; 
                         }
                         else { sound_clock2 = clock(); }
