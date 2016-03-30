@@ -325,6 +325,8 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                 }
             }
             if(multi_player){
+                // std::cout << netManager.multiPlayerInit(24) << std::endl;
+                // std::cout << netManager.getClients() << std::endl;
                 if(player_one_score == 8 || player_two_score == 8){
                     mPause=true;
                     gameOver = true;

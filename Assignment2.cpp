@@ -762,9 +762,11 @@ void Assignment2::buttonHit(OgreBites::Button * button) {
         mTrayMgr->removeWidgetFromTray(menu13);
         render_multi_paddle();
 
+        //netManager.getIPstring().c_str()
         netManager.initNetManager();
-        netManager.addNetworkInfo(PROTOCOL_UDP, netManager.getHostname().c_str(), 50000);
+        netManager.addNetworkInfo(PROTOCOL_TCP, netManager.getIPstring().c_str(), 51215);
         netManager.startClient();
+        std::cout << netManager.getHostname().c_str() << std::endl;
     }
     else if(button->getName()=="MyButton11"){
         button_sound.play(0);
@@ -792,12 +794,13 @@ void Assignment2::buttonHit(OgreBites::Button * button) {
         render_multi_paddle();
 
         netManager.initNetManager();
-        netManager.addNetworkInfo(PROTOCOL_UDP, NULL, 50000);
-
-
+        netManager.addNetworkInfo(PROTOCOL_TCP, NULL, 51215);
         std::cout << netManager.startServer() << std::endl;
 
         std::cout << netManager.multiPlayerInit(512) << std::endl;
+        // std::cout << netManager.udpServerData[0].host << std::endl;
+        netManager.acceptConnections();
+        std::cout << netManager.getIPstring() << std::endl;
 
     }
     else if(button->getName()=="MyButton9"){
