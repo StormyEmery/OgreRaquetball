@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/v/filer4b/v38q001/sihai/Desktop/GameTech/appdirectory/Project3/OgreRaquetball/ceed/ceed/ui/BitmapEditor.ui'
+# Form implementation generated from reading ui file '/v/filer4b/v38q001/stormy12/GameTech/Assignment3/OgreRaquetball/ceed/ceed/ui/BitmapEditor.ui'
 #
-# Created: Fri Mar 25 11:45:32 2016
+# Created: Mon Mar 28 19:24:41 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!

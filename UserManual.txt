@@ -1,7 +1,6 @@
 CS354R 
 Group 10: Sihai Tang, Rafik Rizik, Stormy Emery 
 EID: st24899, ror279, sre478 
-late days used on this project: 1
 
 User Manual:
 
@@ -18,8 +17,13 @@ User Manual:
 		Right Mouse Button  rotates the paddle1 left and right based on mouse movement
 		Left Mouse Button   pans the paddle1 up and down based on mouse movement
 		WASD				moved paddle2 across the screen
+<<<<<<< HEAD
 		Left Shift			rotates paddle2 left and right based on AD movement
 		Spacebar			Pans paddle2 up and down based on WS movement
+=======
+		Left Shift			rotates paddle2 left and right based on A and D movement
+		Spacebar			Pans paddle2 up and down based on W and S movement
+>>>>>>> ddb7b9beaa4297807e760b5b48d67bbc9656cbf3
 		SysRQ/PrtScn		takes a screenshot
 
 
@@ -80,7 +84,9 @@ User Manual:
 		The camera position makes it a little hard to know exactly where the ball is going to be sometiems. While this adds to the difficulty of the game, we would have liked to have fine tuned this a little more and maybe give the player an option to move the camera to where they want it.
 
 
-	Plans:
+	Plans/Progress:
 		This build was mostly set up so that all we have to do is networking for the following week. All the underlying mechanics are in place for single player and multi player, as well as switching between the two.
 
-		We had a good amount of trouble getting CEGUI working as well as integrating it into our game. Currently we have it integrated into our game and we are able to use some ofits basic features. Fortunatly all of the game functionality is complete so all we would have to do is work on networking and UI. We will try and divide the labor appropriately in order to accomplish this goal.
+		We had a good amount of trouble getting CEGUI working as well as integrating it into our game. Currently we have it integrated into our game and we are able to use some of its basic features. Fortunatly all of the game functionality is complete so all we would have to do is work on networking and UI. We will try and divide the labor appropriately in order to accomplish this goal.
+
+		Due to our late integration of CEGUI, we don't currently have mouse input working yet, so all CEGUI stuff has been left out so that you still have a playable demo.
