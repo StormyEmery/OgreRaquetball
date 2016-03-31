@@ -355,6 +355,42 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
     Vector3 paddle_one_coords = mSceneMgr->getSceneNode("translate")->getPosition();
     Quaternion paddle_one_quat = mSceneMgr->getSceneNode("translate")->getOrientation();
 
+    //Construct messages, need to add ball info
+    message_sent = "";
+    message_sent += to_string(rel_mouse_state_x);
+    message_sent += " ";
+    message_sent += to_string(-rel_moust_state_y);
+    message_sent += " ";
+    message_sent += to_string(current_x);
+    message_sent += " ";
+    message_sent += to_string(current_y);
+    message_sent += " ";
+
+    if(leftPressed){
+        message_sent += "1";
+        message_sent += " ";
+    }
+    else{
+        message_sent += "0";
+        message_sent += " ";
+    }
+    if(rightPressed){
+        message_sent += "1";
+        message_sent += " ";
+    }
+    else{
+        message_sent += "0";
+        message_sent += " ";
+    }
+
+    if (isClient) {
+        netManager.messageServer(PROTOCOL_UDP, message_sent.c_str(), message_sent.length());
+    }
+
+    if(isServer){
+        netManager.messageClients(PROTOCOL_UDP, message_sent.c_str(), message_sent.length());
+    }
+
     /*DO ALL POLLING HERE!! 
         serverpoll
             get client paddle data
@@ -363,8 +399,6 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
             get ball data
             get server paddle data
     */
-    
-
 
     if(!mPause && !main_menu && multi_player) {    
 
@@ -578,42 +612,45 @@ bool Assignment2::mouseMoved(const OIS::MouseEvent &arg)
             temp->translate(arg.state.X.rel, -arg.state.Y.rel, 0);
         }
 
-        current_x = current_x + arg.state.X.rel;
-        current_y = current_y + arg.state.Y.rel;
+        rel_mouse_state_x = arg.state.X.rel;
+        rel_moust_state_y = arg.state.Y.rel;
+        current_x += rel_mouse_state_x;
+        current_y += rel_moust_state_y;
 
-        message_sent = "";
-        message_sent += to_string(arg.state.X.rel);
-        message_sent += " ";
-        message_sent += to_string(-arg.state.Y.rel);
-        message_sent += " ";
-        message_sent += to_string(current_x);
-        message_sent += " ";
-        message_sent += to_string(current_y);
-        message_sent += " ";
-        if(leftPressed){
-            message_sent += "1";
-            message_sent += " ";
-        }
-        else{
-            message_sent += "0";
-            message_sent += " ";
-        }
-        if(rightPressed){
-            message_sent += "1";
-            message_sent += " ";
-        }
-        else{
-            message_sent += "0";
-            message_sent += " ";
-        }
+        // message_sent = "";
+        // message_sent += to_string(arg.state.X.rel);
+        // message_sent += " ";
+        // message_sent += to_string(-arg.state.Y.rel);
+        // message_sent += " ";
+        // message_sent += to_string(current_x);
+        // message_sent += " ";
+        // message_sent += to_string(current_y);
+        // message_sent += " ";
 
-        if (isClient) {
-            netManager.messageServer(PROTOCOL_UDP, message_sent.c_str(), message_sent.length());
-        }
+        // if(leftPressed){
+        //     message_sent += "1";
+        //     message_sent += " ";
+        // }
+        // else{
+        //     message_sent += "0";
+        //     message_sent += " ";
+        // }
+        // if(rightPressed){
+        //     message_sent += "1";
+        //     message_sent += " ";
+        // }
+        // else{
+        //     message_sent += "0";
+        //     message_sent += " ";
+        // }
 
-        if(isServer){
-            netManager.messageClients(PROTOCOL_UDP, message_sent.c_str(), message_sent.length());
-        }
+        // if (isClient) {
+        //     netManager.messageServer(PROTOCOL_UDP, message_sent.c_str(), message_sent.length());
+        // }
+
+        // if(isServer){
+        //     netManager.messageClients(PROTOCOL_UDP, message_sent.c_str(), message_sent.length());
+        // }
         
 
 
@@ -871,7 +908,7 @@ void Assignment2::buttonHit(OgreBites::Button * button) {
         render_multi_paddle();
 
         netManager.initNetManager();
-        netManager.addNetworkInfo(PROTOCOL_UDP, "128.83.144.220", 51215);
+        netManager.addNetworkInfo(PROTOCOL_UDP, "128.83.144.216", 51215);
         netManager.startClient();
         isServer = false;
         isClient = true;

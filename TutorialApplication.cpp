@@ -139,8 +139,6 @@ void TutorialApplication::createScene(void)
     plain6.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(1500)));
     plain6.create_bounding_box(simulator, 1.0f);
 
-    
-
 
     Plain* g = new Plain(mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 400, 750, 0, "goal", "node_goal", "Examples/Chrome", "translateThree");
     g->set_origin(btVector3(btScalar(0), btScalar(0), btScalar(10000)));
@@ -160,9 +158,6 @@ void TutorialApplication::createScene(void)
     paddleNewTwo->create_bounding_box(simulator, 1.0f, 1.0f);
     setPaddleTwo(paddleNewTwo);
     
-
-
-
 
     Ball* b = new Ball(mSceneMgr, "node_ball");
     b->reset(mSceneMgr, b, simulator);
