@@ -17,8 +17,13 @@ User Manual:
 		Right Mouse Button  rotates the paddle1 left and right based on mouse movement
 		Left Mouse Button   pans the paddle1 up and down based on mouse movement
 		WASD				moved paddle2 across the screen
+<<<<<<< HEAD
+		Left Shift			rotates paddle2 left and right based on AD movement
+		Spacebar			Pans paddle2 up and down based on WS movement
+=======
 		Left Shift			rotates paddle2 left and right based on A and D movement
 		Spacebar			Pans paddle2 up and down based on W and S movement
+>>>>>>> ddb7b9beaa4297807e760b5b48d67bbc9656cbf3
 		SysRQ/PrtScn		takes a screenshot
 
 

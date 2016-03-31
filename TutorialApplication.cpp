@@ -49,14 +49,6 @@ void TutorialApplication::createScene(void)
 
 
 
-
-
-
-
- 
-
-
-
     //===============================================================================================================================================================
 
     simulator = new Simulator();
@@ -177,8 +169,8 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
     
     desired_velocity = ball->ballRB->getLinearVelocity().length();
 
-    if(background_music && !main_menu)
-        game_music.play(-1);
+    // if(background_music && !main_menu)
+    //     game_music.play(-1);
     single_duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
     multi_duration = ( std::clock() - sound_clock2 ) / (double) CLOCKS_PER_SEC;
     sound_duration = ( std::clock() - sound_clock ) / (double) CLOCKS_PER_SEC;
@@ -284,6 +276,7 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                 }
             }
             if(multi_player){
+
                 if(player_one_score == 8 || player_two_score == 8){
                     mPause=true;
                     gameOver = true;

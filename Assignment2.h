@@ -103,6 +103,7 @@ public:
     virtual void windowClosed(Ogre::RenderWindow* rw);
 
     virtual void buttonHit(OgreBites::Button * button);
+    virtual bool new_game (const CEGUI::EventArgs &e);
 
     virtual Ball* getBall()=0;
     virtual void setBall(Ball* b)=0;
@@ -151,6 +152,8 @@ public:
     bool                        moveDown;
     bool                        player_two_rotate;
     bool                        player_two_pan;
+    bool                        isServer;
+    bool                        isClient;
     Real                        rotate_x;
     Real                        pan_y;
     Real                        x_pos;
@@ -159,6 +162,8 @@ public:
     bool                        multi_player;
     Real                        current_x;
     Real                        current_y;
+    String                      message_sent;
+    String                      message_received;
 
 
 

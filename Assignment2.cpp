@@ -41,6 +41,10 @@ Assignment2::Assignment2(void) :
     player_two_pan(false),
     rotate_x(0),
     pan_y(0),
+    isServer(false),
+    isClient(false),
+    message_sent(""),
+    message_received(""),
 
     //test("music/wall_collision.wav", 1),
     
@@ -154,6 +158,8 @@ void Assignment2::createFrameListener(void)
     mTrayMgr = new OgreBites::SdkTrayManager("InterfaceName", mWindow, mInputContext, this);
 
     mTrayMgr->hideCursor();
+    // CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setInitialMousePosition(CEGUI::Vector2f(0, 0));  
+
 
     // Create a params panel for displaying sample details
     Ogre::StringVector items;
@@ -200,7 +206,7 @@ void Assignment2::createFrameListener(void)
     separator->hide();
     mTrayMgr->removeWidgetFromTray(separator);
 
-    mTrayMgr->showCursor();
+    //mTrayMgr->showCursor();
     menu1->hide();
     menu3->hide();
     menu6->hide();
@@ -260,13 +266,40 @@ void Assignment2::createFrameListener(void)
 
     menuWindow->hide();
 
-    // quit->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::quit, this));
+    sheet->getChild(1)->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::new_game, this));
+
 
 //===========================================================================
 
 
 
 }
+
+
+CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID)
+{
+    switch (buttonID)
+    {
+    case OIS::MB_Left:
+        std::cout << "Left Button is Converted  " << std::endl; 
+
+        return CEGUI::LeftButton;
+        break;
+ 
+    case OIS::MB_Right:
+        return CEGUI::RightButton;
+        break;
+ 
+    case OIS::MB_Middle:
+        return CEGUI::MiddleButton;
+        break;
+ 
+    default:
+        return CEGUI::LeftButton;
+        break;
+    }
+}
+
 //---------------------------------------------------------------------------
 void Assignment2::destroyScene(void)
 {
@@ -390,7 +423,78 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
     Vector3 bounds = temp->getPosition();
 
 
-    if(!mPause && !main_menu && multi_player) {        
+    Vector3 paddle_one_coords = mSceneMgr->getSceneNode("translate")->getPosition();
+    Quaternion paddle_one_quat = mSceneMgr->getSceneNode("translate")->getOrientation();
+
+    /*DO ALL POLLING HERE!! 
+        serverpoll
+            get client paddle data
+
+        clieentpoll
+            get ball data
+            get server paddle data
+    */
+    
+
+
+    if(!mPause && !main_menu && multi_player) {    
+
+        if(isClient){
+            if(netManager.pollForActivity(1)){
+                istringstream stream(netManager.udpServerData[0].output);
+                string sub;
+                stream >> sub;
+                float move_x = atof(sub.c_str());
+                stream >> sub;
+                float move_y = atof(sub.c_str());
+                stream >> sub;
+                float current_x = atof(sub.c_str());
+                stream >> sub;
+                float current_y = atof(sub.c_str());
+                stream >> sub;
+                float left_pressed = atof(sub.c_str());
+                stream >> sub;
+                float right_pressed = atof(sub.c_str());
+
+
+                temp->translate(move_x, move_y, 0);
+                if(left_pressed){
+                    paddleTwo->paddleNode->setOrientation(Quaternion(Degree(-current_x/2), Vector3(0,1,0)));
+                }
+                if(right_pressed){
+                    paddleTwo->paddleNode->setOrientation(Quaternion(Degree(-current_y/2), Vector3(1,0,0)));
+                }
+            }
+        }
+        if(isServer){
+            if(netManager.pollForActivity(1)){
+                istringstream stream(netManager.udpClientData[0]->output);
+                string sub;
+                stream >> sub;
+                float move_x = atof(sub.c_str());
+                stream >> sub;
+                float move_y = atof(sub.c_str());
+                stream >> sub;
+                float current_x = atof(sub.c_str());
+                stream >> sub;
+                float current_y = atof(sub.c_str());
+                stream >> sub;
+                float left_pressed = atof(sub.c_str());
+                stream >> sub;
+                float right_pressed = atof(sub.c_str());
+
+
+                temp->translate(move_x, move_y, 0);
+                if(left_pressed){
+                    paddleTwo->paddleNode->setOrientation(Quaternion(Degree(-current_x/2), Vector3(0,1,0)));
+                }
+                if(right_pressed){
+                    paddleTwo->paddleNode->setOrientation(Quaternion(Degree(-current_y/2), Vector3(1,0,0)));
+                }
+            }
+        }
+
+
        if( bounds.x > 597 || bounds.x < -570 ||
         bounds.y > 398 || bounds.y < -398){
             if(bounds.x  > 597)
@@ -401,28 +505,23 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
                 temp->setPosition(bounds.x, 398, bounds.z);
             else if(bounds.y < 398)                                
                 temp->setPosition(bounds.x, -398, bounds.z);
-
-
-        }else{
-            if(moveUp){ temp->translate(0, 0.5, 0); }
-            if(moveDown){ temp->translate(0, -0.5, 0); }
-            if(moveLeft){ temp->translate(-0.5, 0, 0); }
-            if(moveRight){ temp->translate(0.5, 0, 0); }
         }
 
 
-        if(player_two_rotate && moveLeft){
-            paddleTwo->paddleNode->setOrientation(Quaternion(Degree(rotate_x+=0.1), Vector3(0,1,0)));
-        }
-        if(player_two_rotate && moveRight){
-            paddleTwo->paddleNode->setOrientation(Quaternion(Degree(rotate_x-=0.1), Vector3(0,1,0)));
-        }
-        if(player_two_pan && moveUp){
-            paddleTwo->paddleNode->setOrientation(Quaternion(Degree(pan_y-=0.1), Vector3(1,0,0)));
-        }
-        if(player_two_pan && moveDown){
-            paddleTwo->paddleNode->setOrientation(Quaternion(Degree(pan_y+=0.1), Vector3(1,0,0)));
-        }
+
+        //Use polled paddle data to update player two's paddle
+        // if(player_two_rotate && moveLeft){
+        //     paddleTwo->paddleNode->setOrientation(Quaternion(Degree(rotate_x+=0.1), Vector3(0,1,0)));
+        // }
+        // if(player_two_rotate && moveRight){
+        //     paddleTwo->paddleNode->setOrientation(Quaternion(Degree(rotate_x-=0.1), Vector3(0,1,0)));
+        // }
+        // if(player_two_pan && moveUp){
+        //     paddleTwo->paddleNode->setOrientation(Quaternion(Degree(pan_y-=0.1), Vector3(1,0,0)));
+        // }
+        // if(player_two_pan && moveDown){
+        //     paddleTwo->paddleNode->setOrientation(Quaternion(Degree(pan_y+=0.1), Vector3(1,0,0)));
+        // }
         paddleTwo->updateTransform();
     }
 
@@ -458,7 +557,7 @@ bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
         if(!mPause && !gameOver) {
             game_music.pause();
             menu_sound.play(0);
-            mTrayMgr->showCursor();
+            //mTrayMgr->showCursor();
             mPause=true;
             menu6->show();
             menu1->show();
@@ -527,13 +626,20 @@ bool Assignment2::keyReleased(const OIS::KeyEvent &arg)
 //---------------------------------------------------------------------------
 bool Assignment2::mouseMoved(const OIS::MouseEvent &arg)
 {
+    CEGUI::System &sys = CEGUI::System::getSingleton();
+    sys.getDefaultGUIContext().getMouseCursor().setInitialMousePosition(CEGUI::Vector2f(0, 0));  
+
+    sys.getDefaultGUIContext().getMouseCursor().offsetPosition(CEGUI::Vector2f(arg.state.X.rel, arg.state.Y.rel));  
+  
     if (mTrayMgr->injectMouseMove(arg)) return true;
     SceneNode* temp = mSceneMgr->getSceneNode("translate");
     Vector3 bounds = temp->getPosition();
 
 
-    if(!mPause && !main_menu ) {        
-       if( bounds.x > 597 || bounds.x < -570 ||
+    if(!mPause && !main_menu ) {       
+
+
+        if( bounds.x > 597 || bounds.x < -570 ||
         bounds.y > 398 || bounds.y < -398){
             if(bounds.x  > 597)
                 temp->setPosition(597, bounds.y, bounds.z);
@@ -548,9 +654,44 @@ bool Assignment2::mouseMoved(const OIS::MouseEvent &arg)
             temp->translate(arg.state.X.rel, -arg.state.Y.rel, 0);
         }
 
-
         current_x = current_x + arg.state.X.rel;
         current_y = current_y + arg.state.Y.rel;
+
+        message_sent = "";
+        message_sent += to_string(arg.state.X.rel);
+        message_sent += " ";
+        message_sent += to_string(-arg.state.Y.rel);
+        message_sent += " ";
+        message_sent += to_string(current_x);
+        message_sent += " ";
+        message_sent += to_string(current_y);
+        message_sent += " ";
+        if(leftPressed){
+            message_sent += "1";
+            message_sent += " ";
+        }
+        else{
+            message_sent += "0";
+            message_sent += " ";
+        }
+        if(rightPressed){
+            message_sent += "1";
+            message_sent += " ";
+        }
+        else{
+            message_sent += "0";
+            message_sent += " ";
+        }
+
+        if (isClient) {
+            netManager.messageServer(PROTOCOL_UDP, message_sent.c_str(), message_sent.length());
+        }
+
+        if(isServer){
+            netManager.messageClients(PROTOCOL_UDP, message_sent.c_str(), message_sent.length());
+        }
+        
+
 
         if(leftPressed){
             paddleOne->paddleNode->setOrientation(Quaternion(Degree(current_x/2), Vector3(0,1,0)));
@@ -565,8 +706,8 @@ bool Assignment2::mouseMoved(const OIS::MouseEvent &arg)
 //---------------------------------------------------------------------------
 bool Assignment2::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
- 
-
+    CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(convertButton(id));
+    std::cout << "Mouse Press Registered" << std::endl; 
 
     if(id == 0){ leftPressed = true; }
     if(id == 1){ rightPressed = true; }
@@ -799,14 +940,19 @@ void Assignment2::buttonHit(OgreBites::Button * button) {
         gameOverLabel->hide();
         playerOneWins->hide();
         playerTwoWins->hide();
+        mTrayMgr->hideCursor();
         mTrayMgr->removeWidgetFromTray(menu11);
         mTrayMgr->removeWidgetFromTray(menu12);
         mTrayMgr->removeWidgetFromTray(menu13);
         render_multi_paddle();
 
         netManager.initNetManager();
-        netManager.addNetworkInfo(PROTOCOL_UDP, netManager.getIPstring().c_str(), 51215);
+
+        netManager.addNetworkInfo(PROTOCOL_UDP, "128.83.144.220", 51215);
+
         netManager.startClient();
+        isServer = false;
+        isClient = true;
     }
     else if(button->getName()=="MyButton11"){
         button_sound.play(0);
@@ -836,10 +982,10 @@ void Assignment2::buttonHit(OgreBites::Button * button) {
         netManager.initNetManager();
         netManager.addNetworkInfo(PROTOCOL_UDP, NULL, 51215);
 
-
-        std::cout << netManager.startServer() << std::endl;
+        netManager.startServer();
         netManager.acceptConnections();
-        std::cout << netManager.getIPstring() << std::endl;
+        isServer = true;
+        isClient = false;
 
     }
     else if(button->getName()=="MyButton9"){
@@ -882,6 +1028,13 @@ void Assignment2::buttonHit(OgreBites::Button * button) {
         mTrayMgr->moveWidgetToTray(menu5, OgreBites::TL_CENTER, 0);
         ball->reset(mSceneMgr, ball, simulator);
     }
+}
+
+bool Assignment2::new_game (const CEGUI::EventArgs &e){
+    std::cout << "Mouse Button Pressed!!!!!  \n";
+    mShutDown = true;
+    return true;
+
 }
 
 
