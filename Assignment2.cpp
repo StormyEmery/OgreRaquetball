@@ -175,8 +175,11 @@ void Assignment2::createFrameListener(void)
     menu6 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton6", "Reset ball", 150);
     menu7 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton7", "Single Player", 150);
     menu8 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton8", "MultiPlayer", 150);
-    menu9 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton9", "Back", 150);
+    menu9 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton9", "Back1", 150);
     menu10 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton10", "Main Menu", 150);
+    menu11 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton11", "Start Server", 150);
+    menu12 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton12", "Start Client", 150);
+    menu13 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton13", "Back2", 150);
 
 
     mDetailsPanel = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "DetailsPanel", 200, items);
@@ -205,6 +208,9 @@ void Assignment2::createFrameListener(void)
     menu8->hide();
     menu9->hide();
     menu10->hide();
+    menu11->hide();
+    menu12->hide();
+    menu13->hide();
     mTrayMgr->removeWidgetFromTray(menu1);
     mTrayMgr->removeWidgetFromTray(menu3);
     mTrayMgr->removeWidgetFromTray(menu6);
@@ -212,8 +218,53 @@ void Assignment2::createFrameListener(void)
     mTrayMgr->removeWidgetFromTray(menu8);
     mTrayMgr->removeWidgetFromTray(menu9);
     mTrayMgr->removeWidgetFromTray(menu10);
+    mTrayMgr->removeWidgetFromTray(menu11);
+    mTrayMgr->removeWidgetFromTray(menu12);
+    mTrayMgr->removeWidgetFromTray(menu13);
     mTrayMgr->setTrayPadding(12);
     mTrayMgr->hideBackdrop();
+
+
+//=======================================================================
+        //initializeGUI();
+    mRenderer = &CEGUI::OgreRenderer::bootstrapSystem();
+
+    CEGUI::ImageManager::setImagesetDefaultResourceGroup("Imagesets");
+    CEGUI::Font::setDefaultResourceGroup("Fonts");
+    CEGUI::Scheme::setDefaultResourceGroup("Schemes");
+    CEGUI::WidgetLookManager::setDefaultResourceGroup("LookNFeel");
+    CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
+
+    CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
+    CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
+
+
+    CEGUI::FontManager::getSingleton().createFromFile("DejaVuSans-10.font");
+ 
+    CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
+
+    CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
+    CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
+
+    CEGUI::Window *menuWindow = CEGUI::WindowManager::getSingleton().loadLayoutFromFile("main_menu.layout");
+    sheet->addChild(menuWindow);
+    menuWindow->setPosition(CEGUI::UVector2(CEGUI::UDim(0.383,0), CEGUI::UDim(0.35,0)));
+    menuWindow->setSize(CEGUI::USize(CEGUI::UDim(.2, 0), CEGUI::UDim(.33, 0)));
+    menuWindow->setMouseCursor("TaharezLook/MouseArrow");
+    
+    for(int i=1; i<=5; i++){
+        menuWindow->getChild(i)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(i*.051),0)));
+        sheet->addChild(menuWindow->getChild(i));
+
+    }
+
+    menuWindow->hide();
+
+    // quit->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::quit, this));
+
+//===========================================================================
+
+
 
 }
 //---------------------------------------------------------------------------
@@ -701,21 +752,79 @@ void Assignment2::buttonHit(OgreBites::Button * button) {
     }
     else if(button->getName()=="MyButton8"){
         button_sound.play(0);
-        single_player = false;
-        multi_player = true;
-        main_menu = false;
-        mPause = false;
-        gameOver = false;
         menu7->hide();
         menu8->hide();
         menu9->hide();
         gameOverLabel->hide();
         playerOneWins->hide();
         playerTwoWins->hide();
-        separator->hide();
         mTrayMgr->removeWidgetFromTray(menu7);
         mTrayMgr->removeWidgetFromTray(menu8);
         mTrayMgr->removeWidgetFromTray(menu9);
+        menu13->show();
+        menu12->show();
+        menu11->show();
+        mTrayMgr->moveWidgetToTray(menu13, OgreBites::TL_CENTER, 0);
+        mTrayMgr->moveWidgetToTray(menu12, OgreBites::TL_CENTER, 0);
+        mTrayMgr->moveWidgetToTray(menu11, OgreBites::TL_CENTER, 0);
+    }
+    else if(button->getName()=="MyButton13"){
+        button_sound.play(0);
+        menu11->hide();
+        menu12->hide();
+        menu13->hide();
+        gameOverLabel->hide();
+        playerOneWins->hide();
+        playerTwoWins->hide();
+        mTrayMgr->removeWidgetFromTray(menu11);
+        mTrayMgr->removeWidgetFromTray(menu12);
+        mTrayMgr->removeWidgetFromTray(menu13);
+        menu9->show();
+        menu8->show();
+        menu7->show();
+        mTrayMgr->moveWidgetToTray(menu9, OgreBites::TL_CENTER, 0);
+        mTrayMgr->moveWidgetToTray(menu8, OgreBites::TL_CENTER, 0);
+        mTrayMgr->moveWidgetToTray(menu7, OgreBites::TL_CENTER, 0);
+    }
+    else if(button->getName()=="MyButton12"){
+        button_sound.play(0);
+        single_player = false;
+        multi_player = true;
+        main_menu = false;
+        mPause = false;
+        gameOver = false;
+        menu11->hide();
+        menu12->hide();
+        menu13->hide();
+        gameOverLabel->hide();
+        playerOneWins->hide();
+        playerTwoWins->hide();
+        mTrayMgr->removeWidgetFromTray(menu11);
+        mTrayMgr->removeWidgetFromTray(menu12);
+        mTrayMgr->removeWidgetFromTray(menu13);
+        render_multi_paddle();
+
+        netManager.initNetManager();
+        netManager.addNetworkInfo(PROTOCOL_UDP, netManager.getIPstring().c_str(), 51215);
+        netManager.startClient();
+    }
+    else if(button->getName()=="MyButton11"){
+        button_sound.play(0);
+        single_player = false;
+        multi_player = true;
+        main_menu = false;
+        mPause = false;
+        gameOver = false;
+        menu11->hide();
+        menu12->hide();
+        menu13->hide();
+        gameOverLabel->hide();
+        playerOneWins->hide();
+        playerTwoWins->hide();
+        separator->hide();
+        mTrayMgr->removeWidgetFromTray(menu11);
+        mTrayMgr->removeWidgetFromTray(menu12);
+        mTrayMgr->removeWidgetFromTray(menu13);
         mTrayMgr->removeWidgetFromTray(gameOverLabel);
         mTrayMgr->removeWidgetFromTray(playerOneWins);
         mTrayMgr->removeWidgetFromTray(playerTwoWins);
@@ -723,6 +832,15 @@ void Assignment2::buttonHit(OgreBites::Button * button) {
         mTrayMgr->hideCursor();
         resetScore();
         render_multi_paddle();
+
+        netManager.initNetManager();
+        netManager.addNetworkInfo(PROTOCOL_UDP, NULL, 51215);
+
+
+        std::cout << netManager.startServer() << std::endl;
+        netManager.acceptConnections();
+        std::cout << netManager.getIPstring() << std::endl;
+
     }
     else if(button->getName()=="MyButton9"){
         button_sound.play(0);
