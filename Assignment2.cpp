@@ -355,7 +355,8 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
     Vector3 paddle_one_coords = mSceneMgr->getSceneNode("translate")->getPosition();
     Quaternion paddle_one_quat = mSceneMgr->getSceneNode("translate")->getOrientation();
 
-    //Construct messages, need to add ball info
+    //Construct messages
+    //if server, add ball info to message
     message_sent = "";
     message_sent += to_string(rel_mouse_state_x);
     message_sent += " ";
