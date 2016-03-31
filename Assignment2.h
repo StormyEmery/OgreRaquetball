@@ -151,6 +151,8 @@ public:
     bool                        moveDown;
     bool                        player_two_rotate;
     bool                        player_two_pan;
+    bool                        isServer;
+    bool                        isClient;
     Real                        rotate_x;
     Real                        pan_y;
     Real                        x_pos;
@@ -159,6 +161,8 @@ public:
     bool                        multi_player;
     Real                        current_x;
     Real                        current_y;
+    String                      message_sent;
+    String                      message_received;
 
 
 
