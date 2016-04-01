@@ -160,7 +160,9 @@ public:
     bool                        single_player;
     bool                        multi_player;
     Real                        rel_mouse_state_x;
-    Real                        rel_moust_state_y;
+    Real                        rel_mouse_state_y;
+    Real                        old_rel_x;
+    Real                        old_rel_y;
     Real                        current_x;
     Real                        current_y;
     String                      message_sent;

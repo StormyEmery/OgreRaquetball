@@ -31,6 +31,8 @@ Assignment2::Assignment2(void) :
     rightPressed(false),
     current_x(0),
     current_y(0),
+    old_rel_x(0),
+    old_rel_y(0),
     single_player(false),
     multi_player(false),
     moveUp(false),
@@ -347,7 +349,6 @@ bool Assignment2::setup(void)
 //---------------------------------------------------------------------------
 bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
-
     SceneNode* temp = mSceneMgr->getSceneNode("translateTwo");
     Vector3 bounds = temp->getPosition();
 
@@ -355,17 +356,33 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
     Vector3 paddle_one_coords = mSceneMgr->getSceneNode("translate")->getPosition();
     Quaternion paddle_one_quat = mSceneMgr->getSceneNode("translate")->getOrientation();
 
+    Vector3 ball_coords = ball->ballNode->getPosition();
+    Quaternion ball_quat = ball->ballNode->getOrientation();
+
     //Construct messages
-    //if server, add ball info to message
-    message_sent = "";
-    message_sent += to_string(rel_mouse_state_x);
-    message_sent += " ";
-    message_sent += to_string(-rel_moust_state_y);
-    message_sent += " ";
+    if(old_rel_x != rel_mouse_state_x && old_rel_y != rel_mouse_state_y) {
+        message_sent = "";
+        message_sent += to_string(rel_mouse_state_x);
+        message_sent += " ";
+        message_sent += to_string(-rel_mouse_state_y);
+        message_sent += " ";
+        old_rel_x = rel_mouse_state_x;
+        old_rel_y = rel_mouse_state_y;
+    }
+    else {
+        message_sent = "";
+        message_sent += to_string(0);
+        message_sent += " ";
+        message_sent += to_string(0);
+        message_sent += " ";
+    }
+
     message_sent += to_string(current_x);
     message_sent += " ";
     message_sent += to_string(current_y);
     message_sent += " ";
+
+
 
     if(leftPressed){
         message_sent += "1";
@@ -383,6 +400,25 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
         message_sent += "0";
         message_sent += " ";
     }
+
+    /*Start of Stormy's bullshit*/
+    if(isServer) {
+        message_sent += to_string(ball_coords.x);
+        message_sent += " ";
+        message_sent += to_string(ball_coords.y);
+        message_sent += " ";
+        message_sent += to_string(ball_coords.z);
+        message_sent += " ";
+        message_sent += to_string(ball_quat.w);
+        message_sent += " ";
+        message_sent += to_string(ball_quat.x);
+        message_sent += " ";
+        message_sent += to_string(ball_quat.y);
+        message_sent += " ";
+        message_sent += to_string(ball_quat.z);
+        message_sent += " ";
+    }
+    /*End of Stormy's bullshit*/
 
     if (isClient) {
         netManager.messageServer(PROTOCOL_UDP, message_sent.c_str(), message_sent.length());
@@ -419,6 +455,28 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
                 float left_pressed = atof(sub.c_str());
                 stream >> sub;
                 float right_pressed = atof(sub.c_str());
+                stream >> sub;
+
+                /*Start of Stormy's bullshit*/
+                float ball_pos_x = atof(sub.c_str());
+                stream >> sub;
+                float ball_pos_y = atof(sub.c_str());
+                stream >> sub;
+                float ball_pos_z = atof(sub.c_str());
+                stream >> sub;
+                float ball_quat_w = atof(sub.c_str());
+                stream >> sub;
+                float ball_quat_x = atof(sub.c_str());
+                stream >> sub;
+                float ball_quat_y = atof(sub.c_str());
+                stream >> sub;
+                float ball_quat_z = atof(sub.c_str());
+
+                ball->ballNode->setPosition(ball_pos_x, ball_pos_y, ball_pos_z);
+                ball->ballNode->setOrientation(ball_quat_w, ball_quat_x, ball_quat_y, ball_quat_z);
+                ball->updateTransform();
+
+                /*End of Stormy's bullshit*/
 
 
                 temp->translate(move_x, move_y, 0);
@@ -511,7 +569,7 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
             mDetailsPanel->setParamValue(1, Ogre::StringConverter::toString(getScoreTwo()));            
         }
     }
-
+    
     return true;
 }
 //---------------------------------------------------------------------------
@@ -590,14 +648,13 @@ bool Assignment2::keyReleased(const OIS::KeyEvent &arg)
 //---------------------------------------------------------------------------
 bool Assignment2::mouseMoved(const OIS::MouseEvent &arg)
 {
+
     if (mTrayMgr->injectMouseMove(arg)) return true;
     SceneNode* temp = mSceneMgr->getSceneNode("translate");
     Vector3 bounds = temp->getPosition();
 
 
     if(!mPause && !main_menu ) {       
-
-
         if( bounds.x > 597 || bounds.x < -570 ||
         bounds.y > 398 || bounds.y < -398){
             if(bounds.x  > 597)
@@ -614,10 +671,11 @@ bool Assignment2::mouseMoved(const OIS::MouseEvent &arg)
         }
 
         rel_mouse_state_x = arg.state.X.rel;
-        rel_moust_state_y = arg.state.Y.rel;
-        current_x += rel_mouse_state_x;
-        current_y += rel_moust_state_y;
+        rel_mouse_state_y = arg.state.Y.rel;
+        current_x = current_x + rel_mouse_state_x;
+        current_y = current_y + rel_mouse_state_y;
 
+    
         // message_sent = "";
         // message_sent += to_string(arg.state.X.rel);
         // message_sent += " ";
@@ -909,7 +967,7 @@ void Assignment2::buttonHit(OgreBites::Button * button) {
         render_multi_paddle();
 
         netManager.initNetManager();
-        netManager.addNetworkInfo(PROTOCOL_UDP, "128.83.144.216", 51215);
+        netManager.addNetworkInfo(PROTOCOL_UDP, "128.83.144.121", 51215);
         netManager.startClient();
         isServer = false;
         isClient = true;

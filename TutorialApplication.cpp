@@ -342,7 +342,7 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                     
                     ball->reset(mSceneMgr, ball, simulator);
                 }
-                if(simulator != NULL) {
+                if(simulator != NULL && isServer && netManager.getClients() > 0) {
                     simulator->getDynamicsWorld()->stepSimulation(1.0f/60.0f);
                     int numManifolds = simulator->getDispatcher()->getNumManifolds();
                     for(int i = 0; i < numManifolds; i++) {
