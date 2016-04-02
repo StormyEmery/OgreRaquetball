@@ -12,6 +12,8 @@ assignment2_CPPFLAGS += -std=c++11
 assignment2_CPPFLAGS += -I/usr/include/SDL
 assignment2_LDFLAGS += -lSDL -lSDL_mixer -lSDL_net
 
+OgreApp_LDFLAGS= -lOgreOverlay -lboost_system -R/lusr/lib/cegui-0.8
+
 
 EXTRA_DIST = buildit makeit
 AUTOMAKE_OPTIONS = foreign

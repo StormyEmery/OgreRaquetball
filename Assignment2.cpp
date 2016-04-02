@@ -206,7 +206,7 @@ void Assignment2::createFrameListener(void)
     separator->hide();
     mTrayMgr->removeWidgetFromTray(separator);
 
-    //mTrayMgr->showCursor();
+    mTrayMgr->showCursor();
     menu1->hide();
     menu3->hide();
     menu6->hide();
@@ -249,7 +249,7 @@ void Assignment2::createFrameListener(void)
  
     CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
 
-    CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
+    sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
     CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
 
     CEGUI::Window *menuWindow = CEGUI::WindowManager::getSingleton().loadLayoutFromFile("main_menu.layout");
@@ -269,6 +269,14 @@ void Assignment2::createFrameListener(void)
     sheet->getChild(1)->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::new_game, this));
 
 
+    // CEGUI::Window *quit = wmgr.createWindow("TaharezLook/TabButton", "CEGUIDemo/QuitButton");
+    // quit->setText("Quit");
+    // quit->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(6*.051),0)));
+    // quit->setSize(CEGUI::USize(CEGUI::UDim(0.15,0), CEGUI::UDim(.05,0)));
+    // sheet->addChild(quit);
+
+    // quit->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::new_game, this));
+
 //===========================================================================
 
 
@@ -281,7 +289,6 @@ CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID)
     switch (buttonID)
     {
     case OIS::MB_Left:
-        std::cout << "Left Button is Converted  " << std::endl; 
 
         return CEGUI::LeftButton;
         break;
@@ -426,6 +433,42 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
     Vector3 paddle_one_coords = mSceneMgr->getSceneNode("translate")->getPosition();
     Quaternion paddle_one_quat = mSceneMgr->getSceneNode("translate")->getOrientation();
 
+    //Construct messages, need to add ball info
+    message_sent = "";
+    message_sent += to_string(rel_mouse_state_x);
+    message_sent += " ";
+    message_sent += to_string(-rel_moust_state_y);
+    message_sent += " ";
+    message_sent += to_string(current_x);
+    message_sent += " ";
+    message_sent += to_string(current_y);
+    message_sent += " ";
+
+    if(leftPressed){
+        message_sent += "1";
+        message_sent += " ";
+    }
+    else{
+        message_sent += "0";
+        message_sent += " ";
+    }
+    if(rightPressed){
+        message_sent += "1";
+        message_sent += " ";
+    }
+    else{
+        message_sent += "0";
+        message_sent += " ";
+    }
+
+    if (isClient) {
+        netManager.messageServer(PROTOCOL_UDP, message_sent.c_str(), message_sent.length());
+    }
+
+    if(isServer){
+        netManager.messageClients(PROTOCOL_UDP, message_sent.c_str(), message_sent.length());
+    }
+
     /*DO ALL POLLING HERE!! 
         serverpoll
             get client paddle data
@@ -434,8 +477,6 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
             get ball data
             get server paddle data
     */
-    
-
 
     if(!mPause && !main_menu && multi_player) {    
 
@@ -557,7 +598,7 @@ bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
         if(!mPause && !gameOver) {
             game_music.pause();
             menu_sound.play(0);
-            //mTrayMgr->showCursor();
+            mTrayMgr->showCursor();
             mPause=true;
             menu6->show();
             menu1->show();
@@ -627,9 +668,8 @@ bool Assignment2::keyReleased(const OIS::KeyEvent &arg)
 bool Assignment2::mouseMoved(const OIS::MouseEvent &arg)
 {
     CEGUI::System &sys = CEGUI::System::getSingleton();
-    sys.getDefaultGUIContext().getMouseCursor().setInitialMousePosition(CEGUI::Vector2f(0, 0));  
 
-    sys.getDefaultGUIContext().getMouseCursor().offsetPosition(CEGUI::Vector2f(arg.state.X.rel, arg.state.Y.rel));  
+    sys.getDefaultGUIContext().injectMouseMove(arg.state.X.rel, arg.state.Y.rel);  
   
     if (mTrayMgr->injectMouseMove(arg)) return true;
     SceneNode* temp = mSceneMgr->getSceneNode("translate");
@@ -654,42 +694,45 @@ bool Assignment2::mouseMoved(const OIS::MouseEvent &arg)
             temp->translate(arg.state.X.rel, -arg.state.Y.rel, 0);
         }
 
-        current_x = current_x + arg.state.X.rel;
-        current_y = current_y + arg.state.Y.rel;
+        rel_mouse_state_x = arg.state.X.rel;
+        rel_moust_state_y = arg.state.Y.rel;
+        current_x += rel_mouse_state_x;
+        current_y += rel_moust_state_y;
 
-        message_sent = "";
-        message_sent += to_string(arg.state.X.rel);
-        message_sent += " ";
-        message_sent += to_string(-arg.state.Y.rel);
-        message_sent += " ";
-        message_sent += to_string(current_x);
-        message_sent += " ";
-        message_sent += to_string(current_y);
-        message_sent += " ";
-        if(leftPressed){
-            message_sent += "1";
-            message_sent += " ";
-        }
-        else{
-            message_sent += "0";
-            message_sent += " ";
-        }
-        if(rightPressed){
-            message_sent += "1";
-            message_sent += " ";
-        }
-        else{
-            message_sent += "0";
-            message_sent += " ";
-        }
+        // message_sent = "";
+        // message_sent += to_string(arg.state.X.rel);
+        // message_sent += " ";
+        // message_sent += to_string(-arg.state.Y.rel);
+        // message_sent += " ";
+        // message_sent += to_string(current_x);
+        // message_sent += " ";
+        // message_sent += to_string(current_y);
+        // message_sent += " ";
 
-        if (isClient) {
-            netManager.messageServer(PROTOCOL_UDP, message_sent.c_str(), message_sent.length());
-        }
+        // if(leftPressed){
+        //     message_sent += "1";
+        //     message_sent += " ";
+        // }
+        // else{
+        //     message_sent += "0";
+        //     message_sent += " ";
+        // }
+        // if(rightPressed){
+        //     message_sent += "1";
+        //     message_sent += " ";
+        // }
+        // else{
+        //     message_sent += "0";
+        //     message_sent += " ";
+        // }
 
-        if(isServer){
-            netManager.messageClients(PROTOCOL_UDP, message_sent.c_str(), message_sent.length());
-        }
+        // if (isClient) {
+        //     netManager.messageServer(PROTOCOL_UDP, message_sent.c_str(), message_sent.length());
+        // }
+
+        // if(isServer){
+        //     netManager.messageClients(PROTOCOL_UDP, message_sent.c_str(), message_sent.length());
+        // }
         
 
 
@@ -707,7 +750,7 @@ bool Assignment2::mouseMoved(const OIS::MouseEvent &arg)
 bool Assignment2::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
     CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(convertButton(id));
-    std::cout << "Mouse Press Registered" << std::endl; 
+    std::cout << sheet->getChild(1)->isMouseContainedInArea() << std::endl; 
 
     if(id == 0){ leftPressed = true; }
     if(id == 1){ rightPressed = true; }
@@ -723,7 +766,8 @@ bool Assignment2::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id
 bool Assignment2::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
 
-
+    CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(convertButton(id));
+    std::cout << sheet->getChild(1)->isMouseContainedInArea() << std::endl; 
     if(id == 0){ leftPressed = false; }
     if(id == 1){ rightPressed = false; }
 
@@ -948,7 +992,7 @@ void Assignment2::buttonHit(OgreBites::Button * button) {
 
         netManager.initNetManager();
 
-        netManager.addNetworkInfo(PROTOCOL_UDP, "128.83.144.220", 51215);
+        netManager.addNetworkInfo(PROTOCOL_UDP, "128.83.144.216", 51215);
 
         netManager.startClient();
         isServer = false;
