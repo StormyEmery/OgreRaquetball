@@ -43,64 +43,6 @@ TutorialApplication::~TutorialApplication(void)
 void TutorialApplication::createScene(void)
 {
 
-
-    // //initializeGUI();
-    // mRenderer = &CEGUI::OgreRenderer::bootstrapSystem();
-
-    // CEGUI::ImageManager::setImagesetDefaultResourceGroup("Imagesets");
-    // CEGUI::Font::setDefaultResourceGroup("Fonts");
-    // CEGUI::Scheme::setDefaultResourceGroup("Schemes");
-    // CEGUI::WidgetLookManager::setDefaultResourceGroup("LookNFeel");
-    // CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
-
-    // CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
-    // CEGUI::FontManager::getSingleton().createFromFile("DejaVuSans-12.font");
- 
-    // CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
-
-    // CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
-    // CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
-
-
-    // CEGUI::Window *mainMenu = CEGUI::WindowManager::getSingleton().loadLayoutFromFile("main_menu.layout"); 
-    // sheet->addChild(mainMenu);
-
-    // sheet->addChild(mainMenu->getChild(1));
-    // sheet->getChild(1)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.43,0), CEGUI::UDim(0.40,0)));
-    // CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
-    // CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
-
-    //     // CEGUI::Window *backGround = wmgr.createWindow("TaharezLook/FrameWindow", "CEGUIDemo/Background");
-    //     // backGround->setSize(CEGUI::USize(CEGUI::UDim(1.0f, 0.0f), CEGUI::UDim(1.0f, 1.0f)));
-    //     // sheet->addChild(backGround);
-
-    // CEGUI::Window *newGame = wmgr.createWindow("TaharezLook/TabButton", "CEGUIDemo/NewGameButton");
-    // newGame->setText("New Game");
-    // newGame->setPosition(CEGUI::UVector2(CEGUI::UDim(0.43,0), CEGUI::UDim(0.40,0)));
-    // newGame->setSize(CEGUI::USize(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
-    // sheet->addChild(newGame);
-
-    // CEGUI::Window *quit = wmgr.createWindow("TaharezLook/TabButton", "CEGUIDemo/QuitButton");
-    // quit->setText("Quit");
-    // quit->setPosition(CEGUI::UVector2(CEGUI::UDim(0.43,0),CEGUI::UDim(0.5,0)));
-    // quit->setSize(CEGUI::USize(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
-    // sheet->addChild(quit);
-
-    // CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
-
-    // quit->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::quit, this));
-
-    // // CEGUI::Window *quit = wmgr.createWindow("TaharezLook/ClientBrush", "Background");
-    // // quit->setText("Quit");
-    // // quit->setSize(CEGUI::USize(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
- 
-    // sheet->addChild(quit);
-    // CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
-
- 
-
-
-
     //===============================================================================================================================================================
 
     simulator = new Simulator();
@@ -288,13 +230,19 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                             sound_clock = clock();
                             mPause=true;
                             gameOver = true;
-                            mTrayMgr->showCursor();
-                            mTrayMgr->moveWidgetToTray(menu2,OgreBites::TL_CENTER, 0);
-                            mTrayMgr->moveWidgetToTray(menu5,OgreBites::TL_CENTER, 0);
+                            //mTrayMgr->showCursor();
+                            CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
+                            
                             mTrayMgr->moveWidgetToTray(separator, OgreBites::TL_CENTER, 0);
                             mTrayMgr->moveWidgetToTray(gameOverLabel,OgreBites::TL_CENTER, 0);
-                            menu2->show();
-                            menu5->show();
+                            sheet->getChild(1)->show();
+                            sheet->getChild(5)->show();
+                            sheet->getChild(1)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.445,0), CEGUI::UDim(0.35+(4*.051),0)));
+                            sheet->getChild(5)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.445,0), CEGUI::UDim(0.35+(5*.051),0)));
+                            menu2->hide();
+                            menu5->hide();
+                            mTrayMgr->removeWidgetFromTray(menu2);
+                            mTrayMgr->removeWidgetFromTray(menu5);
                             separator->show();
                             gameOverLabel->show();
 
@@ -327,9 +275,8 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                 if(player_one_score == 8 || player_two_score == 8){
                     mPause=true;
                     gameOver = true;
-                    mTrayMgr->showCursor();
-                    mTrayMgr->moveWidgetToTray(menu2,OgreBites::TL_CENTER, 0);
-                    mTrayMgr->moveWidgetToTray(menu5,OgreBites::TL_CENTER, 0);
+                    //mTrayMgr->showCursor();
+                    CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
                     mTrayMgr->moveWidgetToTray(separator, OgreBites::TL_CENTER, 0);
                     if(player_one_score == 8){
                         mTrayMgr->moveWidgetToTray(playerOneWins,OgreBites::TL_CENTER, 0);
@@ -339,8 +286,14 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                         mTrayMgr->moveWidgetToTray(playerTwoWins,OgreBites::TL_CENTER, 0);
                         playerTwoWins->show();
                     }
-                    menu2->show();
-                    menu5->show();
+                    sheet->getChild(1)->show();
+                    sheet->getChild(5)->show();
+                    sheet->getChild(1)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.445,0), CEGUI::UDim(0.35+(4*.051),0)));
+                    sheet->getChild(5)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.445,0), CEGUI::UDim(0.35+(5*.051),0)));
+                    menu2->hide();
+                    menu5->hide();
+                    mTrayMgr->removeWidgetFromTray(menu2);
+                    mTrayMgr->removeWidgetFromTray(menu5);
                     separator->show();
                     
                     ball->reset(mSceneMgr, ball, simulator);
@@ -541,56 +494,6 @@ void TutorialApplication::resetScore() {
     player_one_score = 0;
     player_two_score = 0;
 }
-
-void TutorialApplication::initializeGUI() {
-    mRenderer = &CEGUI::OgreRenderer::bootstrapSystem();
-
-    // CEGUI::ImageManager::setImagesetDefaultResourceGroup("Imagesets");
-    // CEGUI::Font::setDefaultResourceGroup("Fonts");
-    // CEGUI::Scheme::setDefaultResourceGroup("Schemes");
-    // CEGUI::WidgetLookManager::setDefaultResourceGroup("LookNFeel");
-    // CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
-
-    // CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
-    // CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
-
-    // CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
-    // CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
-    // CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
-
-    // CEGUI::Window *guiRoot = CEGUI::WindowManager::getSingleton().loadLayoutFromFile("TaharezLook.layout"); 
-    // CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(guiRoot);
-
-    // CEGUI::Window *quit = wmgr.createWindow("TaharezLook/Button", "CEGUIDemo/QuitButton");
-    // quit->setText("Quit");
-    // quit->setSize(CEGUI::USize(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
-
-    // sheet->addChild(quit);
-    // CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
-    // CEGUI::DefaultResourceProvider* rp = static_cast<CEGUI::DefaultResourceProvider*>(CEGUI::System::getSingleton().getResourceProvider());
-    
-    // //Specify resource groups
-    // rp->setResourceGroupDirectory("schemes", "./ceed/data/schemes/");
-    // rp->setResourceGroupDirectory("imagesets", "/lusr/opt/cegui-0.8.4/share/cegui-0/imagesets/");
-    // rp->setResourceGroupDirectory("fonts", "./ceed/data/fonts/");
-    // rp->setResourceGroupDirectory("layouts", "./ceed/data/layouts/");
-    // rp->setResourceGroupDirectory("looknfeels", "./ceed/data/looknfeel/");
-    // rp->setResourceGroupDirectory("lua_scripts", "./ceed/data/lua_scripts/");
-
-    // //Specify which resources groups for the system to use
-    // CEGUI::Scheme::setDefaultResourceGroup("schemes");
-    // CEGUI::ImageManager::setImagesetDefaultResourceGroup("imagesets");
-
-    // CEGUI::Font::setDefaultResourceGroup("fonts");
-    // CEGUI::WidgetLookManager::setDefaultResourceGroup("looknfeels");
-    // CEGUI::WindowManager::setDefaultResourceGroup("layouts");
-    // CEGUI::ScriptModule::setDefaultResourceGroup("lua_scripts");
-
-    // CEGUI::System::getSingleton().getDefaultGUIContext().setDefaultFont( "DejaVuSans-10" );
-    // CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage( "TaharezLook/MouseArrow" );
-
-}
-
 
 //---------------------------------------------------------------------------
 
