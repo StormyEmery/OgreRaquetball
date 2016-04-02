@@ -189,8 +189,8 @@ void Assignment2::createFrameListener(void)
 
 
     mDetailsPanel = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "DetailsPanel", 200, items);
-    mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(getScoreOne()));
-    mDetailsPanel->setParamValue(1, Ogre::StringConverter::toString(getScoreTwo()));
+    mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(player_one_score));
+    mDetailsPanel->setParamValue(1, Ogre::StringConverter::toString(player_two_score));
     mDetailsPanel->show();
 
 
@@ -360,14 +360,14 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
     Quaternion ball_quat = ball->ballNode->getOrientation();
 
     //Construct messages
-    if(old_rel_x != rel_mouse_state_x && old_rel_y != rel_mouse_state_y) {
+    if(rel_mouse_state_x != 0 || rel_mouse_state_y != 0) {
         message_sent = "";
         message_sent += to_string(rel_mouse_state_x);
         message_sent += " ";
         message_sent += to_string(-rel_mouse_state_y);
         message_sent += " ";
-        old_rel_x = rel_mouse_state_x;
-        old_rel_y = rel_mouse_state_y;
+        rel_mouse_state_x = 0;
+        rel_mouse_state_y = 0;
     }
     else {
         message_sent = "";
@@ -417,6 +417,10 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
         message_sent += " ";
         message_sent += to_string(ball_quat.z);
         message_sent += " ";
+        message_sent += to_string(player_one_score);
+        message_sent += " ";
+        message_sent += to_string(player_two_score);
+        message_sent += " ";
     }
     /*End of Stormy's bullshit*/
 
@@ -462,7 +466,7 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
                 stream >> sub;
                 float ball_pos_y = atof(sub.c_str());
                 stream >> sub;
-                float ball_pos_z = atof(sub.c_str());
+                float ball_pos_z = -atof(sub.c_str());
                 stream >> sub;
                 float ball_quat_w = atof(sub.c_str());
                 stream >> sub;
@@ -471,6 +475,14 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
                 float ball_quat_y = atof(sub.c_str());
                 stream >> sub;
                 float ball_quat_z = atof(sub.c_str());
+
+                stream >> sub;
+                player_one_score = atoi(sub.c_str());
+                stream >> sub;
+                player_two_score = atoi(sub.c_str());
+                stream >> sub;
+                mPause = atoi(sub.c_str());
+
 
                 ball->ballNode->setPosition(ball_pos_x, ball_pos_y, ball_pos_z);
                 ball->ballNode->setOrientation(ball_quat_w, ball_quat_x, ball_quat_y, ball_quat_z);
@@ -565,8 +577,8 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
         mCameraMan->frameRenderingQueued(evt);   // If dialog isn't up, then update the camera
         if (mDetailsPanel->isVisible())          // If details panel is visible, then update its contents
         {
-            mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(getScoreOne()));            
-            mDetailsPanel->setParamValue(1, Ogre::StringConverter::toString(getScoreTwo()));            
+            mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(player_one_score));            
+            mDetailsPanel->setParamValue(1, Ogre::StringConverter::toString(player_two_score));            
         }
     }
     
@@ -967,7 +979,7 @@ void Assignment2::buttonHit(OgreBites::Button * button) {
         render_multi_paddle();
 
         netManager.initNetManager();
-        netManager.addNetworkInfo(PROTOCOL_UDP, "128.83.144.121", 51215);
+        netManager.addNetworkInfo(PROTOCOL_UDP, "128.83.144.78", 51215);
         netManager.startClient();
         isServer = false;
         isClient = true;

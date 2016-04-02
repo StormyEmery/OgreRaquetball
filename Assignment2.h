@@ -167,6 +167,8 @@ public:
     Real                        current_y;
     String                      message_sent;
     String                      message_received;
+    int                         player_one_score;
+    int                         player_two_score;
 
 
 

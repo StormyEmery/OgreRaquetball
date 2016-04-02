@@ -303,7 +303,7 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                             paddle_collision_sound.play(0);
                             Quaternion qt = paddleOne->paddleNode->getOrientation();
                             Vector3 v = qt * Vector3::NEGATIVE_UNIT_Z;
-                            ball->a(btVector3(-v.x, -v.y, -v.z));
+                            ball->a(btVector3(v.x, v.y, v.z));
                         }
 
                         if(obOneName == "node_goal" && obTwoName == "node_ball" && single_score_ok) {
@@ -419,8 +419,8 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                         if(obOneName == "node_paddle" && obTwoName == "node_ball"){
                             score_sound.play(0);
                             Quaternion qt = paddleOne->paddleNode->getOrientation();
-                            Vector3 v = qt * Vector3::NEGATIVE_UNIT_Z;
-                            ball->a(btVector3(-v.x, -v.y, -v.z));
+                            Vector3 v = qt * Vector3::UNIT_Z;
+                            ball->a(btVector3(v.x, v.y, v.z));
                         }
 
                         if(obOneName == "node_paddleTwo" && obTwoName == "node_ball"){
