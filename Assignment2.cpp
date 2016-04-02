@@ -31,6 +31,8 @@ Assignment2::Assignment2(void) :
     rightPressed(false),
     current_x(0),
     current_y(0),
+    old_rel_x(0),
+    old_rel_y(0),
     single_player(false),
     multi_player(false),
     moveUp(false),
@@ -189,8 +191,8 @@ void Assignment2::createFrameListener(void)
 
 
     mDetailsPanel = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "DetailsPanel", 200, items);
-    mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(getScoreOne()));
-    mDetailsPanel->setParamValue(1, Ogre::StringConverter::toString(getScoreTwo()));
+    mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(player_one_score));
+    mDetailsPanel->setParamValue(1, Ogre::StringConverter::toString(player_two_score));
     mDetailsPanel->show();
 
 
@@ -206,7 +208,9 @@ void Assignment2::createFrameListener(void)
     separator->hide();
     mTrayMgr->removeWidgetFromTray(separator);
 
-    mTrayMgr->showCursor();
+    //mTrayMgr->showCursor();
+    menu2->hide();
+    menu5->hide();
     menu1->hide();
     menu3->hide();
     menu6->hide();
@@ -217,6 +221,8 @@ void Assignment2::createFrameListener(void)
     menu11->hide();
     menu12->hide();
     menu13->hide();
+    mTrayMgr->removeWidgetFromTray(menu2);
+    mTrayMgr->removeWidgetFromTray(menu5);
     mTrayMgr->removeWidgetFromTray(menu1);
     mTrayMgr->removeWidgetFromTray(menu3);
     mTrayMgr->removeWidgetFromTray(menu6);
@@ -258,24 +264,34 @@ void Assignment2::createFrameListener(void)
     menuWindow->setSize(CEGUI::USize(CEGUI::UDim(.2, 0), CEGUI::UDim(.33, 0)));
     menuWindow->setMouseCursor("TaharezLook/MouseArrow");
     
-    for(int i=1; i<=5; i++){
-        menuWindow->getChild(i)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(i*.051),0)));
+    for(int i=1; i<=13; i++){        
         sheet->addChild(menuWindow->getChild(i));
-
+        sheet->getChild(i)->hide();
     }
 
+
+
     menuWindow->hide();
+    sheet->getChild(1)->show();
+    sheet->getChild(5)->show();
+    sheet->getChild(1)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(1*.051),0)));
+    sheet->getChild(5)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(2*.051),0)));
 
-    sheet->getChild(1)->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::new_game, this));
 
+    sheet->getChild(8)->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::continue1, this));
+    sheet->getChild(5)->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::exit2, this));
+    sheet->getChild(2)->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::toggle_music3, this));
+    sheet->getChild(1)->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::new_game5, this));
+    sheet->getChild(12)->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::reset_ball6, this));
+    sheet->getChild(4)->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::single_player7, this));
+    sheet->getChild(3)->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::multiplayer8, this));
+    sheet->getChild(10)->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::back1_9, this));
+    sheet->getChild(9)->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::main_menu10, this));
+    sheet->getChild(6)->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::start_server11, this));
+    sheet->getChild(7)->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::start_client12, this));
+    sheet->getChild(11)->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::back2_13, this));
+    sheet->getChild(13)->subscribeEvent(CEGUI::Editbox::EventTextAccepted, CEGUI::Event::Subscriber(&Assignment2::Handle_TextSubmitted,this));
 
-    // CEGUI::Window *quit = wmgr.createWindow("TaharezLook/TabButton", "CEGUIDemo/QuitButton");
-    // quit->setText("Quit");
-    // quit->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(6*.051),0)));
-    // quit->setSize(CEGUI::USize(CEGUI::UDim(0.15,0), CEGUI::UDim(.05,0)));
-    // sheet->addChild(quit);
-
-    // quit->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::new_game, this));
 
 //===========================================================================
 
@@ -425,7 +441,6 @@ bool Assignment2::setup(void)
 //---------------------------------------------------------------------------
 bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
-
     SceneNode* temp = mSceneMgr->getSceneNode("translateTwo");
     Vector3 bounds = temp->getPosition();
 
@@ -433,16 +448,33 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
     Vector3 paddle_one_coords = mSceneMgr->getSceneNode("translate")->getPosition();
     Quaternion paddle_one_quat = mSceneMgr->getSceneNode("translate")->getOrientation();
 
-    //Construct messages, need to add ball info
-    message_sent = "";
-    message_sent += to_string(rel_mouse_state_x);
-    message_sent += " ";
-    message_sent += to_string(-rel_moust_state_y);
-    message_sent += " ";
+    Vector3 ball_coords = ball->ballNode->getPosition();
+    Quaternion ball_quat = ball->ballNode->getOrientation();
+
+    //Construct messages
+    if(rel_mouse_state_x != 0 || rel_mouse_state_y != 0) {
+        message_sent = "";
+        message_sent += to_string(rel_mouse_state_x);
+        message_sent += " ";
+        message_sent += to_string(-rel_mouse_state_y);
+        message_sent += " ";
+        rel_mouse_state_x = 0;
+        rel_mouse_state_y = 0;
+    }
+    else {
+        message_sent = "";
+        message_sent += to_string(0);
+        message_sent += " ";
+        message_sent += to_string(0);
+        message_sent += " ";
+    }
+
     message_sent += to_string(current_x);
     message_sent += " ";
     message_sent += to_string(current_y);
     message_sent += " ";
+
+
 
     if(leftPressed){
         message_sent += "1";
@@ -460,6 +492,29 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
         message_sent += "0";
         message_sent += " ";
     }
+
+    /*Start of Stormy's bullshit*/
+    if(isServer) {
+        message_sent += to_string(ball_coords.x);
+        message_sent += " ";
+        message_sent += to_string(ball_coords.y);
+        message_sent += " ";
+        message_sent += to_string(ball_coords.z);
+        message_sent += " ";
+        message_sent += to_string(ball_quat.w);
+        message_sent += " ";
+        message_sent += to_string(ball_quat.x);
+        message_sent += " ";
+        message_sent += to_string(ball_quat.y);
+        message_sent += " ";
+        message_sent += to_string(ball_quat.z);
+        message_sent += " ";
+        message_sent += to_string(player_one_score);
+        message_sent += " ";
+        message_sent += to_string(player_two_score);
+        message_sent += " ";
+    }
+    /*End of Stormy's bullshit*/
 
     if (isClient) {
         netManager.messageServer(PROTOCOL_UDP, message_sent.c_str(), message_sent.length());
@@ -496,6 +551,36 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
                 float left_pressed = atof(sub.c_str());
                 stream >> sub;
                 float right_pressed = atof(sub.c_str());
+                stream >> sub;
+
+                /*Start of Stormy's bullshit*/
+                float ball_pos_x = atof(sub.c_str());
+                stream >> sub;
+                float ball_pos_y = atof(sub.c_str());
+                stream >> sub;
+                float ball_pos_z = -atof(sub.c_str());
+                stream >> sub;
+                float ball_quat_w = atof(sub.c_str());
+                stream >> sub;
+                float ball_quat_x = atof(sub.c_str());
+                stream >> sub;
+                float ball_quat_y = atof(sub.c_str());
+                stream >> sub;
+                float ball_quat_z = atof(sub.c_str());
+
+                stream >> sub;
+                player_one_score = atoi(sub.c_str());
+                stream >> sub;
+                player_two_score = atoi(sub.c_str());
+                stream >> sub;
+                mPause = atoi(sub.c_str());
+
+
+                ball->ballNode->setPosition(ball_pos_x, ball_pos_y, ball_pos_z);
+                ball->ballNode->setOrientation(ball_quat_w, ball_quat_x, ball_quat_y, ball_quat_z);
+                ball->updateTransform();
+
+                /*End of Stormy's bullshit*/
 
 
                 temp->translate(move_x, move_y, 0);
@@ -584,49 +669,51 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
         mCameraMan->frameRenderingQueued(evt);   // If dialog isn't up, then update the camera
         if (mDetailsPanel->isVisible())          // If details panel is visible, then update its contents
         {
-            mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(getScoreOne()));            
-            mDetailsPanel->setParamValue(1, Ogre::StringConverter::toString(getScoreTwo()));            
+            mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(player_one_score));            
+            mDetailsPanel->setParamValue(1, Ogre::StringConverter::toString(player_two_score));            
         }
     }
-
+    
     return true;
 }
 //---------------------------------------------------------------------------
 bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
 {
+    CEGUI::GUIContext& context = CEGUI::System::getSingleton().getDefaultGUIContext();
+    context.injectKeyDown((CEGUI::Key::Scan)arg.key);
+    context.injectChar((CEGUI::Key::Scan)arg.text);
+
     if (arg.key == OIS::KC_ESCAPE && !main_menu){
         if(!mPause && !gameOver) {
             game_music.pause();
             menu_sound.play(0);
-            mTrayMgr->showCursor();
+            //mTrayMgr->showCursor();
+            CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
             mPause=true;
-            menu6->show();
-            menu1->show();
-            menu3->show();
-            menu2->show();
-            menu10->show();
-            mTrayMgr->moveWidgetToTray(menu2, OgreBites::TL_CENTER, 0);
-            mTrayMgr->moveWidgetToTray(menu10, OgreBites::TL_CENTER, 0);
-            mTrayMgr->moveWidgetToTray(menu3, OgreBites::TL_CENTER, 0);
-            mTrayMgr->moveWidgetToTray(menu1, OgreBites::TL_CENTER, 0);
-            mTrayMgr->moveWidgetToTray(menu6, OgreBites::TL_CENTER, 0);
+            sheet->getChild(12)->show();
+            sheet->getChild(8)->show();
+            sheet->getChild(2)->show();
+            sheet->getChild(9)->show();
+            sheet->getChild(5)->show();
+            sheet->getChild(12)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(1*.051),0)));
+            sheet->getChild(8)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(2*.051),0)));
+            sheet->getChild(2)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(3*.051),0)));
+            sheet->getChild(9)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(4*.051),0)));
+            sheet->getChild(5)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(5*.051),0)));
         }   
         else if(!gameOver){
             menu_sound.play(0);
             if(background_music)
                 game_music.resume();
             mTrayMgr->hideCursor();
+            CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();
             mPause=false;
-            mTrayMgr->removeWidgetFromTray(menu6);
-            mTrayMgr->removeWidgetFromTray(menu1);
-            mTrayMgr->removeWidgetFromTray(menu2);
-            mTrayMgr->removeWidgetFromTray(menu3);
-            mTrayMgr->removeWidgetFromTray(menu10);
-            menu6->hide();
-            menu1->hide();
-            menu2->hide();
-            menu3->hide();
-            menu10->hide();
+            sheet->getChild(12)->hide();
+            sheet->getChild(8)->hide();
+            sheet->getChild(2)->hide();
+            sheet->getChild(9)->hide();
+            sheet->getChild(5)->hide();
+           
         }
     }
     if (arg.key == OIS::KC_F12){
@@ -653,6 +740,7 @@ bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
 //---------------------------------------------------------------------------
 bool Assignment2::keyReleased(const OIS::KeyEvent &arg)
 {
+    CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyUp((CEGUI::Key::Scan)arg.key);
     if (arg.key == OIS::KC_W) { moveUp = false; }
     if (arg.key == OIS::KC_A) { moveLeft = false; }
     if (arg.key == OIS::KC_S) { moveDown = false; }
@@ -667,18 +755,18 @@ bool Assignment2::keyReleased(const OIS::KeyEvent &arg)
 //---------------------------------------------------------------------------
 bool Assignment2::mouseMoved(const OIS::MouseEvent &arg)
 {
+
     CEGUI::System &sys = CEGUI::System::getSingleton();
 
     sys.getDefaultGUIContext().injectMouseMove(arg.state.X.rel, arg.state.Y.rel);  
   
+
     if (mTrayMgr->injectMouseMove(arg)) return true;
     SceneNode* temp = mSceneMgr->getSceneNode("translate");
     Vector3 bounds = temp->getPosition();
 
 
     if(!mPause && !main_menu ) {       
-
-
         if( bounds.x > 597 || bounds.x < -570 ||
         bounds.y > 398 || bounds.y < -398){
             if(bounds.x  > 597)
@@ -695,10 +783,11 @@ bool Assignment2::mouseMoved(const OIS::MouseEvent &arg)
         }
 
         rel_mouse_state_x = arg.state.X.rel;
-        rel_moust_state_y = arg.state.Y.rel;
-        current_x += rel_mouse_state_x;
-        current_y += rel_moust_state_y;
+        rel_mouse_state_y = arg.state.Y.rel;
+        current_x = current_x + rel_mouse_state_x;
+        current_y = current_y + rel_mouse_state_y;
 
+    
         // message_sent = "";
         // message_sent += to_string(arg.state.X.rel);
         // message_sent += " ";
@@ -848,237 +937,252 @@ void Assignment2::render_multi_paddle(){
 
 }
 
-void Assignment2::buttonHit(OgreBites::Button * button) {
-    if(button->getName() == "MyButton1") {
+bool Assignment2::continue1 (const CEGUI::EventArgs &e){
+
         button_sound.play(0);
         mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(++mScore));
-        mTrayMgr->removeWidgetFromTray(menu6);
-        mTrayMgr->removeWidgetFromTray(menu1);
-        mTrayMgr->removeWidgetFromTray(menu2);
-        mTrayMgr->removeWidgetFromTray(menu3);
-        mTrayMgr->removeWidgetFromTray(menu10);
-        menu6->hide();
-        menu1->hide();
-        menu2->hide();
-        menu3->hide();
-        menu10->hide();
-        mTrayMgr->hideCursor();
+
+        sheet->getChild(12)->hide();
+        sheet->getChild(8)->hide();
+        sheet->getChild(5)->hide();
+        sheet->getChild(2)->hide();
+        sheet->getChild(9)->hide();
+        CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();
         mPause = false;
-    }
-    else if(button->getName()=="MyButton2"){
+    return true;
+}
+
+
+
+bool Assignment2::exit2 (const CEGUI::EventArgs &e){
+    button_sound.play(0);
+    mShutDown = true;
+    return true;
+}
+
+bool Assignment2::toggle_music3 (const CEGUI::EventArgs &e){
+    button_sound.play(0);
+    background_music = !background_music;
+    return true;
+}
+bool Assignment2::new_game5 (const CEGUI::EventArgs &e){
         button_sound.play(0);
-        mShutDown = true;
-    }
-    else if(button->getName()=="MyButton3"){
-        button_sound.play(0);
-        background_music = !background_music;
-    }
-    else if(button->getName()=="MyButton5"){
-        button_sound.play(0);
-        menu2->hide();
-        menu5->hide();
+        sheet->getChild(5)->hide();
+        sheet->getChild(1)->hide();
         gameOverLabel->hide();
         playerOneWins->hide();
         playerTwoWins->hide();
-        mTrayMgr->removeWidgetFromTray(menu2);
-        mTrayMgr->removeWidgetFromTray(menu5);
-        menu9->show();
-        menu8->show();
-        menu7->show();
-        mTrayMgr->moveWidgetToTray(menu9, OgreBites::TL_CENTER, 0);
-        mTrayMgr->moveWidgetToTray(menu8, OgreBites::TL_CENTER, 0);
-        mTrayMgr->moveWidgetToTray(menu7, OgreBites::TL_CENTER, 0);
+        sheet->getChild(4)->show();
+        sheet->getChild(3)->show();
+        sheet->getChild(10)->show();
+        sheet->getChild(4)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(1*.051),0)));
+        sheet->getChild(3)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(2*.051),0)));
+        sheet->getChild(10)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(3*.051),0)));
+        separator->hide();        
+        mTrayMgr->removeWidgetFromTray(separator);
         mTrayMgr->removeWidgetFromTray(gameOverLabel);
         mTrayMgr->removeWidgetFromTray(playerOneWins);
         mTrayMgr->removeWidgetFromTray(playerTwoWins);
-    }
-    else if(button->getName() == "MyButton6") {
+    return true;
+}
+
+
+bool Assignment2::reset_ball6 (const CEGUI::EventArgs &e){
         button_sound.play(0);
-        mTrayMgr->removeWidgetFromTray(menu6);
-        mTrayMgr->removeWidgetFromTray(menu1);
-        mTrayMgr->removeWidgetFromTray(menu2);
-        mTrayMgr->removeWidgetFromTray(menu3);
-        mTrayMgr->removeWidgetFromTray(menu10);
-        menu6->hide();
-        menu1->hide();
-        menu2->hide();
-        menu3->hide();
-        menu10->hide();
+
+        sheet->getChild(12)->hide();
+        sheet->getChild(8)->hide();
+        sheet->getChild(5)->hide();
+        sheet->getChild(2)->hide();
+        sheet->getChild(9)->hide();
+
         mTrayMgr->hideCursor();
+        CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();
         mPause = false;
         if(background_music)
                 game_music.resume();
         ball->reset(mSceneMgr, ball, simulator);
-    }
-    else if(button->getName()=="MyButton7"){
+
+    return true;
+}
+
+bool Assignment2::single_player7 (const CEGUI::EventArgs &e){
         button_sound.play(0);
         single_player = true;
         multi_player = false;
         main_menu = false;
         mPause = false;
         gameOver = false;
-        menu7->hide();
-        menu8->hide();
-        menu9->hide();
+        sheet->getChild(4)->hide();
+        sheet->getChild(3)->hide();
+        sheet->getChild(10)->hide();
         gameOverLabel->hide();
         playerOneWins->hide();
         playerTwoWins->hide();
         separator->hide();
-        mTrayMgr->removeWidgetFromTray(menu7);
-        mTrayMgr->removeWidgetFromTray(menu8);
-        mTrayMgr->removeWidgetFromTray(menu9);
         mTrayMgr->removeWidgetFromTray(gameOverLabel);
         mTrayMgr->removeWidgetFromTray(playerOneWins);
         mTrayMgr->removeWidgetFromTray(playerTwoWins);
         mTrayMgr->removeWidgetFromTray(separator);
         mTrayMgr->hideCursor();
+        CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();
         resetScore();
         render_single_paddle();
-    }
-    else if(button->getName()=="MyButton8"){
+    return true;
+}
+bool Assignment2::multiplayer8 (const CEGUI::EventArgs &e){
+
         button_sound.play(0);
-        menu7->hide();
-        menu8->hide();
-        menu9->hide();
+        sheet->getChild(4)->hide();
+        sheet->getChild(3)->hide();
+        sheet->getChild(10)->hide();
         gameOverLabel->hide();
         playerOneWins->hide();
         playerTwoWins->hide();
-        mTrayMgr->removeWidgetFromTray(menu7);
-        mTrayMgr->removeWidgetFromTray(menu8);
-        mTrayMgr->removeWidgetFromTray(menu9);
-        menu13->show();
-        menu12->show();
-        menu11->show();
-        mTrayMgr->moveWidgetToTray(menu13, OgreBites::TL_CENTER, 0);
-        mTrayMgr->moveWidgetToTray(menu12, OgreBites::TL_CENTER, 0);
-        mTrayMgr->moveWidgetToTray(menu11, OgreBites::TL_CENTER, 0);
-    }
-    else if(button->getName()=="MyButton13"){
+        sheet->getChild(6)->show();
+        sheet->getChild(7)->show();
+        sheet->getChild(11)->show();
+        sheet->getChild(13)->show();
+        sheet->getChild(13)->activate();
+        sheet->getChild(6)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(1*.051),0)));
+        sheet->getChild(7)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(2*.051),0)));
+        sheet->getChild(11)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(3*.051),0)));
+        sheet->getChild(13)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.25,0), CEGUI::UDim(0.35+(2*.051),0)));
+
+    return true;
+}
+bool Assignment2::back1_9 (const CEGUI::EventArgs &e){
         button_sound.play(0);
-        menu11->hide();
-        menu12->hide();
-        menu13->hide();
-        gameOverLabel->hide();
-        playerOneWins->hide();
-        playerTwoWins->hide();
-        mTrayMgr->removeWidgetFromTray(menu11);
-        mTrayMgr->removeWidgetFromTray(menu12);
-        mTrayMgr->removeWidgetFromTray(menu13);
-        menu9->show();
-        menu8->show();
-        menu7->show();
-        mTrayMgr->moveWidgetToTray(menu9, OgreBites::TL_CENTER, 0);
-        mTrayMgr->moveWidgetToTray(menu8, OgreBites::TL_CENTER, 0);
-        mTrayMgr->moveWidgetToTray(menu7, OgreBites::TL_CENTER, 0);
-    }
-    else if(button->getName()=="MyButton12"){
-        button_sound.play(0);
-        single_player = false;
-        multi_player = true;
-        main_menu = false;
-        mPause = false;
-        gameOver = false;
-        menu11->hide();
-        menu12->hide();
-        menu13->hide();
-        gameOverLabel->hide();
-        playerOneWins->hide();
-        playerTwoWins->hide();
-        mTrayMgr->hideCursor();
-        mTrayMgr->removeWidgetFromTray(menu11);
-        mTrayMgr->removeWidgetFromTray(menu12);
-        mTrayMgr->removeWidgetFromTray(menu13);
-        render_multi_paddle();
-
-        netManager.initNetManager();
-
-        netManager.addNetworkInfo(PROTOCOL_UDP, "128.83.144.216", 51215);
-
-        netManager.startClient();
-        isServer = false;
-        isClient = true;
-    }
-    else if(button->getName()=="MyButton11"){
-        button_sound.play(0);
-        single_player = false;
-        multi_player = true;
-        main_menu = false;
-        mPause = false;
-        gameOver = false;
-        menu11->hide();
-        menu12->hide();
-        menu13->hide();
-        gameOverLabel->hide();
-        playerOneWins->hide();
-        playerTwoWins->hide();
-        separator->hide();
-        mTrayMgr->removeWidgetFromTray(menu11);
-        mTrayMgr->removeWidgetFromTray(menu12);
-        mTrayMgr->removeWidgetFromTray(menu13);
-        mTrayMgr->removeWidgetFromTray(gameOverLabel);
-        mTrayMgr->removeWidgetFromTray(playerOneWins);
-        mTrayMgr->removeWidgetFromTray(playerTwoWins);
-        mTrayMgr->removeWidgetFromTray(separator);
-        mTrayMgr->hideCursor();
-        resetScore();
-        render_multi_paddle();
-
-        netManager.initNetManager();
-        netManager.addNetworkInfo(PROTOCOL_UDP, NULL, 51215);
-
-        netManager.startServer();
-        netManager.acceptConnections();
-        isServer = true;
-        isClient = false;
-
-    }
-    else if(button->getName()=="MyButton9"){
-        button_sound.play(0);
-        menu7->hide();
-        menu8->hide();
-        menu9->hide();
-        mTrayMgr->removeWidgetFromTray(menu7);
-        mTrayMgr->removeWidgetFromTray(menu8);
-        mTrayMgr->removeWidgetFromTray(menu9);
-        menu2->show();
-        menu5->show();
-        mTrayMgr->moveWidgetToTray(menu2, OgreBites::TL_CENTER, 0);
-        mTrayMgr->moveWidgetToTray(menu5, OgreBites::TL_CENTER, 0);
-    }
-    else if(button->getName()=="MyButton10"){
+        sheet->getChild(3)->hide();
+        sheet->getChild(4)->hide();
+        sheet->getChild(10)->hide();
+        sheet->getChild(1)->show();
+        sheet->getChild(5)->show();
+        sheet->getChild(1)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(1*.051),0)));
+        sheet->getChild(5)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(2*.051),0)));
+    return true;
+}
+bool Assignment2::main_menu10 (const CEGUI::EventArgs &e){
         button_sound.play(0);
         single_player = false;
         multi_player = false;
         main_menu = true;
         mPause = false;
         gameOver = false;
-        menu1->hide();
-        menu3->hide();
-        menu6->hide();
-        menu7->hide();
-        menu8->hide();
-        menu9->hide();
-        menu10->hide();
-        mTrayMgr->removeWidgetFromTray(menu1);
-        mTrayMgr->removeWidgetFromTray(menu3);
-        mTrayMgr->removeWidgetFromTray(menu6);
-        mTrayMgr->removeWidgetFromTray(menu7);
-        mTrayMgr->removeWidgetFromTray(menu8);
-        mTrayMgr->removeWidgetFromTray(menu9);
-        mTrayMgr->removeWidgetFromTray(menu10);
-        menu2->show();
-        menu5->show();
-        mTrayMgr->moveWidgetToTray(menu2, OgreBites::TL_CENTER, 0);
-        mTrayMgr->moveWidgetToTray(menu5, OgreBites::TL_CENTER, 0);
+        sheet->getChild(8)->hide();
+        sheet->getChild(2)->hide();
+        sheet->getChild(4)->hide();
+        sheet->getChild(3)->hide();
+        sheet->getChild(10)->hide();
+        sheet->getChild(12)->hide();
+        sheet->getChild(9)->hide();
+        sheet->getChild(1)->show();
+        sheet->getChild(5)->show();
+        sheet->getChild(1)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(1*.051),0)));
+        sheet->getChild(5)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(2*.051),0)));
         ball->reset(mSceneMgr, ball, simulator);
-    }
+    return true;
+}
+bool Assignment2::start_server11 (const CEGUI::EventArgs &e){
+        button_sound.play(0);
+        single_player = false;
+        multi_player = true;
+        main_menu = false;
+        mPause = false;
+        gameOver = false;
+        sheet->getChild(6)->hide();
+        sheet->getChild(7)->hide();
+        sheet->getChild(11)->hide();
+        gameOverLabel->hide();
+        playerOneWins->hide();
+        playerTwoWins->hide();
+        separator->hide();
+        sheet->getChild(13)->hide();
+        sheet->getChild(13)->deactivate();
+        mTrayMgr->removeWidgetFromTray(gameOverLabel);
+        mTrayMgr->removeWidgetFromTray(playerOneWins);
+        mTrayMgr->removeWidgetFromTray(playerTwoWins);
+        mTrayMgr->removeWidgetFromTray(separator);
+        mTrayMgr->hideCursor();
+        CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();
+        resetScore();
+        render_multi_paddle();
+        netManager.initNetManager();
+        netManager.addNetworkInfo(PROTOCOL_UDP, NULL, 51215);
+        netManager.startServer();
+        netManager.acceptConnections();
+        isServer = true;
+        isClient = false;
+    return true;
+}
+bool Assignment2::start_client12 (const CEGUI::EventArgs &e){
+        button_sound.play(0);
+        single_player = false;
+        multi_player = true;
+        main_menu = false;
+        mPause = false;
+        gameOver = false;
+        sheet->getChild(6)->hide();
+        sheet->getChild(7)->hide();
+        sheet->getChild(11)->hide();
+        gameOverLabel->hide();
+        playerOneWins->hide();
+        playerTwoWins->hide();
+        sheet->getChild(13)->hide();
+        sheet->getChild(13)->deactivate();
+        mTrayMgr->hideCursor();
+        CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();
+        render_multi_paddle();
+        netManager.initNetManager();
+        netManager.addNetworkInfo(PROTOCOL_UDP, ipEntered.c_str(), 51215);
+        netManager.startClient();
+        isServer = false;
+        isClient = true;
+    return true;
+}
+bool Assignment2::back2_13 (const CEGUI::EventArgs &e){
+        button_sound.play(0);
+        sheet->getChild(6)->hide();
+        sheet->getChild(7)->hide();
+        sheet->getChild(11)->hide();
+        gameOverLabel->hide();
+        playerOneWins->hide();
+        playerTwoWins->hide();
+        sheet->getChild(13)->hide();
+        sheet->getChild(13)->deactivate();
+        sheet->getChild(4)->show();
+        sheet->getChild(3)->show();
+        sheet->getChild(10)->show();
+        sheet->getChild(4)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(1*.051),0)));
+        sheet->getChild(3)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(2*.051),0)));
+        sheet->getChild(10)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(3*.051),0)));
+    return true;
 }
 
-bool Assignment2::new_game (const CEGUI::EventArgs &e){
-    std::cout << "Mouse Button Pressed!!!!!  \n";
-    mShutDown = true;
+bool Assignment2::Handle_TextSubmitted(const CEGUI::EventArgs &e)
+{
+    // The following line of code is not really needed in this particular example, but is good to show.  The EventArgs by itself 
+     // only has limited uses. You will find it more useful to cast this to another type of Event.  In this case WindowEventArgs
+     // could be much more useful as we are dealing with a CEGUI::Window.  Notably, this will allow you access to the .window
+     // member of the argument, which will have a pointer to the window which called the event.  You can imagine that would be
+     // useful!
+    const CEGUI::WindowEventArgs* args = static_cast<const CEGUI::WindowEventArgs*>(&e);
+ 
+    // Now we need to get the text that is in the edit box right now.
+    CEGUI::String Msg = sheet->getChild(13)->getText();
+ 
+    // Since we have that string, lets send it to the TextParser which will handle it from here
+    (this)->ParseText(Msg);
+ 
+    // Now that we've finished with the text, we need to ensure that we clear out the EditBox.  This is what we would expect
+      // To happen after we press enter
+    sheet->getChild(13)->setText("");
+ 
     return true;
-
+}
+void Assignment2::ParseText(CEGUI::String inMsg)
+{
+      ipEntered = inMsg.c_str();
 }
 
 

@@ -236,13 +236,19 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                             sound_clock = clock();
                             mPause=true;
                             gameOver = true;
-                            mTrayMgr->showCursor();
-                            mTrayMgr->moveWidgetToTray(menu2,OgreBites::TL_CENTER, 0);
-                            mTrayMgr->moveWidgetToTray(menu5,OgreBites::TL_CENTER, 0);
+                            //mTrayMgr->showCursor();
+                            CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
+                            
                             mTrayMgr->moveWidgetToTray(separator, OgreBites::TL_CENTER, 0);
                             mTrayMgr->moveWidgetToTray(gameOverLabel,OgreBites::TL_CENTER, 0);
-                            menu2->show();
-                            menu5->show();
+                            sheet->getChild(1)->show();
+                            sheet->getChild(5)->show();
+                            sheet->getChild(1)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.445,0), CEGUI::UDim(0.35+(4*.051),0)));
+                            sheet->getChild(5)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.445,0), CEGUI::UDim(0.35+(5*.051),0)));
+                            menu2->hide();
+                            menu5->hide();
+                            mTrayMgr->removeWidgetFromTray(menu2);
+                            mTrayMgr->removeWidgetFromTray(menu5);
                             separator->show();
                             gameOverLabel->show();
 
@@ -254,7 +260,7 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                             paddle_collision_sound.play(0);
                             Quaternion qt = paddleOne->paddleNode->getOrientation();
                             Vector3 v = qt * Vector3::NEGATIVE_UNIT_Z;
-                            ball->a(btVector3(-v.x, -v.y, -v.z));
+                            ball->a(btVector3(v.x, v.y, v.z));
                         }
 
                         if(obOneName == "node_goal" && obTwoName == "node_ball" && single_score_ok) {
@@ -275,9 +281,8 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                 if(player_one_score == 8 || player_two_score == 8){
                     mPause=true;
                     gameOver = true;
-                    mTrayMgr->showCursor();
-                    mTrayMgr->moveWidgetToTray(menu2,OgreBites::TL_CENTER, 0);
-                    mTrayMgr->moveWidgetToTray(menu5,OgreBites::TL_CENTER, 0);
+                    //mTrayMgr->showCursor();
+                    CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
                     mTrayMgr->moveWidgetToTray(separator, OgreBites::TL_CENTER, 0);
                     if(player_one_score == 8){
                         mTrayMgr->moveWidgetToTray(playerOneWins,OgreBites::TL_CENTER, 0);
@@ -287,13 +292,19 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                         mTrayMgr->moveWidgetToTray(playerTwoWins,OgreBites::TL_CENTER, 0);
                         playerTwoWins->show();
                     }
-                    menu2->show();
-                    menu5->show();
+                    sheet->getChild(1)->show();
+                    sheet->getChild(5)->show();
+                    sheet->getChild(1)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.445,0), CEGUI::UDim(0.35+(4*.051),0)));
+                    sheet->getChild(5)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.445,0), CEGUI::UDim(0.35+(5*.051),0)));
+                    menu2->hide();
+                    menu5->hide();
+                    mTrayMgr->removeWidgetFromTray(menu2);
+                    mTrayMgr->removeWidgetFromTray(menu5);
                     separator->show();
                     
                     ball->reset(mSceneMgr, ball, simulator);
                 }
-                if(simulator != NULL) {
+                if(simulator != NULL && isServer && netManager.getClients() > 0) {
                     simulator->getDynamicsWorld()->stepSimulation(1.0f/60.0f);
                     int numManifolds = simulator->getDispatcher()->getNumManifolds();
                     for(int i = 0; i < numManifolds; i++) {
@@ -370,8 +381,8 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                         if(obOneName == "node_paddle" && obTwoName == "node_ball"){
                             score_sound.play(0);
                             Quaternion qt = paddleOne->paddleNode->getOrientation();
-                            Vector3 v = qt * Vector3::NEGATIVE_UNIT_Z;
-                            ball->a(btVector3(-v.x, -v.y, -v.z));
+                            Vector3 v = qt * Vector3::UNIT_Z;
+                            ball->a(btVector3(v.x, v.y, v.z));
                         }
 
                         if(obOneName == "node_paddleTwo" && obTwoName == "node_ball"){

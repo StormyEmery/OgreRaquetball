@@ -30,8 +30,8 @@
             <Property name="Text" value="Quit" />
         </Window>
         <Window type="TaharezLook/Button" name="start_client" >
-            <Property name="ID" value="7" />
-            <Property name="Area" value="{{0,404},{0,162},{0,500},{0,194}}" />
+            <Property name="ID" value="6" />
+            <Property name="Area" value="{{0,410},{0,222},{0,506},{0,254}}" />
             <Property name="Text" value="Start Server" />
         </Window>
         <Window type="TaharezLook/Button" name="cotinue" >
@@ -60,10 +60,14 @@
             <Property name="Text" value="Reset Ball" />
         </Window>
         <Window type="TaharezLook/Button" name="start_server" >
-            <Property name="ID" value="6" />
+            <Property name="ID" value="7" />
             <Property name="Area" value="{{0,404},{0,128},{0,500},{0,160}}" />
             <Property name="Text" value="Start Client" />
             <Property name="AlwaysOnTop" value="true" />
+        </Window>
+        <Window type="TaharezLook/Editbox" name="Editbox" >
+            <Property name="ID" value="13" />
+            <Property name="Area" value="{{0,81},{0,274},{0,225},{0,306}}" />
         </Window>
     </Window>
 </GUILayout>

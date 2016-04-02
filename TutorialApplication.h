@@ -37,8 +37,9 @@ protected:
   btDiscreteDynamicsWorld* dynamicsWorld;
 
   btScalar desired_velocity;
-  int player_one_score;
-  int player_two_score;
+  btVector3 current_velocity_direction;
+  // int player_one_score;
+  // int player_two_score;
 
   bool music_running;
   bool already_detected;

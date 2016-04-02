@@ -102,8 +102,6 @@ public:
     // Unattach OIS before window shutdown (very important under Linux)
     virtual void windowClosed(Ogre::RenderWindow* rw);
 
-    virtual void buttonHit(OgreBites::Button * button);
-    virtual bool new_game (const CEGUI::EventArgs &e);
 
     virtual Ball* getBall()=0;
     virtual void setBall(Ball* b)=0;
@@ -161,11 +159,15 @@ public:
     bool                        single_player;
     bool                        multi_player;
     Real                        rel_mouse_state_x;
-    Real                        rel_moust_state_y;
+    Real                        rel_mouse_state_y;
+    Real                        old_rel_x;
+    Real                        old_rel_y;
     Real                        current_x;
     Real                        current_y;
     String                      message_sent;
     String                      message_received;
+    int                         player_one_score;
+    int                         player_two_score;
 
 
 
@@ -223,6 +225,21 @@ public:
     OgreBites::Separator* separator;
     int mScore;
     CEGUI::Window *sheet;
+    virtual bool continue1 (const CEGUI::EventArgs &e);
+    virtual bool exit2 (const CEGUI::EventArgs &e);
+    virtual bool toggle_music3 (const CEGUI::EventArgs &e);
+    virtual bool new_game5 (const CEGUI::EventArgs &e);
+    virtual bool reset_ball6 (const CEGUI::EventArgs &e);
+    virtual bool single_player7 (const CEGUI::EventArgs &e);
+    virtual bool multiplayer8 (const CEGUI::EventArgs &e);
+    virtual bool back1_9 (const CEGUI::EventArgs &e);
+    virtual bool main_menu10 (const CEGUI::EventArgs &e);
+    virtual bool start_server11 (const CEGUI::EventArgs &e);
+    virtual bool start_client12 (const CEGUI::EventArgs &e);
+    virtual bool back2_13 (const CEGUI::EventArgs &e);
+    bool Handle_TextSubmitted(const CEGUI::EventArgs &e);      // Handle when we press Enter after typing  
+    void ParseText(CEGUI::String inMsg); 
+    String              ipEntered;
 
     
 
