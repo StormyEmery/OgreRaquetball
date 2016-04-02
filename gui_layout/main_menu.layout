@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4" >
+    <Window type="TaharezLook/FrameWindow" name="FrameWindow" >
+        <Property name="Area" value="{{0,352},{0,261},{0.3,352},{0.3,261}}" />
+        <Window type="TaharezLook/Editbox" name="Editbox" >
+            <Property name="ID" value="1" />
+            <Property name="Area" value="{{0,56},{0,72},{0,331},{0,104}}" />
+        </Window>
+    </Window>
+</GUILayout>

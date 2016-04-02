@@ -47,6 +47,9 @@ Assignment2::Assignment2(void) :
     isClient(false),
     message_sent(""),
     message_received(""),
+    stopped(false),
+    firstClient(true),
+    firstServer(true),
 
     //test("music/wall_collision.wav", 1),
     
@@ -352,7 +355,6 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
     SceneNode* temp = mSceneMgr->getSceneNode("translateTwo");
     Vector3 bounds = temp->getPosition();
 
-
     Vector3 paddle_one_coords = mSceneMgr->getSceneNode("translate")->getPosition();
     Quaternion paddle_one_quat = mSceneMgr->getSceneNode("translate")->getOrientation();
 
@@ -382,8 +384,6 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
     message_sent += to_string(current_y);
     message_sent += " ";
 
-
-
     if(leftPressed){
         message_sent += "1";
         message_sent += " ";
@@ -401,7 +401,6 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
         message_sent += " ";
     }
 
-    /*Start of Stormy's bullshit*/
     if(isServer) {
         message_sent += to_string(ball_coords.x);
         message_sent += " ";
@@ -421,14 +420,28 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
         message_sent += " ";
         message_sent += to_string(player_two_score);
         message_sent += " ";
-    }
-    /*End of Stormy's bullshit*/
 
-    if (isClient) {
+        if(mPause) 
+            message_sent += to_string(1);
+        else
+            message_sent += to_string(0);
+
+        message_sent += " ";
+
+        if(stopped)
+            message_sent += to_string(1);
+        else
+            message_sent += to_string(0);
+
+        message_sent += " ";
+    }
+
+
+    if (isClient && !stopped) {
         netManager.messageServer(PROTOCOL_UDP, message_sent.c_str(), message_sent.length());
     }
 
-    if(isServer){
+    if(isServer && !stopped){
         netManager.messageClients(PROTOCOL_UDP, message_sent.c_str(), message_sent.length());
     }
 
@@ -441,7 +454,7 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
             get server paddle data
     */
 
-    if(!mPause && !main_menu && multi_player) {    
+    if(!stopped && multi_player) {    
 
         if(isClient){
             if(netManager.pollForActivity(1)){
@@ -481,15 +494,24 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
                 stream >> sub;
                 player_two_score = atoi(sub.c_str());
                 stream >> sub;
-                mPause = atoi(sub.c_str());
+                int isPaused = atoi(sub.c_str());
+                stream >> sub;
+                int isStopped = atoi(sub.c_str());
+
+                if(isPaused)
+                    mPause = true;
+                else 
+                    mPause = false;
+
+                if(isStopped) 
+                    stopped = true;
+                else
+                    stopped = false;
 
 
                 ball->ballNode->setPosition(ball_pos_x, ball_pos_y, ball_pos_z);
                 ball->ballNode->setOrientation(ball_quat_w, ball_quat_x, ball_quat_y, ball_quat_z);
                 ball->updateTransform();
-
-                /*End of Stormy's bullshit*/
-
 
                 temp->translate(move_x, move_y, 0);
                 if(left_pressed){
@@ -500,6 +522,7 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
                 }
             }
         }
+
         if(isServer){
             if(netManager.pollForActivity(1)){
                 istringstream stream(netManager.udpClientData[0]->output);
@@ -516,7 +539,8 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
                 float left_pressed = atof(sub.c_str());
                 stream >> sub;
                 float right_pressed = atof(sub.c_str());
-
+                stream >> sub;
+                int isPaused = atoi(sub.c_str());
 
                 temp->translate(move_x, move_y, 0);
                 if(left_pressed){
@@ -541,21 +565,6 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
                 temp->setPosition(bounds.x, -398, bounds.z);
         }
 
-
-
-        //Use polled paddle data to update player two's paddle
-        // if(player_two_rotate && moveLeft){
-        //     paddleTwo->paddleNode->setOrientation(Quaternion(Degree(rotate_x+=0.1), Vector3(0,1,0)));
-        // }
-        // if(player_two_rotate && moveRight){
-        //     paddleTwo->paddleNode->setOrientation(Quaternion(Degree(rotate_x-=0.1), Vector3(0,1,0)));
-        // }
-        // if(player_two_pan && moveUp){
-        //     paddleTwo->paddleNode->setOrientation(Quaternion(Degree(pan_y-=0.1), Vector3(1,0,0)));
-        // }
-        // if(player_two_pan && moveDown){
-        //     paddleTwo->paddleNode->setOrientation(Quaternion(Degree(pan_y+=0.1), Vector3(1,0,0)));
-        // }
         paddleTwo->updateTransform();
     }
 
@@ -686,43 +695,6 @@ bool Assignment2::mouseMoved(const OIS::MouseEvent &arg)
         rel_mouse_state_y = arg.state.Y.rel;
         current_x = current_x + rel_mouse_state_x;
         current_y = current_y + rel_mouse_state_y;
-
-    
-        // message_sent = "";
-        // message_sent += to_string(arg.state.X.rel);
-        // message_sent += " ";
-        // message_sent += to_string(-arg.state.Y.rel);
-        // message_sent += " ";
-        // message_sent += to_string(current_x);
-        // message_sent += " ";
-        // message_sent += to_string(current_y);
-        // message_sent += " ";
-
-        // if(leftPressed){
-        //     message_sent += "1";
-        //     message_sent += " ";
-        // }
-        // else{
-        //     message_sent += "0";
-        //     message_sent += " ";
-        // }
-        // if(rightPressed){
-        //     message_sent += "1";
-        //     message_sent += " ";
-        // }
-        // else{
-        //     message_sent += "0";
-        //     message_sent += " ";
-        // }
-
-        // if (isClient) {
-        //     netManager.messageServer(PROTOCOL_UDP, message_sent.c_str(), message_sent.length());
-        // }
-
-        // if(isServer){
-        //     netManager.messageClients(PROTOCOL_UDP, message_sent.c_str(), message_sent.length());
-        // }
-        
 
 
         if(leftPressed){
@@ -862,23 +834,43 @@ void Assignment2::buttonHit(OgreBites::Button * button) {
         background_music = !background_music;
     }
     else if(button->getName()=="MyButton5"){
-        button_sound.play(0);
-        menu2->hide();
-        menu5->hide();
-        gameOverLabel->hide();
-        playerOneWins->hide();
-        playerTwoWins->hide();
-        mTrayMgr->removeWidgetFromTray(menu2);
-        mTrayMgr->removeWidgetFromTray(menu5);
-        menu9->show();
-        menu8->show();
-        menu7->show();
-        mTrayMgr->moveWidgetToTray(menu9, OgreBites::TL_CENTER, 0);
-        mTrayMgr->moveWidgetToTray(menu8, OgreBites::TL_CENTER, 0);
-        mTrayMgr->moveWidgetToTray(menu7, OgreBites::TL_CENTER, 0);
-        mTrayMgr->removeWidgetFromTray(gameOverLabel);
-        mTrayMgr->removeWidgetFromTray(playerOneWins);
-        mTrayMgr->removeWidgetFromTray(playerTwoWins);
+        if(gameOver) {
+            gameOver = false;
+            mPause = false;
+            ball->reset(mSceneMgr, ball, simulator);
+            player_one_score = 0;
+            player_two_score = 0;
+            button_sound.play(0);
+            menu2->hide();
+            menu5->hide();
+            gameOverLabel->hide();
+            playerOneWins->hide();
+            playerTwoWins->hide();
+            mTrayMgr->removeWidgetFromTray(menu2);
+            mTrayMgr->removeWidgetFromTray(menu5);
+            mTrayMgr->removeWidgetFromTray(gameOverLabel);
+            mTrayMgr->removeWidgetFromTray(playerOneWins);
+            mTrayMgr->removeWidgetFromTray(playerTwoWins);
+        }
+        else {
+            button_sound.play(0);
+            menu2->hide();
+            menu5->hide();
+            gameOverLabel->hide();
+            playerOneWins->hide();
+            playerTwoWins->hide();
+            mTrayMgr->removeWidgetFromTray(menu2);
+            mTrayMgr->removeWidgetFromTray(menu5);
+            menu9->show();
+            menu8->show();
+            menu7->show();
+            mTrayMgr->moveWidgetToTray(menu9, OgreBites::TL_CENTER, 0);
+            mTrayMgr->moveWidgetToTray(menu8, OgreBites::TL_CENTER, 0);
+            mTrayMgr->moveWidgetToTray(menu7, OgreBites::TL_CENTER, 0);
+            mTrayMgr->removeWidgetFromTray(gameOverLabel);
+            mTrayMgr->removeWidgetFromTray(playerOneWins);
+            mTrayMgr->removeWidgetFromTray(playerTwoWins);
+        }
     }
     else if(button->getName() == "MyButton6") {
         button_sound.play(0);
@@ -979,7 +971,7 @@ void Assignment2::buttonHit(OgreBites::Button * button) {
         render_multi_paddle();
 
         netManager.initNetManager();
-        netManager.addNetworkInfo(PROTOCOL_UDP, "128.83.144.78", 51215);
+        netManager.addNetworkInfo(PROTOCOL_UDP, "128.83.130.52", 51215);
         netManager.startClient();
         isServer = false;
         isClient = true;
@@ -1009,12 +1001,16 @@ void Assignment2::buttonHit(OgreBites::Button * button) {
         resetScore();
         render_multi_paddle();
 
-        netManager.initNetManager();
-        netManager.addNetworkInfo(PROTOCOL_UDP, NULL, 51215);
+        if(firstServer) {
+            netManager.initNetManager();
+            netManager.addNetworkInfo(PROTOCOL_UDP, NULL, 51215);
+            firstServer = false;
+        }
         netManager.startServer();
         netManager.acceptConnections();
         isServer = true;
         isClient = false;
+        stopped = false;
     }
     else if(button->getName()=="MyButton9"){
         button_sound.play(0);
@@ -1055,6 +1051,11 @@ void Assignment2::buttonHit(OgreBites::Button * button) {
         mTrayMgr->moveWidgetToTray(menu2, OgreBites::TL_CENTER, 0);
         mTrayMgr->moveWidgetToTray(menu5, OgreBites::TL_CENTER, 0);
         ball->reset(mSceneMgr, ball, simulator);
+
+
+
+        netManager.close();
+        stopped = true;
     }
 }
 

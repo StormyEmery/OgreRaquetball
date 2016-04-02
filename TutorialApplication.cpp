@@ -59,11 +59,14 @@ void TutorialApplication::createScene(void)
     // CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
 
     // CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
-    
+    // CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
 
-    // // CEGUI::Window *mainMenu = CEGUI::WindowManager::getSingleton().loadLayoutFromFile("main_menu.layout"); 
-    // // sheet->addChild(mainMenu);
 
+    // CEGUI::Window *mainMenu = CEGUI::WindowManager::getSingleton().loadLayoutFromFile("main_menu.layout"); 
+    // sheet->addChild(mainMenu);
+
+    // sheet->addChild(mainMenu->getChild(1));
+    // sheet->getChild(1)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.43,0), CEGUI::UDim(0.40,0)));
     // CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
     // CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
 
@@ -400,21 +403,6 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                             break; 
                         }
                         else { sound_clock2 = clock(); }
-
-                        // if(obOneName == "node_ground6" && obTwoName == "node_ball"){
-                        //     if(multi_duration > .5){
-                        //         multi_score_ok = true;
-                        //     }
-                        //     else
-                        //         sound_clock2 = clock();
-                        // }
-                        // if(obOneName == "node_ground5" && obTwoName == "node_ball"){
-                        //     if(multi_duration > .5){
-                        //         multi_score_ok = true;
-                        //     }
-                        //     else
-                        //         sound_clock2 = clock();
-                        // }
 
                         if(obOneName == "node_paddle" && obTwoName == "node_ball"){
                             score_sound.play(0);

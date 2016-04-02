@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file '/v/filer4b/v38q001/stormy12/GameTech/Assignment3/OgreRaquetball/ceed/ceed/ui/BitmapEditor.ui'
 #
-# Created: Mon Mar 28 19:24:41 2016
+# Created: Fri Apr  1 20:37:42 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!

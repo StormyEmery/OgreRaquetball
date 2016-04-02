@@ -169,6 +169,9 @@ public:
     String                      message_received;
     int                         player_one_score;
     int                         player_two_score;
+    bool                        stopped;
+    bool                        firstClient;
+    bool                        firstServer;
 
 
 
