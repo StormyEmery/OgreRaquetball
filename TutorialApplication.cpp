@@ -158,8 +158,8 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
     
     desired_velocity = ball->ballRB->getLinearVelocity().length();
 
-    // if(background_music && !main_menu)
-    //     game_music.play(-1);
+    if(background_music && !main_menu)
+        game_music.play(-1);
     single_duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
     multi_duration = ( std::clock() - sound_clock2 ) / (double) CLOCKS_PER_SEC;
     sound_duration = ( std::clock() - sound_clock ) / (double) CLOCKS_PER_SEC;
@@ -275,8 +275,14 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                 if(player_one_score == 8 || player_two_score == 8){
                     mPause=true;
                     gameOver = true;
-                    //mTrayMgr->showCursor();
-                    CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
+                    if(isServer) {
+                        CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
+                        sheet->getChild(1)->show();
+                        sheet->getChild(5)->show();
+                        sheet->getChild(1)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.445,0), CEGUI::UDim(0.35+(4*.051),0)));
+                        sheet->getChild(5)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.445,0), CEGUI::UDim(0.35+(5*.051),0)));
+                    }
+                    
                     mTrayMgr->moveWidgetToTray(separator, OgreBites::TL_CENTER, 0);
                     if(player_one_score == 8){
                         mTrayMgr->moveWidgetToTray(playerOneWins,OgreBites::TL_CENTER, 0);
@@ -286,14 +292,7 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                         mTrayMgr->moveWidgetToTray(playerTwoWins,OgreBites::TL_CENTER, 0);
                         playerTwoWins->show();
                     }
-                    sheet->getChild(1)->show();
-                    sheet->getChild(5)->show();
-                    sheet->getChild(1)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.445,0), CEGUI::UDim(0.35+(4*.051),0)));
-                    sheet->getChild(5)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.445,0), CEGUI::UDim(0.35+(5*.051),0)));
-                    menu2->hide();
-                    menu5->hide();
-                    mTrayMgr->removeWidgetFromTray(menu2);
-                    mTrayMgr->removeWidgetFromTray(menu5);
+                    
                     separator->show();
                     
                     ball->reset(mSceneMgr, ball, simulator);
@@ -386,13 +385,6 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
     }     
 
 }   
-
-// bool TutorialApplication::mouseMoved( const OIS::MouseEvent &arg )
-// {
-//     // CEGUI::System &sys = CEGUI::System::getSingleton();
-//     // sys.injectMouseMove(arg.state.X.rel, arg.state.Y.rel);
-//     // return true;
-// }
 
 void TutorialApplication::InjectOISMouseButton(bool bButtonDown, OIS::MouseButtonID inButton)
 {

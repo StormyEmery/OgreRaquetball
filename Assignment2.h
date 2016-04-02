@@ -169,8 +169,8 @@ public:
     int                         player_one_score;
     int                         player_two_score;
     bool                        stopped;
-    bool                        firstClient;
-    bool                        firstServer;
+    bool                        new_multiplayer_game;
+    bool                        first;
 
 
 
@@ -241,7 +241,9 @@ public:
     virtual bool start_client12 (const CEGUI::EventArgs &e);
     virtual bool back2_13 (const CEGUI::EventArgs &e);
     bool Handle_TextSubmitted(const CEGUI::EventArgs &e);      // Handle when we press Enter after typing  
-    void ParseText(CEGUI::String inMsg); 
+    void ParseText(CEGUI::String inMsg);
+    void startNewMultiplayerGame();
+    void goToMainMenu(); 
     String              ipEntered;
 
     

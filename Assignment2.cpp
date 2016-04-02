@@ -48,8 +48,8 @@ Assignment2::Assignment2(void) :
     message_sent(""),
     message_received(""),
     stopped(false),
-    firstClient(true),
-    firstServer(true),
+    new_multiplayer_game(false),
+    first(true),
 
     //test("music/wall_collision.wav", 1),
     
@@ -170,6 +170,7 @@ void Assignment2::createFrameListener(void)
     Ogre::StringVector items;
     items.push_back("P1 Score");
     items.push_back("P2 Score");
+    items.push_back("IP Address");
 
     //Ogre::StringVector items2;
     // items2.push_back("P2 Score");
@@ -193,9 +194,10 @@ void Assignment2::createFrameListener(void)
     menu13 = mTrayMgr->createButton(OgreBites::TL_CENTER, "MyButton13", "Back2", 150);
 
 
-    mDetailsPanel = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "DetailsPanel", 200, items);
+    mDetailsPanel = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "DetailsPanel", 225, items);
     mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(player_one_score));
     mDetailsPanel->setParamValue(1, Ogre::StringConverter::toString(player_two_score));
+    mDetailsPanel->setParamValue(2, netManager.getIPstring());
     mDetailsPanel->show();
 
 
@@ -453,100 +455,107 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
     Vector3 ball_coords = ball->ballNode->getPosition();
     Quaternion ball_quat = ball->ballNode->getOrientation();
 
-    //Construct messages
-    if(rel_mouse_state_x != 0 || rel_mouse_state_y != 0) {
-        message_sent = "";
-        message_sent += to_string(rel_mouse_state_x);
-        message_sent += " ";
-        message_sent += to_string(-rel_mouse_state_y);
-        message_sent += " ";
-        rel_mouse_state_x = 0;
-        rel_mouse_state_y = 0;
-    }
-    else {
-        message_sent = "";
-        message_sent += to_string(0);
-        message_sent += " ";
-        message_sent += to_string(0);
-        message_sent += " ";
-    }
-
-    message_sent += to_string(current_x);
-    message_sent += " ";
-    message_sent += to_string(current_y);
-    message_sent += " ";
-
-    if(leftPressed){
-        message_sent += "1";
-        message_sent += " ";
-    }
-    else{
-        message_sent += "0";
-        message_sent += " ";
-    }
-    if(rightPressed){
-        message_sent += "1";
-        message_sent += " ";
-    }
-    else{
-        message_sent += "0";
-        message_sent += " ";
-    }
-
-    if(isServer) {
-        message_sent += to_string(ball_coords.x);
-        message_sent += " ";
-        message_sent += to_string(ball_coords.y);
-        message_sent += " ";
-        message_sent += to_string(ball_coords.z);
-        message_sent += " ";
-        message_sent += to_string(ball_quat.w);
-        message_sent += " ";
-        message_sent += to_string(ball_quat.x);
-        message_sent += " ";
-        message_sent += to_string(ball_quat.y);
-        message_sent += " ";
-        message_sent += to_string(ball_quat.z);
-        message_sent += " ";
-        message_sent += to_string(player_one_score);
-        message_sent += " ";
-        message_sent += to_string(player_two_score);
-        message_sent += " ";
-
-        if(mPause) 
-            message_sent += to_string(1);
-        else
+    if(multi_player) {
+        if(rel_mouse_state_x != 0 || rel_mouse_state_y != 0) {
+            message_sent = "";
+            message_sent += to_string(rel_mouse_state_x);
+            message_sent += " ";
+            message_sent += to_string(-rel_mouse_state_y);
+            message_sent += " ";
+            rel_mouse_state_x = 0;
+            rel_mouse_state_y = 0;
+        }
+        else {
+            message_sent = "";
             message_sent += to_string(0);
-
-        message_sent += " ";
-
-        if(stopped)
-            message_sent += to_string(1);
-        else
+            message_sent += " ";
             message_sent += to_string(0);
+            message_sent += " ";
+        }
 
+        message_sent += to_string(current_x);
         message_sent += " ";
+        message_sent += to_string(current_y);
+        message_sent += " ";
+
+        if(leftPressed){
+            message_sent += "1";
+            message_sent += " ";
+        }
+        else{
+            message_sent += "0";
+            message_sent += " ";
+        }
+        if(rightPressed){
+            message_sent += "1";
+            message_sent += " ";
+        }
+        else{
+            message_sent += "0";
+            message_sent += " ";
+        }
+
+        if(isServer) {
+            message_sent += to_string(ball_coords.x);
+            message_sent += " ";
+            message_sent += to_string(ball_coords.y);
+            message_sent += " ";
+            message_sent += to_string(ball_coords.z);
+            message_sent += " ";
+            message_sent += to_string(ball_quat.w);
+            message_sent += " ";
+            message_sent += to_string(ball_quat.x);
+            message_sent += " ";
+            message_sent += to_string(ball_quat.y);
+            message_sent += " ";
+            message_sent += to_string(ball_quat.z);
+            message_sent += " ";
+            message_sent += to_string(player_one_score);
+            message_sent += " ";
+            message_sent += to_string(player_two_score);
+            message_sent += " ";
+
+            if(mPause) 
+                message_sent += to_string(1);
+            else
+                message_sent += to_string(0);
+
+            message_sent += " ";
+
+            if(new_multiplayer_game)
+                message_sent += to_string(1);
+            else
+                message_sent += to_string(0);
+
+            new_multiplayer_game = false;
+
+            message_sent += " ";
+
+            if(main_menu) 
+                message_sent += to_string(1);
+            else
+                message_sent += to_string(0);
+
+            message_sent += " ";
+        }
+
+
+        if (isClient) {
+            netManager.messageServer(PROTOCOL_UDP, message_sent.c_str(), message_sent.length());
+        }
+
+        if(isServer){
+            netManager.messageClients(PROTOCOL_UDP, message_sent.c_str(), message_sent.length());
+            if(main_menu) {
+                netManager.dropClient(PROTOCOL_UDP, (Uint32)atoi(ipEntered.c_str()));
+                netManager.stopServer(PROTOCOL_UDP);
+                multi_player = false;
+                isServer = false;
+            }
+        }
     }
 
-
-    if (isClient && !stopped) {
-        netManager.messageServer(PROTOCOL_UDP, message_sent.c_str(), message_sent.length());
-    }
-
-    if(isServer && !stopped){
-        netManager.messageClients(PROTOCOL_UDP, message_sent.c_str(), message_sent.length());
-    }
-
-    /*DO ALL POLLING HERE!! 
-        serverpoll
-            get client paddle data
-
-        clieentpoll
-            get ball data
-            get server paddle data
-    */
-
-    if(!stopped && multi_player) {    
+    if(multi_player) {    
 
         if(isClient){
             if(netManager.pollForActivity(1)){
@@ -588,18 +597,18 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
                 stream >> sub;
                 int isPaused = atoi(sub.c_str());
                 stream >> sub;
-                int isStopped = atoi(sub.c_str());
+                int isNewMultiplayerGame = atoi(sub.c_str());
+                stream >> sub;
+                int isMainMenu = atoi(sub.c_str());
 
                 if(isPaused)
                     mPause = true;
                 else 
                     mPause = false;
 
-                if(isStopped) 
-                    stopped = true;
-                else
-                    stopped = false;
-
+                if(isNewMultiplayerGame) {
+                    startNewMultiplayerGame();
+                }
 
                 ball->ballNode->setPosition(ball_pos_x, ball_pos_y, ball_pos_z);
                 ball->ballNode->setOrientation(ball_quat_w, ball_quat_x, ball_quat_y, ball_quat_z);
@@ -611,6 +620,10 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
                 }
                 if(right_pressed){
                     paddleTwo->paddleNode->setOrientation(Quaternion(Degree(-current_y/2), Vector3(1,0,0)));
+                }
+
+                if(isMainMenu) {
+                    goToMainMenu();
                 }
             }
         }
@@ -692,7 +705,7 @@ bool Assignment2::keyPressed( const OIS::KeyEvent &arg )
     context.injectKeyDown((CEGUI::Key::Scan)arg.key);
     context.injectChar((CEGUI::Key::Scan)arg.text);
 
-    if (arg.key == OIS::KC_ESCAPE && !main_menu){
+    if (arg.key == OIS::KC_ESCAPE && !main_menu && !isClient){
         if(!mPause && !gameOver) {
             game_music.pause();
             menu_sound.play(0);
@@ -938,18 +951,28 @@ bool Assignment2::toggle_music3 (const CEGUI::EventArgs &e){
     return true;
 }
 bool Assignment2::new_game5 (const CEGUI::EventArgs &e){
+        if(gameOver) {
+            CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();
+            resetScore();
+            ball->reset(mSceneMgr, ball, simulator);
+            gameOver = false;
+            mPause = false;
+            new_multiplayer_game= true;
+        }
+        else {
+            sheet->getChild(4)->show();
+            sheet->getChild(3)->show();
+            sheet->getChild(10)->show();
+            sheet->getChild(4)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(1*.051),0)));
+            sheet->getChild(3)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(2*.051),0)));
+            sheet->getChild(10)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(3*.051),0)));
+        }
         button_sound.play(0);
         sheet->getChild(5)->hide();
         sheet->getChild(1)->hide();
         gameOverLabel->hide();
         playerOneWins->hide();
         playerTwoWins->hide();
-        sheet->getChild(4)->show();
-        sheet->getChild(3)->show();
-        sheet->getChild(10)->show();
-        sheet->getChild(4)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(1*.051),0)));
-        sheet->getChild(3)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(2*.051),0)));
-        sheet->getChild(10)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(3*.051),0)));
         separator->hide();        
         mTrayMgr->removeWidgetFromTray(separator);
         mTrayMgr->removeWidgetFromTray(gameOverLabel);
@@ -1037,7 +1060,7 @@ bool Assignment2::back1_9 (const CEGUI::EventArgs &e){
 bool Assignment2::main_menu10 (const CEGUI::EventArgs &e){
         button_sound.play(0);
         single_player = false;
-        multi_player = false;
+        // multi_player = false;
         main_menu = true;
         mPause = false;
         gameOver = false;
@@ -1053,6 +1076,7 @@ bool Assignment2::main_menu10 (const CEGUI::EventArgs &e){
         sheet->getChild(1)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(1*.051),0)));
         sheet->getChild(5)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(2*.051),0)));
         ball->reset(mSceneMgr, ball, simulator);
+        resetScore();
     return true;
 }
 bool Assignment2::start_server11 (const CEGUI::EventArgs &e){
@@ -1077,19 +1101,15 @@ bool Assignment2::start_server11 (const CEGUI::EventArgs &e){
         mTrayMgr->removeWidgetFromTray(separator);
         mTrayMgr->hideCursor();
         CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();
-        resetScore();
         render_multi_paddle();
-        if(firstServer) {
-            netManager.initNetManager();
-            netManager.addNetworkInfo(PROTOCOL_UDP, NULL, 51215);
-            firstServer = false;
-        }
 
+        netManager.initNetManager();
+        netManager.addNetworkInfo(PROTOCOL_UDP, NULL, 51215);
         netManager.startServer();
         netManager.acceptConnections();
+
         isServer = true;
         isClient = false;
-        stopped = false;
     return true;
 }
 bool Assignment2::start_client12 (const CEGUI::EventArgs &e){
@@ -1100,8 +1120,7 @@ bool Assignment2::start_client12 (const CEGUI::EventArgs &e){
         mPause = false;
         gameOver = false;
         ball->reset(mSceneMgr, ball, simulator);
-        netManager.close();
-        stopped = true;
+
         sheet->getChild(6)->hide();
         sheet->getChild(7)->hide();
         sheet->getChild(11)->hide();
@@ -1113,6 +1132,7 @@ bool Assignment2::start_client12 (const CEGUI::EventArgs &e){
         mTrayMgr->hideCursor();
         CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();
         render_multi_paddle();
+
         netManager.initNetManager();
         netManager.addNetworkInfo(PROTOCOL_UDP, ipEntered.c_str(), 51215);
         netManager.startClient();
@@ -1165,6 +1185,49 @@ void Assignment2::ParseText(CEGUI::String inMsg)
       ipEntered = inMsg.c_str();
 }
 
+void Assignment2::startNewMultiplayerGame() {
+    CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();
+    resetScore();
+    ball->reset(mSceneMgr, ball, simulator);
+    gameOver = false;
+    mPause = false;
+    button_sound.play(0);
+    sheet->getChild(5)->hide();
+    sheet->getChild(1)->hide();
+    gameOverLabel->hide();
+    playerOneWins->hide();
+    playerTwoWins->hide();
+    separator->hide();        
+    mTrayMgr->removeWidgetFromTray(separator);
+    mTrayMgr->removeWidgetFromTray(gameOverLabel);
+    mTrayMgr->removeWidgetFromTray(playerOneWins);
+    mTrayMgr->removeWidgetFromTray(playerTwoWins);
+}
+
+void Assignment2::goToMainMenu() {
+    netManager.stopClient(PROTOCOL_UDP);
+    isClient = false;
+    CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
+    button_sound.play(0);
+    single_player = false;
+    multi_player = false;
+    main_menu = true;
+    mPause = false;
+    gameOver = false;
+    sheet->getChild(8)->hide();
+    sheet->getChild(2)->hide();
+    sheet->getChild(4)->hide();
+    sheet->getChild(3)->hide();
+    sheet->getChild(10)->hide();
+    sheet->getChild(12)->hide();
+    sheet->getChild(9)->hide();
+    sheet->getChild(1)->show();
+    sheet->getChild(5)->show();
+    sheet->getChild(1)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(1*.051),0)));
+    sheet->getChild(5)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.425,0), CEGUI::UDim(0.35+(2*.051),0)));
+    ball->reset(mSceneMgr, ball, simulator);
+    resetScore();
+}
 
 
 //---------------------------------------------------------------------------
