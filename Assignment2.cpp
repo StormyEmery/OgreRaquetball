@@ -65,7 +65,8 @@ Assignment2::Assignment2(void) :
     mMenu(0),
     mScore(0),
     oneFrame(false),
-    mRenderer(0)
+    mRenderer(0),
+    rS(0)
 
 {
 #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
@@ -789,16 +790,16 @@ bool Assignment2::mouseMoved(const OIS::MouseEvent &arg)
 
 
     if(!mPause && !main_menu ) {       
-        if( bounds.x > 597 || bounds.x < -570 ||
-        bounds.y > 398 || bounds.y < -398){
-            if(bounds.x  > 597)
-                temp->setPosition(597, bounds.y, bounds.z);
-            else if(bounds.x < -570) 
-                temp->setPosition(-570, bounds.y, bounds.z);
-            else if(bounds.y > 398)
-                temp->setPosition(bounds.x, 398, bounds.z);
-            else if(bounds.y < 398)                                
-                temp->setPosition(bounds.x, -398, bounds.z);
+        if( bounds.x > rS+97 || bounds.x < -rS-70 ||
+        bounds.y > rS-100 || bounds.y < -(rS-100)){
+            if(bounds.x  > rS+97)
+                temp->setPosition(rS+97, bounds.y, bounds.z);
+            else if(bounds.x < -rS-70) 
+                temp->setPosition(-rS-70, bounds.y, bounds.z);
+            else if(bounds.y > rS-100)
+                temp->setPosition(bounds.x, rS-100, bounds.z);
+            else if(bounds.y < rS-100)                                
+                temp->setPosition(bounds.x, -(rS-100), bounds.z);
 
         }else{
             temp->translate(arg.state.X.rel, -arg.state.Y.rel, 0);

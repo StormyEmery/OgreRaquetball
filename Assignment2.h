@@ -171,6 +171,7 @@ public:
     bool                        stopped;
     bool                        new_multiplayer_game;
     bool                        first;
+    int                         rS;
 
 
 

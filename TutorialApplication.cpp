@@ -45,6 +45,7 @@ void TutorialApplication::createScene(void)
 
     //===============================================================================================================================================================
 
+    rS = 1000;
     simulator = new Simulator();
 
     SceneNode* translateNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("translate");
@@ -60,28 +61,28 @@ void TutorialApplication::createScene(void)
 
     mSceneMgr->setAmbientLight(ColourValue(0.25,0.25,0.25));
 
-    Plain plain1(mSceneMgr, Vector3::UNIT_Y, Vector3::UNIT_Z, 1500, 3000, -500, "ground1", "node_ground1", "Examples/BumpyMetal");
-    plain1.set_origin(btVector3(btScalar(0), btScalar(-500), btScalar(0)));
+    Plain plain1(mSceneMgr, Vector3::UNIT_Y, Vector3::UNIT_Z, rS*3, rS*6, -rS, "ground1", "node_ground1", "Examples/BumpyMetal");
+    plain1.set_origin(btVector3(btScalar(0), btScalar(-rS), btScalar(0)));
     plain1.create_bounding_box(simulator, 1.0f);
 
-    Plain plain2(mSceneMgr, Vector3::NEGATIVE_UNIT_Y, Vector3::UNIT_Z, 1500, 3000, -500, "ground2", "node_ground2", "Examples/BumpyMetal");
-    plain2.set_origin(btVector3(btScalar(0), btScalar(500), btScalar(0)));
+    Plain plain2(mSceneMgr, Vector3::NEGATIVE_UNIT_Y, Vector3::UNIT_Z, rS*3, rS*6, -rS, "ground2", "node_ground2", "Examples/BumpyMetal");
+    plain2.set_origin(btVector3(btScalar(0), btScalar(rS), btScalar(0)));
     plain2.create_bounding_box(simulator, 1.0f);
 
-    Plain plain3(mSceneMgr, Vector3::UNIT_X, Vector3::UNIT_Y, 3000, 1000, -750, "ground3", "node_ground3", "Examples/BumpyMetal");
-    plain3.set_origin(btVector3(btScalar(-750), btScalar(0), btScalar(0)));
+    Plain plain3(mSceneMgr, Vector3::UNIT_X, Vector3::UNIT_Y, rS*6, rS*2, -rS*1.5, "ground3", "node_ground3", "Examples/BumpyMetal");
+    plain3.set_origin(btVector3(btScalar(-rS*1.5), btScalar(0), btScalar(0)));
     plain3.create_bounding_box(simulator, 1.0f);
 
-    Plain plain4(mSceneMgr, Vector3::NEGATIVE_UNIT_X, Vector3::UNIT_Y, 3000, 1000, -750, "ground4", "node_ground4", "Examples/BumpyMetal");
-    plain4.set_origin(btVector3(btScalar(750), btScalar(0), btScalar(0)));
+    Plain plain4(mSceneMgr, Vector3::NEGATIVE_UNIT_X, Vector3::UNIT_Y, rS*6, rS*2, -rS*1.5, "ground4", "node_ground4", "Examples/BumpyMetal");
+    plain4.set_origin(btVector3(btScalar(rS*1.5), btScalar(0), btScalar(0)));
     plain4.create_bounding_box(simulator, 1.0f);
 
-    Plain plain5(mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 1000, 1500, -1500, "ground5", "node_ground5", "Examples/BumpyMetal");
-    plain5.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(-1500)));
+    Plain plain5(mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, rS*2, rS*3, -rS*3, "ground5", "node_ground5", "Examples/BumpyMetal");
+    plain5.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(-rS*3)));
     plain5.create_bounding_box(simulator, 1.0f);
 
-    Plain plain6(mSceneMgr, Vector3::NEGATIVE_UNIT_Z, Vector3::UNIT_X, 1000, 1500, -1500, "ground6", "node_ground6", "Examples/BumpyMetal");
-    plain6.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(1500)));
+    Plain plain6(mSceneMgr, Vector3::NEGATIVE_UNIT_Z, Vector3::UNIT_X, rS*2, rS*3, -rS*3, "ground6", "node_ground6", "Examples/BumpyMetal");
+    plain6.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(rS*3)));
     plain6.create_bounding_box(simulator, 1.0f);
 
 
@@ -156,7 +157,7 @@ void TutorialApplication::createViewports() {
 bool TutorialApplication::frameStarted(const FrameEvent& fe) {
     bool ret = Assignment2::frameRenderingQueued(fe);
     
-    desired_velocity = ball->ballRB->getLinearVelocity().length();
+    desired_velocity = ball->ballRB->getLinearVelocity().length()/3;
 
     if(background_music && !main_menu)
         game_music.play(-1);
