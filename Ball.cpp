@@ -5,6 +5,7 @@ Ball::Ball(SceneManager* mSceneMgr, String node_name) {
 	
 	entBall = mSceneMgr->createEntity("sphere.mesh");
 	entBall->setMaterialName("Examples/Chrome");
+	entBall->setCastShadows(true);
 	ballNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(node_name);
 	ballNode->setScale(.5, .5, .5);
 	ballNode->attachObject(entBall);

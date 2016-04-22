@@ -86,21 +86,21 @@ void TutorialApplication::createScene(void)
     plain6.create_bounding_box(simulator, 1.0f);
 
 
-    Plain* g = new Plain(mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 400, 750, 0, "goal", "node_goal", "Examples/Chrome", "translateThree");
-    g->set_origin(btVector3(btScalar(0), btScalar(0), btScalar(10000)));
+    Plain* g = new Plain(mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, rS*4/5, rS*1.5, -1.5*rS, "goal", "node_goal", "Examples/Chrome", "translateThree");
+    g->set_origin(btVector3(btScalar(0), btScalar(0), btScalar(rS*20)));
     g->create_bounding_box(simulator, 1.0f);
     setGoal(g);
 
     
 
     Paddle* paddleNew = new Paddle(mSceneMgr, "paddle", "node_paddle", Vector3(3, 2, .5), "translate");
-    paddleNew->set_origin(btVector3(0, 0, 1000));
+    paddleNew->set_origin(btVector3(0, 0, rS));
     paddleNew->create_bounding_box(simulator, 1.0f, 1.0f);
     setPaddleOne(paddleNew);
 
 
     Paddle* paddleNewTwo = new Paddle(mSceneMgr, "paddle2", "node_paddleTwo", Vector3(3, 2, .5), "translateTwo");
-    paddleNewTwo->set_origin(btVector3(0, 0, 2000));
+    paddleNewTwo->set_origin(btVector3(0, 0, rS*4));
     paddleNewTwo->create_bounding_box(simulator, 1.0f, 1.0f);
     setPaddleTwo(paddleNewTwo);
     
