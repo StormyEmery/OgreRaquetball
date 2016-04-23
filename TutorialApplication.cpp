@@ -65,25 +65,37 @@ void TutorialApplication::createScene(void)
     plain1.set_origin(btVector3(btScalar(0), btScalar(-rS), btScalar(0)));
     plain1.create_bounding_box(simulator, 1.0f);
 
+    std::cout << "Angular Damping 1: "<< plain1.groundBody->getRollingFriction() << std::endl;
+
     Plain plain2(mSceneMgr, Vector3::NEGATIVE_UNIT_Y, Vector3::UNIT_Z, rS*3, rS*6, -rS, "ground2", "node_ground2", "Examples/BumpyMetal");
     plain2.set_origin(btVector3(btScalar(0), btScalar(rS), btScalar(0)));
     plain2.create_bounding_box(simulator, 1.0f);
+
+    std::cout << "Angular Damping 2: "<< plain2.groundBody->getRollingFriction() << std::endl;
 
     Plain plain3(mSceneMgr, Vector3::UNIT_X, Vector3::UNIT_Y, rS*6, rS*2, -rS*1.5, "ground3", "node_ground3", "Examples/BumpyMetal");
     plain3.set_origin(btVector3(btScalar(-rS*1.5), btScalar(0), btScalar(0)));
     plain3.create_bounding_box(simulator, 1.0f);
 
+    std::cout << "Angular Damping 3: "<< plain3.groundBody->getRollingFriction() << std::endl;
+
     Plain plain4(mSceneMgr, Vector3::NEGATIVE_UNIT_X, Vector3::UNIT_Y, rS*6, rS*2, -rS*1.5, "ground4", "node_ground4", "Examples/BumpyMetal");
     plain4.set_origin(btVector3(btScalar(rS*1.5), btScalar(0), btScalar(0)));
     plain4.create_bounding_box(simulator, 1.0f);
+
+    std::cout << "Angular Damping 4: "<< plain4.groundBody->getRollingFriction() << std::endl;
 
     Plain plain5(mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, rS*2, rS*3, -rS*3, "ground5", "node_ground5", "Examples/BumpyMetal");
     plain5.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(-rS*3)));
     plain5.create_bounding_box(simulator, 1.0f);
 
+    std::cout << "Angular Damping 5: "<< plain5.groundBody->getRollingFriction() << std::endl;
+
     Plain plain6(mSceneMgr, Vector3::NEGATIVE_UNIT_Z, Vector3::UNIT_X, rS*2, rS*3, -rS*3, "ground6", "node_ground6", "Examples/BumpyMetal");
     plain6.set_origin(btVector3(btScalar(0), btScalar(0), btScalar(rS*3)));
     plain6.create_bounding_box(simulator, 1.0f);
+
+    std::cout << "Angular Damping 6: "<< plain6.groundBody->getRollingFriction() << std::endl;
 
 
     Plain* g = new Plain(mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, 400, 750, 0, "goal", "node_goal", "Examples/Chrome", "translateThree");
@@ -91,17 +103,19 @@ void TutorialApplication::createScene(void)
     g->create_bounding_box(simulator, 1.0f);
     setGoal(g);
 
+    std::cout << "Angular Damping G: "<< g->groundBody->getRollingFriction() << std::endl;
+
     
 
     Paddle* paddleNew = new Paddle(mSceneMgr, "paddle", "node_paddle", Vector3(3, 2, .5), "translate");
     paddleNew->set_origin(btVector3(0, 0, 1000));
-    paddleNew->create_bounding_box(simulator, 1.0f, 1.0f);
+    paddleNew->create_bounding_box(simulator, 0.0f, 1.0f);
     setPaddleOne(paddleNew);
 
 
     Paddle* paddleNewTwo = new Paddle(mSceneMgr, "paddle2", "node_paddleTwo", Vector3(3, 2, .5), "translateTwo");
     paddleNewTwo->set_origin(btVector3(0, 0, 2000));
-    paddleNewTwo->create_bounding_box(simulator, 1.0f, 1.0f);
+    paddleNewTwo->create_bounding_box(simulator, 00.0f, 1.0f);
     setPaddleTwo(paddleNewTwo);
     
 
@@ -156,7 +170,11 @@ void TutorialApplication::createViewports() {
 
 bool TutorialApplication::frameStarted(const FrameEvent& fe) {
     bool ret = Assignment2::frameRenderingQueued(fe);
-    
+
+    btVector3 v = ball->ballRB->getGravity();
+    //std::cout << "Ball gravity: (" << v.x() << ", " << v.y() << ", " << v.z() << ")" << std::endl;
+    //std::cout << ball->ballRB->getRollingFriction() << std::endl;
+
     desired_velocity = ball->ballRB->getLinearVelocity().length()/3;
 
     if(background_music && !main_menu)
@@ -194,6 +212,7 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                         if(obOneName == "node_ground1" && obTwoName == "node_ball" && sound_duration > .1) {
                             wall_collision_sound.play(0); 
                             sound_clock = clock();
+                            std::cout << "1" << std::endl;
                             break; 
                         }
                         else{ sound_clock = clock(); }
@@ -201,6 +220,7 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                         if(obOneName == "node_ground2" && obTwoName == "node_ball" && sound_duration > .1) { 
                             wall_collision_sound.play(0); 
                             sound_clock = clock();
+                            std::cout << "2" << std::endl;
                             break; 
                         }
                         else { sound_clock = clock(); }
@@ -208,6 +228,7 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                         if(obOneName == "node_ground3" && obTwoName == "node_ball" && sound_duration > .1) { 
                             wall_collision_sound.play(0); 
                             sound_clock = clock();
+                            std::cout << "3" << std::endl;
                             break; 
                         }
                         else { sound_clock = clock(); }
@@ -215,6 +236,7 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                         if(obOneName == "node_ground4" && obTwoName == "node_ball" && sound_duration > .1) { 
                             wall_collision_sound.play(0); 
                             sound_clock = clock();
+                            std::cout << "4" << std::endl;
                             break; 
                         }
                         else { sound_clock = clock(); }
@@ -222,6 +244,7 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                         if(obOneName == "node_ground5" && obTwoName == "node_ball" && sound_duration > .1) { 
                             wall_collision_sound.play(0); 
                             sound_clock = clock();
+                            std::cout << "5" << std::endl;
                             break; 
                         }
                         else { sound_clock = clock(); }
@@ -229,25 +252,26 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                         if(obOneName == "node_ground6" && obTwoName == "node_ball") { 
                             wall_collision_sound.play(0); 
                             sound_clock = clock();
-                            mPause=true;
-                            gameOver = true;
-                            //mTrayMgr->showCursor();
-                            CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
+                            std::cout << "6" << std::endl;
+                            // mPause=true;
+                            // gameOver = true;
+                            // //mTrayMgr->showCursor();
+                            // CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
                             
-                            mTrayMgr->moveWidgetToTray(separator, OgreBites::TL_CENTER, 0);
-                            mTrayMgr->moveWidgetToTray(gameOverLabel,OgreBites::TL_CENTER, 0);
-                            sheet->getChild(1)->show();
-                            sheet->getChild(5)->show();
-                            sheet->getChild(1)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.445,0), CEGUI::UDim(0.35+(4*.051),0)));
-                            sheet->getChild(5)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.445,0), CEGUI::UDim(0.35+(5*.051),0)));
-                            menu2->hide();
-                            menu5->hide();
-                            mTrayMgr->removeWidgetFromTray(menu2);
-                            mTrayMgr->removeWidgetFromTray(menu5);
-                            separator->show();
-                            gameOverLabel->show();
+                            // mTrayMgr->moveWidgetToTray(separator, OgreBites::TL_CENTER, 0);
+                            // mTrayMgr->moveWidgetToTray(gameOverLabel,OgreBites::TL_CENTER, 0);
+                            // sheet->getChild(1)->show();
+                            // sheet->getChild(5)->show();
+                            // sheet->getChild(1)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.445,0), CEGUI::UDim(0.35+(4*.051),0)));
+                            // sheet->getChild(5)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.445,0), CEGUI::UDim(0.35+(5*.051),0)));
+                            // menu2->hide();
+                            // menu5->hide();
+                            // mTrayMgr->removeWidgetFromTray(menu2);
+                            // mTrayMgr->removeWidgetFromTray(menu5);
+                            // separator->show();
+                            // gameOverLabel->show();
 
-                            ball->reset(mSceneMgr, ball, simulator);
+                            // ball->reset(mSceneMgr, ball, simulator);
                         }
                         else { sound_clock = clock(); }
 
@@ -255,7 +279,8 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                             paddle_collision_sound.play(0);
                             Quaternion qt = paddleOne->paddleNode->getOrientation();
                             Vector3 v = qt * Vector3::NEGATIVE_UNIT_Z;
-                            ball->a(btVector3(v.x, v.y, v.z));
+                            std::cout << "paddle" << std::endl;
+                            //ball->a(btVector3(v.x, v.y, v.z));
                         }
 
                         if(obOneName == "node_goal" && obTwoName == "node_ball" && single_score_ok) {
@@ -263,6 +288,7 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                                 score_sound.play(0);
                                 player_one_score++;
                                 single_score_ok = false;
+                                std::cout << "goal" << std::endl;
                                 break;
                         }
                     }

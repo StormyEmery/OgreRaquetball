@@ -42,6 +42,7 @@ void Paddle::create_bounding_box(Simulator* simulator, btScalar mass, btScalar r
 	paddleObject = new btCollisionObject();
 	paddleObject->setCollisionShape(paddleShape);
 	paddleObject->setWorldTransform(paddleTransform); //might need to remove or update somewhere else?
+	paddleObject->setFriction(btScalar(0.0));
 	paddleObject->forceActivationState(DISABLE_DEACTIVATION);
 	s->getDynamicsWorld()->addCollisionObject(paddleObject);
 

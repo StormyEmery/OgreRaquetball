@@ -38,13 +38,13 @@ void Ball::create_bounding_box(Simulator* simulator, btScalar mass, btVector3 in
 	ballShape->calculateLocalInertia(mass, inertia);
 	ballShape->setUserPointer(ballNode);
 
-
 	ballMotionState = new OgreMotionState(ballTransform, ballNode);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, ballMotionState, ballShape, inertia);
 	ballRB = new btRigidBody(rbInfo);
 	ballRB->activate(true);
 	ballRB->setRestitution(restitution);
 	ballRB->setUserPointer(ballNode);
+	ballRB->setFriction(0.0);
 
 	simulator->getDynamicsWorld()->addRigidBody(ballRB);
 }
@@ -56,9 +56,9 @@ void Ball::reset(SceneManager* mSceneMgr, Ball* ball, Simulator* simulator) {
     ball->set_bounding_box(50.0f);
     btVector3 inertia = btVector3(0.0f, 0.0f, 0.0f);
     btScalar restitution = 1.0f;
-    ball->create_bounding_box(simulator, .035f, inertia, restitution);
+    ball->create_bounding_box(simulator, 1.0f, inertia, restitution);
 
-    ball->get_rigidbody()->applyCentralForce(btVector3(btScalar(0), btScalar(0), btScalar(-500)));
+    ball->get_rigidbody()->applyCentralForce(btVector3(btScalar(0), btScalar(0), btScalar(-15000)));
 }
 
 void Ball::a(btVector3 dir){

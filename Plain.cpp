@@ -58,6 +58,7 @@ void Plain::create_bounding_box(Simulator* simulator, btScalar resititution){
     btRigidBody::btRigidBodyConstructionInfo groundRBInfo(groundMass, groundMotionState, groundShape, localGroundInertia);
     groundBody = new btRigidBody(groundRBInfo);
     groundBody->setRestitution(resititution);
+    groundBody->setFriction(0.0);
     groundBody->setCollisionFlags(groundBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
     groundBody->setActivationState(DISABLE_DEACTIVATION);
     simulator->getDynamicsWorld()->addRigidBody(groundBody);
