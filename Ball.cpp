@@ -5,6 +5,7 @@ Ball::Ball(SceneManager* mSceneMgr, String node_name) {
 	
 	entBall = mSceneMgr->createEntity("sphere.mesh");
 	entBall->setMaterialName("Examples/Chrome");
+	entBall->setCastShadows(true);
 	ballNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(node_name);
 	ballNode->setScale(.5, .5, .5);
 	ballNode->attachObject(entBall);
@@ -41,7 +42,7 @@ void Ball::create_bounding_box(Simulator* simulator, btScalar mass, btVector3 in
 	ballMotionState = new OgreMotionState(ballTransform, ballNode);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, ballMotionState, ballShape, inertia);
 	ballRB = new btRigidBody(rbInfo);
-	ballRB->activate(true);
+	//ballRB->activate(true);
 	ballRB->setRestitution(restitution);
 	ballRB->setUserPointer(ballNode);
 	ballRB->setFriction(0.0);
@@ -62,7 +63,7 @@ void Ball::reset(SceneManager* mSceneMgr, Ball* ball, Simulator* simulator) {
 }
 
 void Ball::a(btVector3 dir){
-	dir.setY(dir.getY() + .75);
+	//dir.setY(dir.getY() + .75);
 	ballRB->setLinearVelocity(dir.normalize()*250);
 }
 

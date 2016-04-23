@@ -39,12 +39,16 @@ void Paddle::set_bounding_box() {
 void Paddle::create_bounding_box(Simulator* simulator, btScalar mass, btScalar restitution) {
 	s = simulator;
 	paddleShape->setUserPointer(paddleNode);
-	paddleObject = new btCollisionObject();
-	paddleObject->setCollisionShape(paddleShape);
-	paddleObject->setWorldTransform(paddleTransform); //might need to remove or update somewhere else?
-	paddleObject->setFriction(btScalar(0.0));
-	paddleObject->forceActivationState(DISABLE_DEACTIVATION);
-	s->getDynamicsWorld()->addCollisionObject(paddleObject);
+
+	/*The code commented out below was causing us to have some sort of 
+	  invisible physics entity in the middle of our playing field*/
+
+	// paddleObject = new btCollisionObject();
+	// paddleObject->setCollisionShape(paddleShape);
+	// paddleObject->setWorldTransform(paddleTransform); //might need to remove or update somewhere else?
+	// paddleObject->setFriction(btScalar(0.0));
+	// paddleObject->forceActivationState(DISABLE_DEACTIVATION);
+	// s->getDynamicsWorld()->addCollisionObject(paddleObject);
 
 	paddleMotionState = new OgreMotionState(paddleTransform, paddleNode);
 

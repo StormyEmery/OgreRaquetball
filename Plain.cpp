@@ -45,11 +45,16 @@ void Plain::set_bounding_box(){
 void Plain::create_bounding_box(Simulator* simulator, btScalar resititution){
     simulator->getCollisionShapes()->push_back(groundShape);
     groundShape->setUserPointer(groundNode);
-    groundObject = new btCollisionObject();
-    groundObject->setCollisionShape(groundShape);
-    groundObject->setWorldTransform(groundTransform);
-    groundObject->forceActivationState(DISABLE_DEACTIVATION);
-    simulator->getDynamicsWorld()->addCollisionObject(groundObject);
+
+    /*The code commented out below was causing problems in some of our other
+      classes, so I went ahead and disabled it here as well, nothing*/
+
+    // groundObject = new btCollisionObject();
+    // groundObject->setCollisionShape(groundShape);
+    // groundObject->setWorldTransform(groundTransform);
+    // groundObject->forceActivationState(DISABLE_DEACTIVATION);
+    // simulator->getDynamicsWorld()->addCollisionObject(groundObject);
+    
 	btScalar groundMass(0.0);
     btVector3 localGroundInertia(0,0,0);
     groundMotionState = new OgreMotionState(groundTransform, groundNode);

@@ -787,15 +787,15 @@ bool Assignment2::mouseMoved(const OIS::MouseEvent &arg)
     if (mTrayMgr->injectMouseMove(arg)) return true;
     SceneNode* temp = mSceneMgr->getSceneNode("translate");
     Vector3 bounds = temp->getPosition();
-
+    mCamera->moveRelative(Ogre::Vector3(0, 0, -arg.state.Z.rel));
 
     if(!mPause && !main_menu ) {       
-        if( bounds.x > rS+97 || bounds.x < -rS-70 ||
+        if( bounds.x > rS*1.2+97 || bounds.x < -rS*1.2-70 ||
         bounds.y > rS-100 || bounds.y < -(rS-100)){
-            if(bounds.x  > rS+97)
-                temp->setPosition(rS+97, bounds.y, bounds.z);
-            else if(bounds.x < -rS-70) 
-                temp->setPosition(-rS-70, bounds.y, bounds.z);
+            if(bounds.x  > rS*1.2+97)
+                temp->setPosition(rS*1.2+97, bounds.y, bounds.z);
+            else if(bounds.x < -rS*1.2-70) 
+                temp->setPosition(-rS*1.2-70, bounds.y, bounds.z);
             else if(bounds.y > rS-100)
                 temp->setPosition(bounds.x, rS-100, bounds.z);
             else if(bounds.y < rS-100)                                
@@ -811,13 +811,16 @@ bool Assignment2::mouseMoved(const OIS::MouseEvent &arg)
         current_y = current_y + rel_mouse_state_y;
 
 
+
         if(leftPressed){
             paddleOne->paddleNode->setOrientation(Quaternion(Degree(current_x/2), Vector3(0,1,0)));
         }
         if(rightPressed){
             paddleOne->paddleNode->setOrientation(Quaternion(Degree(current_y/2), Vector3(1,0,0)));
         }
+
         paddleOne->updateTransform();
+
     }
     return true;
 }
@@ -882,12 +885,13 @@ void Assignment2::windowClosed(Ogre::RenderWindow* rw)
 }
 
 void Assignment2::render_single_paddle(){
+    std::cout << "How many times am I getting called??????\n\n\n\n\n\n\n" << std::endl;
     mSceneMgr->getSceneNode("translate")->setPosition(0,0,1000);
 
     if(mSceneMgr->getSceneNode("translate")->numAttachedObjects() == 0){
         mSceneMgr->getSceneNode("translate")->attachObject(mCamera);
         mCameraMan->setTarget(mSceneMgr->getSceneNode("translate"));
-        mCameraMan->setYawPitchDist(Degree(0), Degree(45), 1000);
+        mCameraMan->setYawPitchDist(Degree(0), Degree(45), rS*2);
     }
 
 
