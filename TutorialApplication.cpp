@@ -46,6 +46,7 @@ void TutorialApplication::createScene(void)
     //===============================================================================================================================================================
 
     rS = 1000;
+    const_velocity = 100.0;
     simulator = new Simulator();
 
     SceneNode* translateNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("translate");
@@ -86,10 +87,10 @@ void TutorialApplication::createScene(void)
     plain6.create_bounding_box(simulator, 1.0f);
 
 
-    Plain* g = new Plain(mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, rS*4/5, rS*1.5, -1.5*rS, "goal", "node_goal", "Examples/Chrome", "translateThree");
-    g->set_origin(btVector3(btScalar(0), btScalar(0), btScalar(rS*20)));
-    g->create_bounding_box(simulator, 1.0f);
-    setGoal(g);
+    // Plain* g = new Plain(mSceneMgr, Vector3::UNIT_Z, Vector3::UNIT_X, rS*4/5, rS*1.5, -1.5*rS, "goal", "node_goal", "Examples/Chrome", "translateThree");
+    // g->set_origin(btVector3(btScalar(0), btScalar(0), btScalar(rS*20)));
+    // g->create_bounding_box(simulator, 1.0f);
+    // setGoal(g);
 
     
 
@@ -156,12 +157,6 @@ void TutorialApplication::createViewports() {
 
 bool TutorialApplication::frameStarted(const FrameEvent& fe) {
     bool ret = Assignment2::frameRenderingQueued(fe);
-
-    btVector3 v = ball->ballRB->getCenterOfMassPosition();
-    std::cout << "RigidBody position: (" << v.x() << ", " << v.y() << ", " << v.z() << ")" << std::endl;
-    //std::cout << ball->ballRB->getRollingFriction() << std::endl;
-
-    desired_velocity = ball->ballRB->getLinearVelocity().length()/3;
 
     if(background_music && !main_menu)
         game_music.play(-1);
@@ -388,6 +383,10 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
 
                 }
             }
+
+            //this is to ensure a constant ball velocity
+            btVector3 norm = ball->ballRB->getLinearVelocity().normalized();
+            ball->ballRB->setLinearVelocity(norm*const_velocity);
         }
         if(oneFrame) {
             mPause = true;

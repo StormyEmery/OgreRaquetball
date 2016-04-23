@@ -172,6 +172,7 @@ public:
     bool                        new_multiplayer_game;
     bool                        first;
     int                         rS;
+    float                       const_velocity;
 
 
 

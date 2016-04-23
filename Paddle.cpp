@@ -62,6 +62,7 @@ void Paddle::create_bounding_box(Simulator* simulator, btScalar mass, btScalar r
 	paddleRigidBody->setCollisionFlags(paddleRigidBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
 	paddleRigidBody->setActivationState(DISABLE_DEACTIVATION);
 	paddleRigidBody->setUserPointer(paddleNode);
+	paddleRigidBody->setFriction(0.0);
 	s->getDynamicsWorld()->addRigidBody(paddleRigidBody);
 }
 

@@ -66,7 +66,8 @@ Assignment2::Assignment2(void) :
     mScore(0),
     oneFrame(false),
     mRenderer(0),
-    rS(0)
+    rS(0),
+    const_velocity(0)
 
 {
 #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
@@ -885,7 +886,6 @@ void Assignment2::windowClosed(Ogre::RenderWindow* rw)
 }
 
 void Assignment2::render_single_paddle(){
-    std::cout << "How many times am I getting called??????\n\n\n\n\n\n\n" << std::endl;
     mSceneMgr->getSceneNode("translate")->setPosition(0,0,1000);
 
     if(mSceneMgr->getSceneNode("translate")->numAttachedObjects() == 0){
@@ -898,12 +898,12 @@ void Assignment2::render_single_paddle(){
     mSceneMgr->getSceneNode("translateTwo")->setPosition(10000,0,-1000);
 
 
-    mSceneMgr->getSceneNode("translateThree")->setPosition(0,0,-1490);
+    //mSceneMgr->getSceneNode("translateThree")->setPosition(0,0,-1490);
 
 
     paddleOne->updateTransform();
     paddleTwo->updateTransform();
-    goal->updateTransform();
+    //goal->updateTransform();
 }
 
 void Assignment2::render_multi_paddle(){
@@ -918,12 +918,12 @@ void Assignment2::render_multi_paddle(){
 
    mSceneMgr->getSceneNode("translateTwo")->setPosition(0,0,-1000);
 
-   mSceneMgr->getSceneNode("translateThree")->setPosition(10000,0,0);
+   //mSceneMgr->getSceneNode("translateThree")->setPosition(10000,0,0);
 
 
    paddleOne->updateTransform();
    paddleTwo->updateTransform();
-   goal->updateTransform();
+   //goal->updateTransform();
 
 }
 
