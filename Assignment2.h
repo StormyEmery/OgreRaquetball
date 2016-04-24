@@ -25,6 +25,7 @@
 #include "Ball.h"
 #include "Sound.h"
 #include "Paddle.h"
+#include "PaddleAI.h"
 
 #include <iostream>
 #include <time.h>

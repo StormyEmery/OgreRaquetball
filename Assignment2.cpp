@@ -1027,7 +1027,7 @@ bool Assignment2::single_player7 (const CEGUI::EventArgs &e){
         mTrayMgr->hideCursor();
         CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();
         resetScore();
-        render_single_paddle();
+        render_multi_paddle();
     return true;
 }
 bool Assignment2::multiplayer8 (const CEGUI::EventArgs &e){

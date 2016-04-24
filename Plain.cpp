@@ -38,8 +38,19 @@ void Plain::set_origin(btVector3 origin){
 void Plain::set_bounding_box(){
     AxisAlignedBox boundingB = entGround->getBoundingBox();
     Vector3 size = Vector3::ZERO;
-    size = boundingB.getSize()*0.95f;
-	groundShape = new btBoxShape(btVector3(size.x*0.5f, size.y*0.5f, size.z*0.5f));
+    size = boundingB.getSize();
+    groundShape = new btBoxShape(btVector3(size.x, size.y, size.z));
+
+    /********************************************************************
+      Old code
+      Since we aren't using a goal anymore, 
+      we don't need to have the rigid body's be
+      the exact size of the plane, so they can 
+      overlap and close any gaps that the ball was getting out through
+      ******************************************************************/
+
+    // size = boundingB.getSize()*0.95f;
+	// groundShape = new btBoxShape(btVector3(size.x*0.5f, size.y*0.5f, size.z*0.5f));
 }	
 
 void Plain::create_bounding_box(Simulator* simulator, btScalar resititution){

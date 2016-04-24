@@ -92,8 +92,6 @@ void TutorialApplication::createScene(void)
     // g->create_bounding_box(simulator, 1.0f);
     // setGoal(g);
 
-    
-
     Paddle* paddleNew = new Paddle(mSceneMgr, "paddle", "node_paddle", Vector3(3, 2, .5), "translate");
     paddleNew->set_origin(btVector3(0, 0, rS));
     paddleNew->create_bounding_box(simulator, 0.0f, 1.0f);
@@ -262,6 +260,10 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                             Vector3 v = qt * Vector3::NEGATIVE_UNIT_Z;
                             //std::cout << "paddle" << std::endl;
                             //ball->a(btVector3(v.x, v.y, v.z));
+                        }
+
+                        if(obOneName == "node_paddleTwo" && obTwoName == "node_ball"){
+                            paddle_collision_sound.play(0);
                         }
 
                         if(obOneName == "node_goal" && obTwoName == "node_ball" && single_score_ok) {
