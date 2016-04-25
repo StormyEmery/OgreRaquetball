@@ -103,6 +103,8 @@ void TutorialApplication::createScene(void)
     paddleNewTwo->create_bounding_box(simulator, 0.0f, 1.0f);
     setPaddleTwo(paddleNewTwo);
 
+    powerup = new Powerup(mSceneMgr, "green", "p1", "p1");
+
     //AI for the second paddle for single player games
     paddleAI = new PaddleAI(paddleTwo,rS);
 

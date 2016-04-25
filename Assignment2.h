@@ -26,6 +26,7 @@
 #include "Sound.h"
 #include "Paddle.h"
 #include "PaddleAI.h"
+#include "Powerup.h"
 
 #include <iostream>
 #include <time.h>
@@ -197,6 +198,7 @@ public:
     Paddle* paddleTwo;
     Plain* goal;
     PaddleAI* paddleAI;
+    Powerup* powerup;
     //btTransform transform;
     //OgreMotionState* paddleMotionState;
     //btRigidBody* paddleBody;
