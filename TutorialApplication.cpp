@@ -103,7 +103,7 @@ void TutorialApplication::createScene(void)
     paddleNewTwo->create_bounding_box(simulator, 0.0f, 1.0f);
     setPaddleTwo(paddleNewTwo);
 
-    powerup = new Powerup(mSceneMgr, "green", "p1", "p1");
+    powerSystem = new PowerupSystem(mSceneMgr);
 
     //AI for the second paddle for single player games
     paddleAI = new PaddleAI(paddleTwo,rS);
@@ -113,22 +113,6 @@ void TutorialApplication::createScene(void)
     setBall(b);
 
     srand(time(NULL));
-
-    Light* light = mSceneMgr->createLight("MainLight");
-    light->setDiffuseColour(153, 0, 0);
-    light->setSpecularColour(1,1,1);
-    light->setType(Light::LT_SPOTLIGHT);
-    light->setPosition(0,dimensions,0);
-    light->setDirection(0, -1, 0);
-    light->setSpotlightRange(Degree(50), Degree(75));
-
-    Light* light2 = mSceneMgr->createLight("SecondaryLight");
-    light2->setDiffuseColour(0, 102, 204);
-    light2->setSpecularColour(1,1,1);
-    light2->setType(Light::LT_SPOTLIGHT);
-    light2->setPosition(0,-dimensions,0);
-    light2->setDirection(0, 1, 0);
-    light2->setSpotlightRange(Degree(50), Degree(75));
 
     Light* light1 = mSceneMgr->createLight("ThirdLight");
     light1->setDiffuseColour(1,1,1);

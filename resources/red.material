@@ -1,0 +1,15 @@
+material usermade/red
+{
+	technique
+	{
+		pass
+		{
+			diffuse 1 1 1
+			ambient 0.8 0.8 0.8
+			texture_unit
+			{
+				texture red.png
+			}
+		}
+	}
+}

@@ -1,0 +1,13 @@
+material usermade/blue
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture blue.png
+			}
+		}
+	}
+}

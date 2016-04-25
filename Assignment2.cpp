@@ -51,7 +51,7 @@ Assignment2::Assignment2(void) :
     new_multiplayer_game(false),
     first(true),
     paddleAI(NULL),
-    powerup(NULL),
+    powerSystem(NULL),
 
     //test("music/wall_collision.wav", 1),
     

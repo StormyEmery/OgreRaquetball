@@ -14,6 +14,8 @@ public:
 	SceneNode* node;
 	String color;
 
+    String get_color();
+
 	Powerup(SceneManager* mSceneMgr, String c, String entity_name, String node_name);
 	~Powerup();
 private:
