@@ -7,7 +7,7 @@ Paddle::Paddle(SceneManager* mSceneMgr, String name, String node, Vector3 scale,
     paddleNode = mSceneMgr->getSceneNode(tname)->createChildSceneNode(node);
     paddleNode->setScale(scale);
     paddleNode->attachObject(paddleEntity);
-    
+    max_speed = 30.0f;
 }
 
 		
@@ -73,5 +73,9 @@ void Paddle::updateTransform() {
 	paddleTransform.setRotation(btQuaternion(qt.x, qt.y, qt.z, qt.w));
 	if(paddleMotionState)
 		paddleMotionState->updateTransform(paddleTransform);
+}
+
+btVector3 Paddle::heading() {
+	return paddleRigidBody->getLinearVelocity().normalized();
 }
 

@@ -80,6 +80,10 @@ void Ball::updateTransform(){
 		ballMotionState->updateTransform(ballTransform);
 }
 
+btVector3 Ball::heading() {
+	return ballRB->getLinearVelocity().normalized();
+}
+
 
 Ball::~Ball(){
 	delete ballShape;

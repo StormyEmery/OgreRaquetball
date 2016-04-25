@@ -102,7 +102,9 @@ void TutorialApplication::createScene(void)
     paddleNewTwo->set_origin(btVector3(0, 0, rS*4));
     paddleNewTwo->create_bounding_box(simulator, 0.0f, 1.0f);
     setPaddleTwo(paddleNewTwo);
-    
+
+    //AI for the second paddle for single player games
+    //paddleAI = new PaddleAI(paddleTwo);
 
     Ball* b = new Ball(mSceneMgr, "node_ball");
     b->reset(mSceneMgr, b, simulator);
@@ -275,6 +277,33 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                                 break;
                         }
                     }
+
+                    float distance = ball->ballNode->getPosition().z - paddleTwo->translationNode->getPosition().z;
+                    std::cout << "Distance: " << distance << std::endl;
+
+                    //Really unfair AI, still working on trying to dumb it down 
+                   // if(distance > 25 && distance < 1850) {
+                        Vector3 newPos = ball->ballNode->getPosition();
+                        newPos.z = -1000;
+                        Vector3 bounds = newPos;
+
+                        if( bounds.x > rS*1.2+97 || bounds.x < -rS*1.2-70 ||
+                            bounds.y > rS-100 || bounds.y < -(rS-100)){
+                                if(bounds.x  > rS*1.2+97)
+                                    paddleTwo->translationNode->setPosition(rS*1.2+97, bounds.y, bounds.z);
+                                else if(bounds.x < -rS*1.2-70) 
+                                    paddleTwo->translationNode->setPosition(-rS*1.2-70, bounds.y, bounds.z);
+                                else if(bounds.y > rS-100)
+                                    paddleTwo->translationNode->setPosition(bounds.x, rS-100, bounds.z);
+                                else if(bounds.y < rS-100)                                
+                                    paddleTwo->translationNode->setPosition(bounds.x, -(rS-100), bounds.z);
+
+                            }else{
+                                paddleTwo->translationNode->setPosition(newPos);
+                            }
+
+                        paddleTwo->updateTransform();
+                    //}
 
                     ball->updateTransform();
 

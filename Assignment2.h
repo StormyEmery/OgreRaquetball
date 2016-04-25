@@ -196,6 +196,7 @@ public:
     Paddle* paddleOne;
     Paddle* paddleTwo;
     Plain* goal;
+    PaddleAI* paddleAI;
     //btTransform transform;
     //OgreMotionState* paddleMotionState;
     //btRigidBody* paddleBody;

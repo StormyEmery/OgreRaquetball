@@ -19,6 +19,7 @@ public:
 	OgreMotionState* paddleMotionState;
 	btRigidBody* paddleRigidBody;
 	Simulator* s;
+	float max_speed;
 
 	Paddle(SceneManager* mSceneMgr, String name, String node, Vector3 scale, String tname);
 
@@ -28,6 +29,7 @@ public:
 	void set_bounding_box();
 	void create_bounding_box(Simulator* simulator, btScalar mass, btScalar restitution);
 	void updateTransform();
+	btVector3 heading();
 
 protected:
 

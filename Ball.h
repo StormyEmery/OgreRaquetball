@@ -34,6 +34,7 @@ public:
 	void reset(SceneManager* mSceneMgr, Ball* ball, Simulator* simulator);
 	void a(btVector3 dir);
 	void updateTransform();
+	btVector3 heading();
 
 	btRigidBody* get_rigidbody();
 
