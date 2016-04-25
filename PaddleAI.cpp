@@ -1,53 +1,51 @@
 #include "PaddleAI.h"
 
 
-PaddleAI::PaddleAI(Paddle *p) {
+PaddleAI::PaddleAI(Paddle *p, int room_size) {
 	paddle = p;
+	rS = room_size;
+	difficulty = 1.0;
+	minDetectionDistance = -250;
+	maxDetectionDistance = 2000;
 }
 
-Ogre::Vector3 PaddleAI::Seek(Ogre::Vector3 target_pos) {
-	Ogre::Vector3 v = target_pos - paddle->translationNode->getPosition();
+Ogre::Vector3 PaddleAI::Seek(Ball *b) {
+	float distance = b->ballNode->getPosition().z - paddle->translationNode->getPosition().z;
 
+    if(distance > -minDetectionDistance && distance < maxDetectionDistance) {
+        Vector3 newPos = b->ballNode->getPosition();
+        newPos.z = -1000;
+        Vector3 bounds = paddle->translationNode->getPosition();
 
-	Ogre::Vector3 desired_velocity = v.normalisedCopy() * paddle->max_speed;
+        if( bounds.x > rS*1.2+97 || bounds.x < -rS*1.2-70 ||
+            bounds.y > rS-150 || bounds.y < -(rS-150)){
+                if(bounds.x  > rS*1.2+97)
+                    paddle->translationNode->setPosition(rS*1.2+97, bounds.y, bounds.z);
+                else if(bounds.x < -rS*1.2-70) 
+                    paddle->translationNode->setPosition(-rS*1.2-70, bounds.y, bounds.z);
+                else if(bounds.y > rS-150)
+                    paddle->translationNode->setPosition(bounds.x, rS-150, bounds.z);
+                else if(bounds.y < rS-150)                                
+                    paddle->translationNode->setPosition(bounds.x, -(rS-150), bounds.z);
+        }else{
+            Vector3 to_ball = b->ballNode->getPosition() - paddle->translationNode->getPosition();
+            to_ball.z = 0;
+            to_ball = to_ball.normalisedCopy();
+            paddle->translationNode->translate(to_ball*difficulty);
+        }
 
-	// Ogre::Vector3 vd = desired_velocity;
- //    std::cout << "PaddleTwo Position: (" << vd.x << ", " << vd.y << ", " << vd.z << ")" << std::endl;
-
-	Ogre::Vector3 actual_velocity = convertVectorBulletToOgre(paddle->paddleRigidBody->getLinearVelocity());
-
-	return (desired_velocity - actual_velocity);
+        paddle->updateTransform();
+    }
 }
 
-Ogre::Vector3 PaddleAI::Pursuit(Ball* b) {
-	Ogre::Vector3 to_ball = b->ballNode->getPosition() - paddle->translationNode->getPosition();
-	// Ogre::Vector3 v = to_ball;
- //    std::cout << "PaddleTwo Position: (" << v.x << ", " << v.y << ", " << v.z << ")" << std::endl;
-	btScalar relative_heading = paddle->heading().dot(b->heading());
-
-	// std::cout << "relative_heading: " << relative_heading << std::endl;
-
-	btVector3 to_ball_bt = convertVectorOgreToBullet(to_ball);
-
-	//if paddle is ahead of ball
-	if((to_ball_bt.dot(paddle->heading()) > 0) && relative_heading < -0.95) 
-		return Seek(b->ballNode->getPosition());
-
-	btVector3 ball_velocity = b->ballRB->getLinearVelocity();
-		
-	btScalar look_ahead_time = to_ball_bt.length() / (paddle->max_speed + ball_velocity.length());
-
-	std::cout << "look_ahead_time: " << ball_velocity.length() << std::endl;
-
-	Ogre::Vector3 ball_velocity_ogre = convertVectorBulletToOgre(ball_velocity).normalisedCopy();
-
-	return Seek(b->ballNode->getPosition() + (ball_velocity_ogre * look_ahead_time));
+void PaddleAI::setDifficulty(int d) {
+	difficulty = d;
 }
 
-btVector3 PaddleAI::convertVectorOgreToBullet(Ogre::Vector3 v) {
-	return btVector3(v.x, v.y, v.z);
-}
+void PaddleAI::setMinDetectionDistance(int v) {
+	minDetectionDistance = v;
+} 
 
-Ogre::Vector3 PaddleAI::convertVectorBulletToOgre(btVector3 v) {
-	return Ogre::Vector3(v.x(), v.y(), v.z());
+void PaddleAI::setMaxDetectionDistance(int v) {
+	maxDetectionDistance = v;
 }

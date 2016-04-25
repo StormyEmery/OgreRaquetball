@@ -784,7 +784,6 @@ bool Assignment2::mouseMoved(const OIS::MouseEvent &arg)
     CEGUI::System &sys = CEGUI::System::getSingleton();
 
     sys.getDefaultGUIContext().injectMouseMove(arg.state.X.rel, arg.state.Y.rel);  
-  
 
     if (mTrayMgr->injectMouseMove(arg)) return true;
     SceneNode* temp = mSceneMgr->getSceneNode("translate");
@@ -802,7 +801,6 @@ bool Assignment2::mouseMoved(const OIS::MouseEvent &arg)
                 temp->setPosition(bounds.x, rS-100, bounds.z);
             else if(bounds.y < rS-100)                                
                 temp->setPosition(bounds.x, -(rS-100), bounds.z);
-
         }else{
             temp->translate(arg.state.X.rel, -arg.state.Y.rel, 0);
         }
