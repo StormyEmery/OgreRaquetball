@@ -1,0 +1,14 @@
+material usermade/green
+{
+	technique
+	{
+		pass
+		{
+			diffuse 1 1 1
+			texture_unit
+			{
+				texture green.png
+			}
+		}
+	}
+}

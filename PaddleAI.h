@@ -23,4 +23,5 @@ public:
 	void setMaxDetectionDistance(int v);
 };
 
+
 #endif

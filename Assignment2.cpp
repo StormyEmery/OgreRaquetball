@@ -51,7 +51,7 @@ Assignment2::Assignment2(void) :
     new_multiplayer_game(false),
     first(true),
     paddleAI(NULL),
-    power_up(NULL),
+    powerSystem(NULL),
 
     //test("music/wall_collision.wav", 1),
     
@@ -829,7 +829,6 @@ bool Assignment2::mouseMoved(const OIS::MouseEvent &arg)
 bool Assignment2::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
     CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(convertButton(id));
-    std::cout << sheet->getChild(1)->isMouseContainedInArea() << std::endl; 
 
     if(id == 0){ leftPressed = true; }
     if(id == 1){ rightPressed = true; }
@@ -846,7 +845,6 @@ bool Assignment2::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID i
 {
 
     CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(convertButton(id));
-    std::cout << sheet->getChild(1)->isMouseContainedInArea() << std::endl; 
     if(id == 0){ leftPressed = false; }
     if(id == 1){ rightPressed = false; }
 
