@@ -45,7 +45,7 @@ void Ball::create_bounding_box(Simulator* simulator, btScalar mass, btVector3 in
 	//ballRB->activate(true);
 	ballRB->setRestitution(restitution);
 	ballRB->setUserPointer(ballNode);
-	ballRB->setFriction(0.0);
+	ballRB->setFriction(50.0);
 
 	simulator->getDynamicsWorld()->addRigidBody(ballRB);
 }

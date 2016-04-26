@@ -106,6 +106,8 @@ void TutorialApplication::createScene(void)
     //AI for the second paddle for single player games
     paddleAI = new PaddleAI(paddleTwo,rS);
 
+    power_up = new Powerup(mSceneMgr, "blue", "ent_1", "node_1");
+
     Ball* b = new Ball(mSceneMgr, "node_ball");
     b->reset(mSceneMgr, b, simulator);
     setBall(b);
@@ -399,6 +401,7 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
             //this is to ensure a constant ball velocity
             btVector3 norm = ball->ballRB->getLinearVelocity().normalized();
             ball->ballRB->setLinearVelocity(norm*const_velocity);
+            ball->updateTransform();
         }
         if(oneFrame) {
             mPause = true;

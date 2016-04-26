@@ -1,18 +1,25 @@
 CS354R 
-Group 10: Sihai Tang, Rafik Rizik, Stormy Emery 
+Sihai Tang, Rafik Rizik, Stormy Emery 
 EID: st24899, ror279, sre478 
-late days used on this project: 1
 
-Final Project Report:
+Milestone 2 Report:
 
-	In terms of getting the game finished by the due date, we definitely did worse than expected. It's only one day late, but I feel we could have gotten it turned in on time if a few more things had gone our way. Unfortunately we all have busy schedules and it's hard to have all three of us meet up at the same time, but we still managed to meet up enough and work enough individually to have a majority of the systems in place and working by Friday night. The toughest part of this project was getting the host and client machines to communicate together effectively and, once we had that, figuring out what all we needed to communicate between the two to have a workable multiplayer game. Luckily we had most of this working by Friday. Another thing about this project that might not have been the hardest, but was definitely one of the more time consuming aspects was replacing a lot of our Ogre TrayManager gui stuff with CEGUI. The way we had our gui structured made it really confusing when trying to replace it. But, we finally was able to figure it out and get it in by Saturday, hence the late day used. We definitely would have liked to work on this project a little more and get it more polished, but with the end of the semester coming up and final projects/midterms underway, we had to call what we were able to accomplish good enough.  
+Progess:
+	- So far, we have replaced the goal in single player mode with an AI controlled paddle. The player will have the ability to adjust the difficulty of the AI opponent once we update the UI. The difficulty of the AI is based off it's speed.
+		- Contributors: Stormy
 
-	Looking back at the time spent on this project, we can identify our successes and failures and what caused them.
+	- We have also introduced powerups into the game. As of right now, they are in the game as blue, red, and yellow cubes that switch in and out every 4 seconds. We just have them doing this to show that we have the logic to spawn them in and out of the play area. We are also able to collect the powerups by directing the ball through them. We still need to add in the beneficial effects that they give the player who collected it.
+		- Contributors: Rafik
 
-	In terms of successes, we were again able to work together and individually to be able to get a networked multiplayer game working. We were able to communicate with eachother effectively about what we had worked on on our own and were able to work efficiently when we were able to work together.
+	- We were having problems with the ball moving correctly in zero gravity and bouncing out of the playing room if it hit a corner just right. We have fixed these problems so that the ball now moves around the room at a constant velocity in zero gravity and doesn't break out of the room from hitting a corner.
+		- Contributors: Stormy
 
-	In terms of failures, we weren't able to get the entire game done by the deadline. This was caused by several factors. Mainly because we all had midterms, projects, and family commitments to manage. We also failed in getting the game completely polished, again because it's nearing the end of the semester and we are all taking courses that have big final projects. 
+	- We have improved the camera controls to allow the player to zoom in and out. We still need to test and find the best place to place the camera so that the player can accurately detect where the ball is and where it is going to be.
+		- Conributors: Sihai 
 
-	Due to these failures, we have learned that everyone has busy schedules and that you shouldn't get upset or irritated at someone if they say they can't make it to a meeting or couldn't work as long as you wanted them to on certain days. Real life is hard and is something that we all still have to find out how to manage effectively.
+	- We have also added the ability for us, or potentially the player, to dynamically change the size of the playing room.
+		- Contributors: Sihai
 
-	We all feel good about the effort and ammount of work we were able to get done for this project and hope to make awesome final projects.
+
+We are a little behind schedule. This is due to personal matters coming up, Capstone Beta, and other school related things. Going forward into the final two weeks of classes, we are all still pretty busy getting other final projects finished and studying for exams, but plan to put as much time as we can into getting this game finished. The next things we will be accomplishing are getting the powerup system working and putting obstacles into the game. Once we have these things working, it is just a matter of communicating game information between client and server, which we already have a majority of finished. We will also be redoing the UI to make it more user frienldy and to make it look nicer. We are confident that we will be able to get this finished.
+	
