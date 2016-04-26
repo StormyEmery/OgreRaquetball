@@ -144,6 +144,7 @@ void TutorialApplication::createViewports() {
 bool TutorialApplication::frameStarted(const FrameEvent& fe) {
     bool ret = Assignment2::frameRenderingQueued(fe);
 
+
     if(background_music && !main_menu)
         game_music.play(-1);
     single_duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
@@ -166,6 +167,13 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
 
             if(single_player){
                 if(simulator != NULL) {
+
+                    powerSystem->timer_start();
+                    powerSystem->choose_powerup();
+                    powerSystem->check_collision(getBall());
+
+
+
                     simulator->getDynamicsWorld()->stepSimulation(1.0f/60.0f);
                     int numManifolds = simulator->getDispatcher()->getNumManifolds();
                     for(int i = 0; i < numManifolds; i++) {
@@ -203,40 +211,6 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                             break; 
                         }
                         else { sound_clock = clock(); }
-
-                        // if(obOneName == "node_ground5" && obTwoName == "node_ball" && sound_duration > .1) { 
-                        //     wall_collision_sound.play(0); 
-                        //     sound_clock = clock();
-                        //     //std::cout << "5" << std::endl;
-                        //     break; 
-                        // }
-                        // else { sound_clock = clock(); }
-
-                        // if(obOneName == "node_ground6" && obTwoName == "node_ball") { 
-                        //     wall_collision_sound.play(0); 
-                        //     sound_clock = clock();
-                        //     //std::cout << "6" << std::endl;
-                        //     // mPause=true;
-                        //     // gameOver = true;
-                        //     // //mTrayMgr->showCursor();
-                        //     // CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
-                            
-                        //     // mTrayMgr->moveWidgetToTray(separator, OgreBites::TL_CENTER, 0);
-                        //     // mTrayMgr->moveWidgetToTray(gameOverLabel,OgreBites::TL_CENTER, 0);
-                        //     // sheet->getChild(1)->show();
-                        //     // sheet->getChild(5)->show();
-                        //     // sheet->getChild(1)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.445,0), CEGUI::UDim(0.35+(4*.051),0)));
-                        //     // sheet->getChild(5)->setPosition(CEGUI::UVector2(CEGUI::UDim(0.445,0), CEGUI::UDim(0.35+(5*.051),0)));
-                        //     // menu2->hide();
-                        //     // menu5->hide();
-                        //     // mTrayMgr->removeWidgetFromTray(menu2);
-                        //     // mTrayMgr->removeWidgetFromTray(menu5);
-                        //     // separator->show();
-                        //     // gameOverLabel->show();
-
-                        //     // ball->reset(mSceneMgr, ball, simulator);
-                        // }
-                        // else { sound_clock = clock(); }
 
                         if(obOneName == "node_ground5" && obTwoName == "node_ball" && multi_score_ok) { 
                             wall_collision_sound.play(0); 
