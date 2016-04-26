@@ -11,6 +11,7 @@ User Manual:
 		Right Mouse Button  rotates the paddle left and right based on mouse movement
 		Left Mouse Button   pans the paddle up and down based on mouse movement
 		SysRQ/PrtScn		takes a screenshot
+		Scroll Wheel		zoom in and out
 
 	Multi Player Controls:
 		Esc					Pause game, brings up pause menu
@@ -18,6 +19,7 @@ User Manual:
 		Right Mouse Button  rotates the paddle1 left and right based on mouse movement
 		Left Mouse Button   pans the paddle1 up and down based on mouse movement
 		SysRQ/PrtScn		takes a screenshot
+		Scroll Wheel		zoom in and out
 
 
 	Menus:
@@ -64,7 +66,7 @@ User Manual:
 	Objective:
 
 		Single Player:
-			The objective of the game is to try and get the ball to hit the chrome rectangle at the back of the room by making the ball collide with the paddle. Each time the ball hits the chrome rectangle, you gain a point, which is displayed in the top left corner of the game window. If you miss ball with the paddle, it's game over.
+			The objective of this mode is to play against an AI opponent. As of right now there is now win state, but hitting the wall behind the opponent gains you a point and if you let the ball slip by you, the oppenent gets a point.
 
 		Multi Player:
 			The objective of the game is for either side to get the ball to hit the other side of the wall. This results in giving them one point. The game ends once either side reaches 8 points total. This results in a popup pannel that displays a "player" one/two "wins" with options to quit or to play a new game.
