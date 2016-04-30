@@ -16,7 +16,10 @@ http://www.ogre3d.org/wiki/
 */
 
 #include "TutorialApplication.h"
-
+#include <Ogre.h>
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
 
 using namespace Ogre;
 
@@ -112,7 +115,6 @@ void TutorialApplication::createScene(void)
     b->reset(mSceneMgr, b, simulator);
     setBall(b);
 
-    srand(time(NULL));
 
     Light* light1 = mSceneMgr->createLight("ThirdLight");
     light1->setDiffuseColour(1,1,1);
