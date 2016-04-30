@@ -15,16 +15,14 @@ PowerupSystem::PowerupSystem(SceneManager* mSceneMgr){
 
     
 
-    colors.push_back("blue");
-    colors.push_back("red");
+    //colors.push_back("blue");
+    //colors.push_back("red");
     colors.push_back("yellow");
 
 
-    current_color = colors[rand()%3];
+    current_color = colors[rand()%colors.size()];
     old_color = current_color; 
     set_nodes();
-    std::cout << current_color << std::endl;
-
 
     timer = clock();
 
@@ -36,28 +34,28 @@ void PowerupSystem::timer_start(){
 
 void PowerupSystem::set_random_powerup(){
     old_color = current_color;
-    current_color = colors[rand()%3];
-    std::cout << current_color << std::endl;
+    if(colors.size() != 0)
+        current_color = colors[rand()%colors.size()];
 }
 
 
 void PowerupSystem::get_new_powerup(){
     float randx = (float)rand()/(float)RAND_MAX * 2000 - 1000;
     float randy = (float)rand()/(float)RAND_MAX * 1200 - 600;
-    current_power_node->setPosition(randx, randy, 0);
+    current_powerup->set_position(0, 0, 0);
     if(current_color != old_color){
-        old_power_node->setPosition(-5000, 0, 0);
+        old_powerup->set_position(-5000, 0, 0);
     }
 }
 
 
 void PowerupSystem::set_nodes(){
-    if(current_color == "blue") current_power_node = blue->node;
-    if(current_color == "red") current_power_node =  red->node;
-    if(current_color == "yellow") current_power_node = yellow->node;
-    if(old_color == "blue") old_power_node = blue->node;
-    if(old_color == "red") old_power_node = red->node;
-    if(old_color == "yellow") old_power_node = yellow->node;
+    if(current_color == "blue") current_powerup = blue;
+    if(current_color == "red") current_powerup =  red;
+    if(current_color == "yellow") current_powerup = yellow;
+    if(old_color == "blue") old_powerup = blue;
+    if(old_color == "red") old_powerup = red;
+    if(old_color == "yellow") old_powerup = yellow;
 }
 
 
@@ -72,9 +70,26 @@ void PowerupSystem::choose_powerup(){
 
 
 void PowerupSystem::remove_powerup(){
-    current_power_node->setPosition(-5000, 0, 0);
+    current_powerup->set_position(-5000, 0, 0);
     timer = clock();
 }
+
+
+void PowerupSystem::activate_powerup(Paddle* one, Paddle* two, Light* light){
+    if(current_powerup->is_active()){
+        if(current_color == "blue"){
+            std::cout << "blue" << std::endl;
+        }
+        if(current_color == "red"){
+            std::cout << "red" << std::endl;
+        }
+        if(current_color == "yellow"){
+            current_powerup->activate(light);
+           // colors.erase("yellow");
+        }
+    }
+}
+
 
 void PowerupSystem::check_collision(Ball* b){
 
@@ -83,17 +98,18 @@ void PowerupSystem::check_collision(Ball* b){
     float BZ = b->ballNode->getPosition().z;
     
 
-    float PRX = current_power_node->getPosition().x + size;
-    float PLX = current_power_node->getPosition().x - size;
-    float PRY = current_power_node->getPosition().y + size;
-    float PLY = current_power_node->getPosition().y - size;
-    float PRZ = current_power_node->getPosition().z + size;
-    float PLZ = current_power_node->getPosition().z - size;
+    float PRX = current_powerup->get_position().x + size;
+    float PLX = current_powerup->get_position().x - size;
+    float PRY = current_powerup->get_position().y + size;
+    float PLY = current_powerup->get_position().y - size;
+    float PRZ = current_powerup->get_position().z + size;
+    float PLZ = current_powerup->get_position().z - size;
 
     if(BX > PLX && BX < PRX){
         if(BY < PRY && BY > PLY){
             if(BZ < PRZ && BZ > PLZ){
                 remove_powerup();
+                current_powerup->set_active();
             }
         }
     }

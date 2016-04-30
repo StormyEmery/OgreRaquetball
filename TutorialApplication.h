@@ -59,8 +59,12 @@ protected:
   virtual int getScoreOne();
   virtual int getScoreTwo();
   virtual void resetScore();
+  virtual Paddle* getPaddleOne();
+  virtual Paddle* getPaddleTwo();
   virtual void setPaddleOne(Paddle* p);
   virtual void setPaddleTwo(Paddle* p);
+  virtual void setLight(Light* l);
+  virtual Light* getLight();
   virtual void setGoal(Plain* g);
 
   void updateTransform();

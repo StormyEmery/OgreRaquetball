@@ -119,6 +119,7 @@ void TutorialApplication::createScene(void)
     Light* light1 = mSceneMgr->createLight("ThirdLight");
     light1->setDiffuseColour(1,1,1);
     light1->setPosition(0,50,50);
+    setLight(light1);
 }
 
 bool TutorialApplication::quit(const CEGUI::EventArgs &e)
@@ -173,6 +174,7 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
                     powerSystem->timer_start();
                     powerSystem->choose_powerup();
                     powerSystem->check_collision(getBall());
+                    powerSystem->activate_powerup(getPaddleOne(), getPaddleTwo(), getLight());
 
 
 
@@ -442,8 +444,24 @@ void TutorialApplication::setPaddleOne(Paddle* p) {
     paddleOne = p;
 }
 
+Paddle* TutorialApplication::getPaddleOne(){
+    return paddleOne;
+}
+
 void TutorialApplication::setPaddleTwo(Paddle* p) {
     paddleTwo = p;
+}
+
+Paddle* TutorialApplication::getPaddleTwo(){
+    return paddleTwo;
+}
+
+void TutorialApplication::setLight(Light * l){
+    light = l;
+}
+
+Light* TutorialApplication::getLight(){
+    return light;
 }
 
 void TutorialApplication::setGoal(Plain* g){

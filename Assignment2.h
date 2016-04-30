@@ -106,8 +106,12 @@ public:
     virtual void windowClosed(Ogre::RenderWindow* rw);
 
 
+    virtual Light* getLight()=0;
+    virtual void setLight(Light* l)=0;
     virtual Ball* getBall()=0;
     virtual void setBall(Ball* b)=0;
+    virtual Paddle* getPaddleOne()=0;
+    virtual Paddle* getPaddleTwo()=0;
     virtual Simulator* getSimulator()=0;
     virtual int getScoreOne()=0;
     virtual int getScoreTwo()=0;
@@ -195,6 +199,7 @@ public:
     Sound test;
 
     Ball* ball;
+    Light* light;
     Paddle* paddleOne;
     Paddle* paddleTwo;
     Plain* goal;

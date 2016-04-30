@@ -7,6 +7,7 @@
 #include <vector>
 #include "Powerup.h"
 #include "Ball.h"
+#include "Paddle.h"
 
 
 using namespace Ogre;
@@ -19,7 +20,6 @@ public:
     String current_color;
     String old_color;
 
-
     float size;
 
     std::vector<String> colors;
@@ -27,6 +27,10 @@ public:
     Powerup* blue;
     Powerup* red;
     Powerup* yellow;
+
+
+    Powerup* current_powerup;
+    Powerup* old_powerup;
 
 	SceneNode* current_power_node;
     SceneNode* old_power_node;
@@ -37,6 +41,7 @@ public:
     void get_new_powerup();
     void set_nodes();
     void remove_powerup();
+    void activate_powerup(Paddle* one, Paddle* two, Light* light);
     void check_collision(Ball* b);
 
 	PowerupSystem(SceneManager* mSceneMgr);
