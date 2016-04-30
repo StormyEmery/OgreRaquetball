@@ -4,6 +4,7 @@ Powerup::Powerup(SceneManager* mSceneMgr, String c, String entity_name, String n
     color = c;
 
 	entity = mSceneMgr->createEntity(entity_name,"cube.mesh");
+    
     if(color == "blue")
         entity->setMaterialName("usermade/blue");
     if(color == "red")
@@ -18,7 +19,6 @@ Powerup::Powerup(SceneManager* mSceneMgr, String c, String entity_name, String n
 String Powerup::get_color(){
     return color;
 }
-
 
 Powerup::~Powerup(){};
 

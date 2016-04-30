@@ -1,5 +1,7 @@
-#ifndef __POWERUP_h_
-#define __POWERUP_h_
+
+#ifndef __POWERUP_H_
+#define __POWERUP_H_
+
 
 #include <Simulator.h>
 #include <OgreMeshManager.h>
@@ -7,6 +9,7 @@
 using namespace Ogre;
 
 class Powerup{
+
 public:
 
 

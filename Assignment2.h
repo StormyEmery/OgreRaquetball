@@ -28,6 +28,7 @@
 #include "PaddleAI.h"
 #include "PowerupSystem.h"
 
+
 #include <iostream>
 #include <time.h>
 #include <ctime>
@@ -199,6 +200,7 @@ public:
     Plain* goal;
     PaddleAI* paddleAI;
     PowerupSystem* powerSystem;
+
     //btTransform transform;
     //OgreMotionState* paddleMotionState;
     //btRigidBody* paddleBody;

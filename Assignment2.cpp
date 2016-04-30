@@ -256,8 +256,8 @@ void Assignment2::createFrameListener(void)
     CEGUI::WidgetLookManager::setDefaultResourceGroup("LookNFeel");
     CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
 
-    CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
-    CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
+    CEGUI::SchemeManager::getSingleton().createFromFile("AlfiskoSkin.scheme");
+    CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("AlfiskoSkin/MouseArrow");
 
 
     CEGUI::FontManager::getSingleton().createFromFile("DejaVuSans-10.font");
@@ -271,7 +271,7 @@ void Assignment2::createFrameListener(void)
     sheet->addChild(menuWindow);
     menuWindow->setPosition(CEGUI::UVector2(CEGUI::UDim(0.383,0), CEGUI::UDim(0.35,0)));
     menuWindow->setSize(CEGUI::USize(CEGUI::UDim(.2, 0), CEGUI::UDim(.33, 0)));
-    menuWindow->setMouseCursor("TaharezLook/MouseArrow");
+    menuWindow->setMouseCursor("AlfiskoSkin/MouseArrow");
     
     for(int i=1; i<=13; i++){        
         sheet->addChild(menuWindow->getChild(i));

@@ -4,7 +4,7 @@
 PaddleAI::PaddleAI(Paddle *p, int room_size) {
 	paddle = p;
 	rS = room_size;
-	difficulty = 1.0;
+	difficulty = 1.2;
 	minDetectionDistance = -250;
 	maxDetectionDistance = 2000;
 }

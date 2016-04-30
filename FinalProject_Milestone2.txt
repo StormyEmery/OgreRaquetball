@@ -1,0 +1,24 @@
+CS354R 
+Sihai Tang, Rafik Rizik, Stormy Emery 
+EID: st24899, ror279, sre478 
+
+Milestone 2 Report:
+
+Progess:
+	- So far, we have replaced the goal in single player mode with an AI controlled paddle. The player will have the ability to adjust the difficulty of the AI opponent once we update the UI. The difficulty of the AI is based off it's speed.
+		- Contributors: Stormy
+
+	- We have also introduced powerups into the game. As of right now, they are in the game as blue, red, and yellow cubes that switch in and out every 4 seconds. We just have them doing this to show that we have the logic to spawn them in and out of the play area. We still need to add in the collection of the powerups and the beneficial effects that they give the player who collected it.
+		- Contributors: Rafik
+
+	- We were having problems with the ball moving correctly in zero gravity and bouncing out of the playing room if it hit a corner just right. We have fixed these problems so that the ball now moves around the room at a constant velocity in zero gravity and doesn't break out of the room from hitting a corner.
+		- Contributors: Stormy
+
+	- We have improved the camera controls to allow the player to zoom in and out. We still need to test and find the best place to place the camera so that the player can accurately detect where the ball is and where it is going to be.
+		- Conributors: Sihai 
+
+	- We have also added the ability for us, or potentially the player, to dynamically change the size of the playing room.
+		- Contributors: Sihai
+
+
+We are a little behind schedule. This is due to personal matters coming up, Capstone Beta, and other school related things. Going forward into the final two weeks of classes, we are all still pretty busy getting other final projects finished and studying for exams, but plan to put as much time as we can into getting this game finished. The next things we will be accomplishing are getting the powerup system working and putting obstacles into the game. Once we have these things working, it is just a matter of communicating game information between client and server, which we already have a majority of finished. We will also be redoing the UI to make it more user frienldy and to make it look nicer. We are confident that we will be able to get this finished.

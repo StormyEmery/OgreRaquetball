@@ -1,71 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <GUILayout version="4" >
-    <Window type="TaharezLook/FrameWindow" name="FrameWindow" >
+    <Window type="AlfiskoSkin/FrameWindow" name="FrameWindow" >
         <Property name="Area" value="{{0,42},{0,16},{0.3,364},{0.3,237}}" />
         <Property name="Text" value="MainMenu" />
-        <Window type="TaharezLook/Button" name="new_game" >
+        <Window type="AlfiskoSkin/Button" name="new_game" >
             <Property name="ID" value="1" />
             <Property name="Area" value="{{0,45},{0,5},{0,141},{0,37}}" />
             <Property name="Text" value="New Game" />
         </Window>
-        <Window type="TaharezLook/Button" name="music" >
+        <Window type="AlfiskoSkin/Button" name="music" >
             <Property name="ID" value="2" />
             <Property name="Area" value="{{0,45},{0,40},{0,141},{0,72}}" />
             <Property name="Text" value="Music" />
         </Window>
-        <Window type="TaharezLook/Button" name="multiplayer" >
+        <Window type="AlfiskoSkin/Button" name="multiplayer" >
             <Property name="ID" value="3" />
             <Property name="Area" value="{{0,45},{0,75},{0,141},{0,107}}" />
             <Property name="Text" value="Multiplayer" />
         </Window>
-        <Window type="TaharezLook/Button" name="single_player" >
+        <Window type="AlfiskoSkin/Button" name="single_player" >
             <Property name="ID" value="4" />
             <Property name="Area" value="{{0,45},{0,110},{0,141},{0,142}}" />
             <Property name="Text" value="SinglePlayer" />
         </Window>
-        <Window type="TaharezLook/Button" name="exit" >
+        <Window type="AlfiskoSkin/Button" name="exit" >
             <Property name="ID" value="5" />
             <Property name="Area" value="{{0,45},{0,145},{0,141},{0,177}}" />
             <Property name="Text" value="Quit" />
         </Window>
-        <Window type="TaharezLook/Button" name="start_client" >
+        <Window type="AlfiskoSkin/Button" name="start_client" >
             <Property name="ID" value="6" />
             <Property name="Area" value="{{0,410},{0,222},{0,506},{0,254}}" />
             <Property name="Text" value="Start Server" />
         </Window>
-        <Window type="TaharezLook/Button" name="cotinue" >
+        <Window type="AlfiskoSkin/Button" name="cotinue" >
             <Property name="ID" value="8" />
             <Property name="Area" value="{{0,396},{0,32},{0,492},{0,64}}" />
             <Property name="Text" value="Continue" />
         </Window>
-        <Window type="TaharezLook/Button" name="main_menu" >
+        <Window type="AlfiskoSkin/Button" name="main_menu" >
             <Property name="ID" value="9" />
             <Property name="Area" value="{{0,312},{0,73},{0,408},{0,105}}" />
             <Property name="Text" value="Main Menu" />
         </Window>
-        <Window type="TaharezLook/Button" name="back1" >
+        <Window type="AlfiskoSkin/Button" name="back1" >
             <Property name="ID" value="10" />
             <Property name="Area" value="{{0,276},{0,140},{0,372},{0,172}}" />
             <Property name="Text" value="Back" />
         </Window>
-        <Window type="TaharezLook/Button" name="back2" >
+        <Window type="AlfiskoSkin/Button" name="back2" >
             <Property name="ID" value="11" />
             <Property name="Area" value="{{0,286},{0,195},{0,382},{0,227}}" />
             <Property name="Text" value="Back" />
         </Window>
-        <Window type="TaharezLook/Button" name="reset_ball" >
+        <Window type="AlfiskoSkin/Button" name="reset_ball" >
             <Property name="ID" value="12" />
             <Property name="Area" value="{{0,283},{0,275},{0,379},{0,307}}" />
             <Property name="Text" value="Reset Ball" />
         </Window>
-        <Window type="TaharezLook/Button" name="start_server" >
+        <Window type="AlfiskoSkin/Button" name="start_server" >
             <Property name="ID" value="7" />
             <Property name="Area" value="{{0,404},{0,128},{0,500},{0,160}}" />
             <Property name="Text" value="Start Client" />
             <Property name="AlwaysOnTop" value="true" />
         </Window>
-        <Window type="TaharezLook/Editbox" name="Editbox" >
+        <Window type="AlfiskoSkin/Editbox" name="Editbox" >
             <Property name="ID" value="13" />
             <Property name="Area" value="{{0,81},{0,274},{0,225},{0,306}}" />
         </Window>

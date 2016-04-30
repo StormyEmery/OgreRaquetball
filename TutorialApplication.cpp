@@ -361,6 +361,7 @@ bool TutorialApplication::frameStarted(const FrameEvent& fe) {
             //this is to ensure a constant ball velocity
             btVector3 norm = ball->ballRB->getLinearVelocity().normalized();
             ball->ballRB->setLinearVelocity(norm*const_velocity);
+            ball->updateTransform();
         }
         if(oneFrame) {
             mPause = true;
